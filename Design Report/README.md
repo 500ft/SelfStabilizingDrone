@@ -71,12 +71,18 @@ V1 objective:
 
 ### Applicable Standards and Regulations
 
-This project is designed for indoor cage testing first. Outdoor operation must be checked against the current rules for the country and location of the test.
+This project is designed for indoor cage testing first. Outdoor operation must be checked against the current rules for the country and location of the test. The build is expected to happen in the United States, so FAA rules are the primary outdoor-flight reference.
 
-- FAA recreational guidance says U.S. recreational flyers must take TRUST and carry proof, and drones at or above 250 g require registration. The V1 target is below 250 g, but the project should still be operated conservatively.
+United States FAA baseline:
+
+- Recreational flyers must complete TRUST and carry proof when operating recreationally.
+- FAA registration is required for drones above 0.55 lb, or 250 g, unless an exemption applies. The V1 target is below 250 g, but any heavier revision must be checked.
+- Drones that are required to register, or that are registered, must comply with Remote ID unless flown under an allowed exception such as a FRIA.
+- If the project is flown for non-recreational purposes, Part 107 requirements may apply.
+- If testing outdoors in controlled airspace, airspace authorization may be required through LAANC or another FAA process.
 - ArduPilot Throw Mode is treated as a reference, not a shortcut. Its own documentation describes throw mode as risky, requiring valid position information, and recommends normal takeoff whenever possible.
 - PX4 Offboard Mode is treated as a reference for companion-computer control. PX4 requires continuous offboard signaling and defines failsafe behavior if that signal is lost.
-- Mongolia and other locations may have separate unmanned-aircraft rules. Verify local civil aviation rules before any outdoor test.
+- Mongolia and other locations may have separate unmanned-aircraft rules. Verify local civil aviation rules before any outdoor test outside the United States.
 
 Reference links:
 
@@ -84,6 +90,10 @@ Reference links:
 - PX4 Offboard Mode: https://docs.px4.io/main/en/flight_modes/offboard.html
 - PX4 Safety/Failsafe Configuration: https://docs.px4.io/main/en/config/safety.html
 - FAA Recreational Flyers: https://www.faa.gov/uas/recreational_flyers/
+- FAA Drone Registration: https://www.faa.gov/uas/getting_started/register_drone/
+- FAA Remote ID: https://www.faa.gov/uas/getting_started/remote_id/
+- FAA Part 107 Remote Pilot: https://www.faa.gov/uas/commercial_operators/become_a_drone_pilot
+- FAA LAANC: https://www.faa.gov/uas/getting_started/laanc
 - Mongolian Civil Aviation Law reference: https://legalinfo.mn/mn/detail?lawId=16760186591361
 - OpenMV AprilTag support: https://docs.openmv.io/
 
