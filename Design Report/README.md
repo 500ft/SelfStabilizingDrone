@@ -1,0 +1,326 @@
+# Design Report: Protected Throwable Micro-UAV
+
+## Summary
+
+This report defines a small guarded quadcopter platform intended to learn, test, and document the path toward a throwable micro-UAV. The long-term dream is a drone that can be tossed, dropped, or released, detect the airborne event, stabilize in midair, and follow a designated target. The engineering path is staged so the dangerous behavior is delayed until the hardware, controls, sensor logging, and safety systems are proven.
+
+The first complete build is not a full throw-and-chase drone. It is a protected test vehicle that can manually hover, track a marker slowly, log launch/drop events, and later attempt controlled release recovery inside a cage.
+
+Reference video supplied with the project prompt: https://www.youtube.com/watch?v=J79zT6G878k
+
+## Project Definition and Specifications
+
+### Design Objective
+
+Design a compact guarded micro-UAV that can eventually:
+
+- detect a tossed, dropped, or released state using onboard inertial sensing
+- reject unsafe activation conditions
+- stabilize from a controlled release into hover
+- follow a designated target, starting with a marker
+- support future cooperative behavior with a "mother" drone or external positioning source
+
+V1 objective:
+
+> Build a guarded 140-170 g quadcopter test platform that manually hovers in a cage, tracks a defined marker, logs launch/drop events without automatic motor response, and prepares for controlled release recovery.
+
+### Key Specifications
+
+| Parameter | V1 Specification |
+|---|---:|
+| Vehicle type | guarded quadcopter |
+| Target mass | 140 g |
+| Absolute max mass | 170 g |
+| Preferred total thrust | 400 g+ |
+| Minimum total thrust at 170 g | 340 g |
+| Minimum thrust per motor | 85 g |
+| Preferred thrust per motor | 100 g+ |
+| Propulsion voltage | 2S LiPo baseline |
+| Prop size | 2.0-2.3 in baseline |
+| Flight controller | ArduPilot-capable STM32 H7/F7 board |
+| Vision target | ArUco, AprilTag, or large high-contrast marker |
+| Live test environment | netted cage only |
+| Launch detection | log-only in Stage 1 |
+| Live recovery | controlled release in later stage |
+| Full hand throw | not V1 |
+
+### Requirement Compliance and Verification
+
+| Requirement | Verification Method | V1 Pass Criteria |
+|---|---|---|
+| Mass limit | scale measurement | complete flying mass under 170 g |
+| Thrust margin | motor thrust table and bench test | at least 2:1 thrust-to-weight at max mass |
+| Manual flight | cage hover test | 30 s hover without cage contact |
+| Guard safety | bump and clearance test | no prop contact with guards after minor bump |
+| Battery retention | shake and bump test | battery remains captured |
+| Vibration quality | flight log review | IMU data usable at hover throttle |
+| Marker tracking | cage tracking test | yaw-only centering before translation |
+| Target loss response | blocked/removed marker test | hold, then land after timeout |
+| Launch classifier | log dataset and confusion matrix | zero false live-arm decisions |
+| Emergency response | bench and cage test | manual disarm/kill command works every time |
+
+### Constraints and Engineering Considerations
+
+- Mass creep is the main design threat. Every gram added to guards, mounts, camera, wiring, and battery reduces thrust margin.
+- Prop guards are mandatory, but they must be stiff enough not to flex into the props.
+- The battery should be removable and centrally retained for V1. Putting pouch cells inside hollow frame arms is a future packaging experiment, not the first safe build.
+- The companion vision processor must only send bounded high-level commands. It must not command individual motors.
+- Launch detection must be proven in logs before it is allowed to trigger a live recovery.
+- General object following is not V1. The first target must be defined and measurable.
+- A tri-copter is not selected for V1 because adding servo tilt increases mechanical and controls complexity. A quadcopter gives simpler control allocation and easier use of existing flight stacks.
+
+### Applicable Standards and Regulations
+
+This project is designed for indoor cage testing first. Outdoor operation must be checked against the current rules for the country and location of the test.
+
+- FAA recreational guidance says U.S. recreational flyers must take TRUST and carry proof, and drones at or above 250 g require registration. The V1 target is below 250 g, but the project should still be operated conservatively.
+- ArduPilot Throw Mode is treated as a reference, not a shortcut. Its own documentation describes throw mode as risky, requiring valid position information, and recommends normal takeoff whenever possible.
+- PX4 Offboard Mode is treated as a reference for companion-computer control. PX4 requires continuous offboard signaling and defines failsafe behavior if that signal is lost.
+- Mongolia and other locations may have separate unmanned-aircraft rules. Verify local civil aviation rules before any outdoor test.
+
+Reference links:
+
+- ArduPilot Throw Mode: https://ardupilot.org/copter/docs/throw-mode.html
+- PX4 Offboard Mode: https://docs.px4.io/main/en/flight_modes/offboard.html
+- PX4 Safety/Failsafe Configuration: https://docs.px4.io/main/en/config/safety.html
+- FAA Recreational Flyers: https://www.faa.gov/uas/recreational_flyers/
+- Mongolian Civil Aviation Law reference: https://legalinfo.mn/mn/detail?lawId=16760186591361
+- OpenMV AprilTag support: https://docs.openmv.io/
+
+## Conceptual Design and Evaluation
+
+### Concepts Considered
+
+| Concept | Pros | Cons | Decision |
+|---|---|---|---|
+| Guarded quadcopter | simplest flight stack support, four fixed motors, good control authority | four motors and guards add mass | selected |
+| Tri-copter with servo yaw | fewer motors | servo adds failure mode and control complexity | rejected for V1 |
+| Coaxial quad/X8 micro | compact footprint | inefficient, more ESC/motor mass | rejected for V1 |
+| Off-the-shelf whoop only | fastest to fly | weak mechanical portfolio value | rejected as final form |
+| Custom guarded frame with proven electronics | strong learning and portfolio value | more CAD/testing effort | selected |
+
+### Selected Concept Description
+
+The selected concept is a 2S guarded quadcopter with:
+
+- four 1103-class brushless motors
+- 2.0-2.3 in props
+- modular circular prop guards
+- central removable 2S LiPo battery
+- ArduPilot-capable flight controller
+- 4-in-1 ESC
+- companion vision processor
+- forward/downward camera mount for marker tracking
+- external manual override and emergency disarm path
+
+The first target-following mode uses a visible marker. The future "mother drone" concept should be treated as a later positioning-interface extension where the mother drone or an external beacon provides relative position setpoints.
+
+## Development Section
+
+### Assumptions and Design Constants
+
+| Constant | Value |
+|---|---:|
+| Gravity | 9.81 m/s^2 |
+| Target mass | 0.140 kg |
+| Max mass | 0.170 kg |
+| Required T/W minimum | 2.0 |
+| Preferred total thrust | 0.400 kgf or higher |
+| Battery usable capacity | 80% of nominal |
+| Prop diameter baseline | 2.0-2.3 in |
+| Guard radial prop clearance | 2-3 mm |
+| Recovery stability window | 3 s |
+| Max horizontal tracking speed | 0.3 m/s |
+| Max yaw rate in tracking | 30 deg/s |
+
+### Governing Equations
+
+Core sizing equations are maintained in [calculations.md](calculations.md). The main equations are:
+
+- weight: `W = m g`
+- total thrust-to-weight: `T/W = T_total / W`
+- required thrust per motor: `T_motor = T_total / 4`
+- hover thrust per motor: `T_hover_motor = m / 4`
+- electrical power: `P = V I`
+- estimated flight time: `t_min = 60 * C_usable / I_avg`
+- prop guard inner diameter: `D_inner = D_prop + 2 c`
+- prop guard outer diameter: `D_outer = D_inner + 2 t_wall`
+
+### Parametric Analysis
+
+| Mass | 2:1 Total Thrust Required | Per-Motor Required | Preferred Per-Motor |
+|---:|---:|---:|---:|
+| 140 g | 280 g | 70 g | 100 g+ |
+| 150 g | 300 g | 75 g | 100 g+ |
+| 160 g | 320 g | 80 g | 100 g+ |
+| 170 g | 340 g | 85 g | 100 g+ |
+
+The 170 g case drives the propulsion requirement. Motors should not merely meet 85 g in ideal conditions; the selected set should show 100 g+ each with the chosen prop and battery voltage.
+
+### Final Calculated Dimensions and Performance
+
+Initial V1 geometry:
+
+| Parameter | Starting Value |
+|---|---:|
+| Motor diagonal wheelbase | 90-100 mm |
+| Prop diameter | 51-58 mm |
+| Guard inner diameter | prop diameter + 4-6 mm |
+| Guard wall thickness | 1.5-2.5 mm |
+| Approximate outer footprint | 125-140 mm square envelope |
+| Stack height target | 35-45 mm |
+| Complete mass red line | 170 g |
+
+Initial performance target:
+
+| Metric | Target |
+|---|---:|
+| Peak thrust | 400 g+ total preferred |
+| Hover throttle | below 55% preferred |
+| Manual hover duration | 30 s minimum test requirement |
+| Practical early flight time | 2-4 min expected |
+| Marker tracking speed | 0.3 m/s max |
+| Recovery test | controlled release only |
+
+### Structural and Stability Checks
+
+Required checks:
+
+- prop tip clearance at rest and after minor guard loading
+- guard ring deflection under finger press and cage bump
+- battery retention under shake and bump
+- motor-mount stiffness
+- camera mount stiffness and viewing angle
+- flight-controller vibration in logs
+- CG location relative to motor center
+- wiring strain relief
+
+Vibration check:
+
+- log motors off
+- log low throttle with props on in cage
+- log hover
+- compare accelerometer and gyro noise across tests
+- revise flight-controller mounting if vibration corrupts attitude estimation
+
+### Hold and Emergency Lowering
+
+The drone must never depend on the vision processor for basic survival.
+
+Minimum behaviors:
+
+- manual override always wins
+- low battery triggers landing
+- companion disconnect triggers hold or land
+- target loss triggers hold, then land
+- camera blocked triggers hold, then land
+- excessive tilt/rate rejects recovery
+- cage/test mode disabled blocks auto-spinup
+
+For V1, "emergency lowering" means a commanded controlled landing or immediate disarm depending on altitude, test setup, and cage condition. The exact behavior must be configured and tested before live recovery trials.
+
+## CAD Assembly and Engineering Drawings
+
+Required CAD package:
+
+- top-level assembly
+- guarded frame
+- guard module detail
+- motor mount detail
+- battery bay/strap/retention feature
+- camera mount
+- flight-controller stack
+- ESC/power wiring envelope
+- CG marker
+- exploded view
+- simple manufacturing drawings
+
+Battery-in-frame note:
+
+- V1 should use a central removable battery bay.
+- Hollow arms may route wires and reduce exposed cabling.
+- Do not bury soft LiPo pouch cells inside impact-loaded arms in V1.
+- A future hollow-frame battery concept would need thermal venting, crash protection, cell replacement access, insulation from fasteners, and a separate abuse-test plan.
+
+## Manufacturing and Assembly Plan
+
+Recommended V1 fabrication:
+
+- 3D print guards and frame prototypes in PETG first.
+- Move to nylon or reinforced filament if PETG flexes too much.
+- Use threaded inserts or captive nuts only where repeated service is expected.
+- Keep guards modular so damaged sections can be replaced.
+- Route motor wires inside protected channels where possible.
+- Keep the battery removable without tools.
+- Keep flight controller USB access available.
+
+Assembly order:
+
+1. print frame and guards
+2. inspect prop clearance
+3. install motors
+4. install ESC and flight controller stack
+5. install receiver/manual control link
+6. install battery retention
+7. perform props-off electrical tests
+8. add vision board and camera
+9. perform cage hover tests
+10. add marker tracking and logging
+
+## Tolerance and Alignment Requirements
+
+| Feature | Requirement |
+|---|---:|
+| Prop tip clearance | 2-3 mm minimum |
+| Motor axis tilt | keep visibly square; target under 1-2 deg |
+| Guard-to-prop concentricity | no prop rub after minor flex |
+| Battery CG offset | as close to centerline as practical |
+| Flight controller alignment | axes aligned with frame orientation |
+| Camera mount angle | fixed and documented |
+| Fastener retention | no loosening after hover vibration test |
+
+## Bill of Materials
+
+The working BOM is maintained in [BOM.md](BOM.md). The baseline is a 2S 1103-class guarded quad using an ArduPilot-capable flight controller and a marker-capable vision processor.
+
+## Test Plan
+
+### Stage 1 Tests
+
+| Test | Purpose | Pass Criteria |
+|---|---|---|
+| mass measurement | verify packaging discipline | under 170 g complete |
+| thrust review | verify propulsion feasibility | 100 g+ per motor preferred |
+| props-off motor test | prevent assembly error | correct motor order and direction |
+| emergency stop test | verify safety control | disarm works repeatedly |
+| cage hover | prove flight baseline | 30 s hover without cage contact |
+| vibration log | protect control quality | IMU data usable |
+| marker bench test | verify vision path | target detected in cage lighting |
+| marker hover test | verify tracking path | yaw-only centering first |
+| launch log test | verify classifier data | no live motor response |
+| false-positive test | prevent unsafe arming | zero false live-arm decisions |
+
+### Later Recovery Tests
+
+| Test | Purpose | Pass Criteria |
+|---|---|---|
+| hover disturbance | tune stabilization margin | returns to stable hover |
+| fixture release | first live recovery input | recovery only when no-go checks pass |
+| low-height release | validate recovery timing | stable hover within 3 s |
+| target after recovery | integrated behavior | only after tracking and recovery pass separately |
+
+## Conclusions and Recommendations
+
+This project is feasible if it is built as a staged learning platform. The first engineering priority is not the vision model or dramatic throw behavior; it is closing the mass/thrust/power budget and proving safe manual hover with clean IMU data.
+
+Recommended immediate work:
+
+1. Complete the mass, thrust, power, and cost spreadsheet.
+2. Select a 2S propulsion set with published 100 g+ per-motor thrust.
+3. CAD the guarded 90-100 mm wheelbase frame around the real component dimensions.
+4. Build the cage before live hover testing.
+5. Prove manual hover before adding marker tracking.
+6. Add launch/drop detection in log-only mode.
+7. Attempt controlled release recovery only after the earlier evidence exists.
+
+The long-term dream remains valid, but the project should earn each capability with data.
