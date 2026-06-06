@@ -139,7 +139,7 @@ The first target-following mode uses a visible marker. The future "mother drone"
 | Battery usable capacity | 80% of nominal |
 | Prop diameter baseline | 2.0-2.3 in |
 | Guard radial prop clearance | 2-3 mm |
-| Recovery stability window | 3 s |
+| Stable-hover confirmation window | 3 s |
 | Max horizontal tracking speed | 0.3 m/s |
 | Max yaw rate in tracking | 30 deg/s |
 
@@ -190,7 +190,7 @@ Initial performance target:
 | Manual hover duration | 30 s minimum test requirement |
 | Practical early flight time | 2-4 min expected |
 | Marker tracking speed | 0.3 m/s max |
-| Recovery test | controlled release only |
+| Recovery test | controlled release; minimum successful height must be measured |
 
 ### Structural and Stability Checks
 
@@ -316,7 +316,7 @@ The working BOM is maintained in [BOM.md](BOM.md). The baseline is a 2S 1103-cla
 |---|---|---|
 | hover disturbance | tune stabilization margin | returns to stable hover |
 | fixture release | first live recovery input | recovery only when no-go checks pass |
-| low-height release | validate recovery timing | stable hover within 3 s |
+| controlled-height release series | map recovery envelope | report success rate and minimum successful height |
 | target after recovery | integrated behavior | only after tracking and recovery pass separately |
 
 ## Conclusions and Recommendations

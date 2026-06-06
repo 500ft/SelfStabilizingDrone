@@ -141,19 +141,39 @@ With four circular guards in an X layout, a 90-100 mm diagonal motor wheelbase g
 
 ## Recovery Timing
 
-For later controlled-release recovery:
+Recovery cannot be specified only as "stable within 3 seconds." During ideal free fall, distance grows with the square of time:
 
 ```text
-t_recovery_max = 3 s
+d = 0.5 * g * t^2
 ```
 
-Stable hover definition:
+| Unarrested Fall Time | Ideal Fall Distance |
+|---:|---:|
+| 0.25 s | 0.31 m |
+| 0.50 s | 1.23 m |
+| 0.75 s | 2.76 m |
+| 1.00 s | 4.91 m |
+
+The recovery test must separately measure:
+
+- launch-detection latency
+- motor-start latency
+- attitude-arrest time
+- vertical-velocity-arrest time
+- time until stable hover
+- minimum successful release height
+
+The fixed 3 s value is used only as the stable-hover confirmation window after recovery, not as an acceptable time to recover.
+
+Stable-hover confirmation:
 
 - roll/pitch within +/-5 deg
 - yaw rate below low threshold selected during tuning
 - no cage contact
 - altitude remains inside test envelope
-- condition holds for 3 s
+- all conditions hold for 3 s
+
+Recovery success criteria must be set from fixture data after the propulsion system, controller, and release conditions are defined. Tests should report success rate across release height, initial attitude, initial angular rate, and battery voltage.
 
 ## Marker Tracking Limits
 
