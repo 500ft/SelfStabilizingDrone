@@ -2,41 +2,32 @@
 
 These calculations are the first sizing pass for the protected throwable micro-UAV. Replace assumptions with measured values as parts are selected.
 
-## Mass and Thrust Targets
+## Mass and Thrust Requirements
 
-Given:
+The maximum mass is not frozen. Current planning rollup:
 
-- target mass: `m_target = 140 g = 0.140 kg`
-- maximum mass: `m_max = 170 g = 0.170 kg`
-- minimum thrust-to-weight ratio: `T/W = 2.0`
-- number of motors: `n = 4`
+| Value | Result |
+|---|---:|
+| Sigma best | 106.5 g |
+| Sigma nominal | 140.75 g |
+| Sigma worst | 175.0 g |
+| Proposed frozen maximum | 180.0 g |
 
-Required total thrust at maximum mass:
-
-```text
-T_required_total = 2.0 * 170 g = 340 g
-```
-
-Required thrust per motor:
+Freeze rule:
 
 ```text
-T_required_motor = 340 g / 4 = 85 g
+frozen maximum mass = roundup_to_5g(Sigma worst + 5 g)
+nominal margin = frozen maximum mass - Sigma nominal
 ```
 
-Preferred design target:
+At the current proposed 180 g maximum:
 
 ```text
-T_preferred_motor >= 100 g
-T_preferred_total >= 400 g
+T_required_total = 2.0 * 180 g = 360 g
+T_required_motor = 360 g / 4 = 90 g
 ```
 
-At 170 g mass and 400 g total thrust:
-
-```text
-T/W = 400 / 170 = 2.35
-```
-
-## Hover Thrust
+This is only the static requirement. The recovery case may require greater thrust and torque.
 
 Hover thrust per motor:
 
@@ -49,18 +40,19 @@ T_hover_motor = mass / 4
 | 140 g | 35.0 g |
 | 150 g | 37.5 g |
 | 160 g | 40.0 g |
-| 170 g | 42.5 g |
+| 180 g | 45.0 g |
+| 200 g | 50.0 g |
 
 The selected motor/prop/battery combination should produce hover thrust well below maximum throttle.
 
 ## Example Motor Data Check
 
-Example reference: Happymodel EX1103 KV11000 on 2S with matching small propeller data shows thrust values above 100 g at high throttle. That makes the 1103 2S class plausible for a 170 g vehicle, but current draw and heat must be respected.
+The prior candidate motor claim is not treated as settled. Select a motor only after its datasheet mass and a measured motor-prop-battery thrust/current curve are available.
 
 Planning interpretation:
 
-- `85 g/motor` is the minimum acceptable thrust.
-- `100 g+/motor` is the preferred selection threshold.
+- Static per-motor thrust must be at least one quarter of twice the frozen maximum mass.
+- Recovery torque and angular acceleration may drive a higher requirement.
 - ESC current rating should cover peak current with margin.
 - Hover current must be estimated from thrust data, then measured on the built vehicle.
 
@@ -139,6 +131,29 @@ D_outer = 55.8 + 2(2.0) = 59.8 mm
 
 With four circular guards in an X layout, a 90-100 mm diagonal motor wheelbase gives a compact but plausible 125-140 mm outer footprint depending on guard spacing.
 
+## Guard Functional Elastic Check
+
+Define:
+
+- `k`: radial guard stiffness, `N/m`
+- `c_sigma`: stress per unit force, `Pa/N`
+- `E_impact`: conservatively assigned impact energy, `J`
+
+```text
+delta_impact = sqrt(2 E_impact / k)
+F_equivalent = sqrt(2 E_impact k)
+sigma_impact = c_sigma F_equivalent
+```
+
+Acceptance:
+
+```text
+available clearance / delta_impact >= 2
+elastic allowable stress / sigma_impact >= 3
+```
+
+This is a low-energy linear-elastic functional check only. It cannot establish high-energy fracture survival.
+
 ## Recovery Timing
 
 Recovery cannot be specified only as "stable within 3 seconds." During ideal free fall, distance grows with the square of time:
@@ -162,6 +177,7 @@ The recovery test must separately measure:
 - vertical-velocity-arrest time
 - time until stable hover
 - minimum successful release height
+- gyro saturation and estimator disagreement
 
 The fixed 3 s value is used only as the stable-hover confirmation window after recovery, not as an acceptable time to recover.
 
@@ -174,6 +190,10 @@ Stable-hover confirmation:
 - all conditions hold for 3 s
 
 Recovery success criteria must be set from fixture data after the propulsion system, controller, and release conditions are defined. Tests should report success rate across release height, initial attitude, initial angular rate, and battery voltage.
+
+The initial angular rate must remain below 80% of the verified gyro range. Recovery outside the externally validated estimator envelope is rejected.
+
+The executable preliminary model and its verification tests are under [Analysis](../Analysis/README.md).
 
 ## Marker Tracking Limits
 
@@ -216,4 +236,4 @@ Initial event classes:
 | controlled release | launch candidate |
 | excessive tilt/rate | reject recovery |
 
-No live recovery threshold should be trusted until a log dataset and confusion matrix exist.
+No live recovery threshold should be trusted until a log dataset, confidence-bound analysis, and confusion matrix exist. Zero observed events are never reported as a true zero event rate.

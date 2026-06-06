@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="620" viewBox="0 0 1000 620">
+  <defs><style>text{font-family:Arial,sans-serif;fill:#111}.label{font-size:20px}.small{font-size:16px}.wall{stroke:#222;stroke-width:5;fill:none}.safe{fill:#dff2df;stroke:#347a34;stroke-width:3}.risk{fill:#fde2e2;stroke:#a22;stroke-width:3}</style></defs>
+  <rect width="1000" height="620" fill="white"/>
+  <text x="35" y="42" class="label">Powered release test safety layout</text>
+  <rect x="270" y="90" width="500" height="430" class="wall"/>
+  <rect x="300" y="450" width="440" height="55" fill="#ddd" stroke="#555" stroke-width="2"/>
+  <text x="430" y="485" class="small">Padded floor</text>
+  <line x1="520" y1="105" x2="520" y2="230" stroke="#222" stroke-width="5"/>
+  <rect x="465" y="220" width="110" height="45" class="risk"/>
+  <text x="480" y="250" class="small">Release rig</text>
+  <circle cx="520" cy="325" r="42" class="risk"/>
+  <text x="487" y="332" class="small">UAV</text>
+  <rect x="40" y="115" width="175" height="80" class="safe"/>
+  <text x="58" y="148" class="small">Test director</text>
+  <text x="58" y="174" class="small">outside cage</text>
+  <rect x="40" y="235" width="175" height="80" class="safe"/>
+  <text x="58" y="268" class="small">Emergency-stop</text>
+  <text x="58" y="294" class="small">operator</text>
+  <rect x="805" y="115" width="155" height="80" class="safe"/>
+  <text x="827" y="148" class="small">High-speed</text>
+  <text x="827" y="174" class="small">camera</text>
+  <rect x="805" y="235" width="155" height="80" class="safe"/>
+  <text x="824" y="268" class="small">External logger</text>
+  <text x="824" y="294" class="small">+ sync LED</text>
+  <text x="325" y="555" class="small">No personnel inside enclosure during powered release.</text>
+</svg>

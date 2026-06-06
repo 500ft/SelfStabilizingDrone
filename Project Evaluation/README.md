@@ -8,20 +8,16 @@ The core idea is technically legitimate. Ballistically launched and throw-recove
 
 However, the idea by itself is not impressive enough to materially improve hiring or graduate-school outcomes. The evidence produced while executing it is what matters.
 
-### Current and Potential Scores
+### Evidence-Based Maturity Rubric
 
-| Category | Current Repo | Strong Stage 1 | Research-Grade Completion |
-|---|---:|---:|---:|
-| Technical depth | 35/100 | 75/100 | 92/100 |
-| Mechanical-engineering signal | 30/100 | 82/100 | 92/100 |
-| Robotics/mechatronics hiring value | 25/100 | 85/100 | 95/100 |
-| General mechanical-engineering hiring value | 25/100 | 72/100 | 85/100 |
-| Graduate-school value | 20/100 | 72/100 | 93/100 |
-| Differentiation from typical student projects | 35/100 | 85/100 | 96/100 |
+| Maturity | Required Evidence |
+|---|---|
+| Planning package | requirements, sourced estimates, preliminary calculations, safety plan |
+| Engineering prototype | CAD, manufactured hardware, closed budgets, bench data, manual flight |
+| Validated system | calibrated instruments, repeated tests, uncertainty, failure analysis |
+| Research-grade result | original question, baseline comparison, recovery envelope, reproducible dataset |
 
-The current repository contains a credible plan, preliminary calculations, and a BOM, but no implemented hardware, CAD, code, measured data, or validated results. The high potential scores assume those missing artifacts are produced.
-
-These scores are engineering-portfolio judgments, not predicted hiring or admission probabilities. Actual decisions also depend on academics, internships, communication, recommendations, role/program fit, and the rest of the application.
+The current repository has an improved planning and executable-analysis foundation, but no completed CAD, selected hardware, measured bench data, or flight-test evidence.
 
 ## Why the Project Is Technically Legitimate
 
@@ -29,7 +25,7 @@ Throw recovery is not a fictional problem or a simple software feature.
 
 - ArduPilot includes a Throw Mode that detects a throw and then controls attitude, descent, and horizontal motion. Its documentation explicitly warns that the mode is dangerous and recommends normal takeoff when possible.
 - Caltech/JPL researchers demonstrated SQUID, a ballistically launched multirotor that autonomously transitioned from passive flight to vision-based active stabilization in a GPS-denied environment.
-- TU Delft researchers demonstrated recovery of unknown quadrotors from a throw. Their controller performed online identification, began attitude recovery after approximately 450 ms of excitation, and recovered in all 57 reported live experiments from heights as low as 3.5 m.
+- TU Delft researchers demonstrated recovery of unknown quadrotors from a throw. Their reported approximately 450 ms excitation period supported online identification of an unknown vehicle and is not a directly transferable expected latency for this known-parameter project.
 
 These results prove feasibility, but they also establish a high technical bar. Simply enabling an existing throw mode is not a meaningful original contribution. A strong student project must define and validate its own contribution, such as:
 
@@ -137,7 +133,7 @@ This project can strengthen an application if it becomes evidence of research po
 
 A strong research question would be:
 
-> How reliably can a guarded sub-170 g quadcopter distinguish safe airborne-release events from handling disturbances and recover to stable hover within a constrained indoor test envelope?
+> How reliably can a guarded micro-quadcopter that closes its frozen mass requirement distinguish safe airborne-release events from handling disturbances and recover to stable hover within a constrained indoor test envelope?
 
 Possible hypotheses:
 
@@ -177,7 +173,7 @@ The recovery envelope depends on:
 
 At a maximum recovery time of 3 s, a dropped vehicle would fall approximately 44 m in an ideal vacuum calculation, which demonstrates that a 3 s timeout is not an acceptable design target for low-height indoor recovery. The useful metrics are motor-start latency, attitude-arrest time, vertical-velocity arrest time, and minimum successful release height.
 
-The TU Delft result is a useful benchmark: it reports recovery from heights as low as 3.5 m, not from a small tabletop drop. This suggests that low-height recovery is likely much harder than the current plan implies.
+The TU Delft result is useful evidence that throw recovery is possible, but its identification phase and vehicle are different. This project must establish its own recovery envelope from measured vehicle parameters and estimator limits.
 
 ## Required Technical Corrections
 

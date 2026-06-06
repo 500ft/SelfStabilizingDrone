@@ -1,0 +1,29 @@
+{
+  "initial": "SAFE_IDLE",
+  "states": [
+    "SAFE_IDLE",
+    "DETECTION_CANDIDATE",
+    "AIRBORNE_CONFIRMED",
+    "RECOVERY_ALLOWED",
+    "RECOVERY_ACTIVE",
+    "STABLE_HOVER",
+    "TARGET_TRACK",
+    "FAILSAFE"
+  ],
+  "transitions": [
+    {"from": "SAFE_IDLE", "to": "DETECTION_CANDIDATE", "trigger": "motion_candidate", "guards": "cage_mode or log_only", "timeout": "candidate_window", "command": "log only", "reason": "candidate detected"},
+    {"from": "DETECTION_CANDIDATE", "to": "AIRBORNE_CONFIRMED", "trigger": "airborne_confirmed", "guards": "classifier passes", "timeout": "confirmation_window", "command": "log only", "reason": "airborne event confirmed"},
+    {"from": "AIRBORNE_CONFIRMED", "to": "RECOVERY_ALLOWED", "trigger": "safety_checks_pass", "guards": "battery estimator gyro cage and manual checks pass", "timeout": "immediate", "command": "authorize recovery", "reason": "recovery permitted"},
+    {"from": "RECOVERY_ALLOWED", "to": "RECOVERY_ACTIVE", "trigger": "recovery_command", "guards": "all live safety checks pass", "timeout": "immediate", "command": "bounded recovery control", "reason": "recovery started"},
+    {"from": "RECOVERY_ACTIVE", "to": "STABLE_HOVER", "trigger": "stable_hover_confirmed", "guards": "attitude velocity and estimator checks pass", "timeout": "stable confirmation window", "command": "hold", "reason": "recovery complete"},
+    {"from": "STABLE_HOVER", "to": "TARGET_TRACK", "trigger": "tracking_enabled", "guards": "target and companion healthy", "timeout": "none", "command": "bounded tracking setpoints", "reason": "tracking enabled"},
+    {"from": "TARGET_TRACK", "to": "STABLE_HOVER", "trigger": "target_lost", "guards": "flight controller healthy", "timeout": "2 s", "command": "hold then land", "reason": "target lost"},
+    {"from": "RECOVERY_ACTIVE", "to": "FAILSAFE", "trigger": "recovery_fault", "guards": "arrest timeout or gyro saturation or estimator invalid or insufficient voltage or excessive rate or manual abort", "timeout": "configured arrest timeout", "command": "phase-specific land or disarm", "reason": "recovery aborted"},
+    {"from": "SAFE_IDLE", "to": "FAILSAFE", "trigger": "critical_fault", "guards": "emergency stop or critical fault", "timeout": "immediate", "command": "disarm", "reason": "critical fault"},
+    {"from": "DETECTION_CANDIDATE", "to": "FAILSAFE", "trigger": "critical_fault", "guards": "emergency stop or critical fault", "timeout": "immediate", "command": "disarm", "reason": "critical fault"},
+    {"from": "AIRBORNE_CONFIRMED", "to": "FAILSAFE", "trigger": "critical_fault", "guards": "emergency stop or critical fault", "timeout": "immediate", "command": "phase-specific land or disarm", "reason": "critical fault"},
+    {"from": "RECOVERY_ALLOWED", "to": "FAILSAFE", "trigger": "critical_fault", "guards": "emergency stop or critical fault", "timeout": "immediate", "command": "phase-specific land or disarm", "reason": "critical fault"},
+    {"from": "STABLE_HOVER", "to": "FAILSAFE", "trigger": "critical_fault", "guards": "emergency stop or critical fault", "timeout": "immediate", "command": "land or disarm", "reason": "critical fault"},
+    {"from": "TARGET_TRACK", "to": "FAILSAFE", "trigger": "critical_fault", "guards": "emergency stop or critical fault", "timeout": "immediate", "command": "land or disarm", "reason": "critical fault"}
+  ]
+}

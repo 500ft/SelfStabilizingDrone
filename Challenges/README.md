@@ -4,8 +4,8 @@ This project should start with the challenges that can kill the design earliest:
 
 ## Hardware Challenges
 
-- **Mass budget closure:** keep the complete drone under 170 g; every part needs an estimated and measured mass.
-- **Motor, prop, and battery selection:** find motors with published thrust data showing 100 g+ thrust each with the exact prop and voltage.
+- **Mass budget closure:** freeze a maximum only after worst-case component estimates and the CAD model close; every part needs a sourced and eventually measured mass.
+- **Motor, prop, and battery selection:** use measured thrust/current/RPM data and size against both static and recovery cases.
 - **1S vs 2S decision:** compare thrust, current draw, heat, battery mass, and flight time.
 - **Flight controller choice:** pick one stack, preferably ArduPilot or PX4, and learn setup, calibration, and logging.
 - **Power distribution:** design clean wiring, correct ESC current rating, battery connector choice, and voltage monitoring.
@@ -47,6 +47,6 @@ This project should start with the challenges that can kill the design earliest:
 
 The first serious milestone is:
 
-> A guarded 140-170 g drone can manually hover for 30 seconds in a cage while logging clean IMU data.
+> A guarded drone that closes its frozen mass requirement can manually hover for 30 seconds in a cage while logging clean IMU data.
 
 Everything else depends on that.

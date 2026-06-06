@@ -1,0 +1,10 @@
+id,component,best_g,nominal_g,worst_g,basis,source,status
+EST-MASS-001,Flight controller,5.5,6.75,8.0,estimated,Candidate product class,PENDING
+EST-MASS-002,4-in-1 ESC,5.0,6.5,8.0,estimated,Candidate product class,PENDING
+EST-MASS-003,Four motors,20.0,23.0,26.0,estimated,Typical 1103-class range,PENDING
+EST-MASS-004,Propeller set,1.0,2.5,4.0,estimated,Planning assumption,PENDING
+EST-MASS-005,Flight battery,25.0,32.5,40.0,estimated,2S 450-650 mAh planning range,PENDING
+EST-MASS-006,Receiver buzzer and status LED,2.0,4.0,6.0,estimated,Planning assumption,PENDING
+EST-MASS-007,Vision processor and camera,10.0,17.5,25.0,estimated,Architecture not selected,PENDING
+EST-MASS-008,Frame guards mounts and fasteners,35.0,42.5,50.0,estimated,Replace with CAD mass model,PENDING
+EST-MASS-009,Wiring and connectors,3.0,5.5,8.0,estimated,Planning assumption,PENDING

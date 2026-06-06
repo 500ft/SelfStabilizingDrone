@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="560" viewBox="0 0 900 560">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#222"/></marker>
+    <style>text{font-family:Arial,sans-serif;fill:#111}.label{font-size:21px}.small{font-size:16px}.line{stroke:#222;stroke-width:4;fill:none}.load{stroke:#d7263d;stroke-width:5;marker-end:url(#arrow)}.path{stroke:#2e6f95;stroke-width:5;marker-end:url(#arrow)}</style>
+  </defs>
+  <rect width="900" height="560" fill="white"/>
+  <text x="36" y="42" class="label">Guard impact load path</text>
+  <circle cx="430" cy="280" r="180" class="line"/>
+  <circle cx="430" cy="280" r="115" stroke="#999" stroke-width="3" fill="none" stroke-dasharray="10 8"/>
+  <rect x="385" y="235" width="90" height="90" fill="#e8eef2" stroke="#222" stroke-width="3"/>
+  <line x1="120" y1="280" x2="245" y2="280" class="load"/>
+  <text x="70" y="250" class="label">F impact</text>
+  <path d="M255,280 C280,175 335,125 430,105" class="path"/>
+  <path d="M255,280 C280,385 335,435 430,455" class="path"/>
+  <path d="M430,105 C540,130 590,185 610,265" class="path"/>
+  <path d="M430,455 C540,430 590,375 610,295" class="path"/>
+  <line x1="610" y1="280" x2="475" y2="280" class="path"/>
+  <text x="625" y="240" class="label">ring bending</text>
+  <text x="500" y="305" class="label">arm / center frame</text>
+  <line x1="315" y1="165" x2="365" y2="215" stroke="#d7263d" stroke-width="3"/>
+  <text x="95" y="145" class="small">Minimum prop clearance must remain after elastic guard deflection.</text>
+  <text x="95" y="500" class="small">Functional model assumes low-energy linear elasticity; fracture survival requires direct impact testing.</text>
+</svg>

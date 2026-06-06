@@ -1,16 +1,13 @@
-Category,Item,Qty,Estimated Mass,Estimated Cost,Baseline Candidate,Notes
-Flight control,Flight controller,1,5.5-8 g,$55-$80,Holybro Kakute H7 Mini or Matek H743 Mini,ArduPilot/PX4-capable class; verify availability before purchase
-Flight control,4-in-1 ESC,1,5-8 g,$35-$60,20x20 2S-4S 12 A class ESC,Current rating must match motor peak current
-Propulsion,Brushless motors,4,15-18 g total,$35-$60,Happymodel EX1103 KV11000 class,Published data shows 100 g+ thrust possible on 2S with matching prop
-Propulsion,Propellers,3-5 sets,1-4 g/set,$8-$20,2.0-2.3 in props matching motor data,Buy spares immediately
-Power,Batteries,3-4,25-40 g each,$30-$70,2S 450-650 mAh LiPo,Final size depends on mass and hover current
-Control,Receiver/control link,1,1-3 g,$15-$30,ELRS micro receiver,Manual override required
-Vision,Vision processor,1,TBD,$20-$150,OpenMV RT1062 or ESP32-S3 camera board,OpenMV for AprilTag; ESP32-S3 for cheaper color tracking
-Vision,Camera/lens,1,included/TBD,included-$25,camera matched to vision board,Need wide enough FOV for marker tracking
-Mechanical,Frame/guards,1 set,25-45 g,$20-$60,custom printed PETG/nylon,Must be weighed after each revision
-Mechanical,Fasteners/inserts,1 set,3-8 g,$10-$25,M1.4/M1.6/M2 hardware,Keep serviceable
-Electrical,Wiring/connectors,1 set,3-8 g,$10-$25,silicone wire/battery connector/heat shrink,Easy to underestimate
-Safety,Buzzer/status LED,1,1-3 g,$5-$15,active buzzer/LED,Useful for safety and debugging
-Support,Battery charger,1,N/A,$25-$60,2S LiPo-compatible charger,Required support equipment
-Test equipment,Test cage materials,1,N/A,$50-$150,PVC/wood frame/netting/padding,Build before hover tests
-Test equipment,Release fixture materials,1,N/A,$20-$60,simple drop/release rig,Stage 2, not first hover
+Category,Item,Qty,Mass Best g,Mass Nominal g,Mass Worst g,Mass Basis,Cost Best USD,Cost Nominal USD,Cost Worst USD,Baseline Candidate,Notes
+Flight control,Flight controller,1,5.5,6.75,8.0,estimated,55,67.5,80,Holybro Kakute H7 Mini or Matek H743 Mini,Replace with selected-board datasheet
+Flight control,4-in-1 ESC,1,5.0,6.5,8.0,estimated,35,47.5,60,20x20 2S-4S 12 A class ESC,Current rating must match measured peak current
+Propulsion,Brushless motors,4,20.0,23.0,26.0,estimated,35,47.5,60,1103-class candidate,Replace with selected-motor datasheet; best case is optimistic
+Propulsion,Propeller flight set,1,1.0,2.5,4.0,estimated,2,4,7,2.0-2.3 in prop matching motor data,Buy multiple spare sets separately
+Power,Flight battery,1,25.0,32.5,40.0,estimated,8,12,18,2S 450-650 mAh LiPo,Replace with selected-pack datasheet and measurement
+Control,Receiver buzzer and status LED,1 set,2.0,4.0,6.0,estimated,20,30,45,ELRS micro receiver plus status hardware,Manual override required
+Vision,Vision processor and camera,1,10.0,17.5,25.0,estimated,20,85,150,OpenMV or ESP32-S3 camera board,Architecture not selected
+Mechanical,Frame guards mounts and fasteners,1 set,35.0,42.5,50.0,estimated,20,40,60,custom printed PETG or nylon,Replace with CAD mass model
+Electrical,Wiring and connectors,1 set,3.0,5.5,8.0,estimated,10,17.5,25,silicone wire connectors and heat shrink,Weigh completed harness
+Support,Battery charger,1,,,,N/A,25,42.5,60,2S LiPo-compatible charger,Support equipment not flying mass
+Test equipment,Test cage materials,1,,,,N/A,50,100,150,PVC or wood frame netting and padding,Build before hover tests
+Test equipment,Release fixture materials,1,,,,N/A,20,40,60,simple controlled-release rig,No powered release before safety gate

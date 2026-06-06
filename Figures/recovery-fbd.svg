@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="560" viewBox="0 0 900 560">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#222"/></marker>
+    <style>text{font-family:Arial,sans-serif;fill:#111}.label{font-size:22px}.small{font-size:17px}.body{fill:#e8eef2;stroke:#222;stroke-width:3}.vec{stroke:#222;stroke-width:4;marker-end:url(#arrow)}</style>
+  </defs>
+  <rect width="900" height="560" fill="white"/>
+  <text x="36" y="42" class="label">Recovery free-body diagram</text>
+  <g transform="translate(450 285) rotate(-25)">
+    <rect x="-120" y="-28" width="240" height="56" rx="8" class="body"/>
+    <circle cx="-105" cy="0" r="38" fill="none" stroke="#222" stroke-width="3"/>
+    <circle cx="105" cy="0" r="38" fill="none" stroke="#222" stroke-width="3"/>
+    <circle cx="0" cy="0" r="7" fill="#d7263d"/>
+    <text x="-16" y="-42" class="small">CG</text>
+  </g>
+  <line x1="450" y1="285" x2="450" y2="465" class="vec"/>
+  <text x="470" y="445" class="label">W = mg</text>
+  <line x1="450" y1="285" x2="375" y2="105" class="vec"/>
+  <text x="265" y="100" class="label">T</text>
+  <line x1="450" y1="285" x2="620" y2="335" class="vec"/>
+  <text x="635" y="345" class="label">D</text>
+  <path d="M330,275 A125,125 0 0 1 385,175" fill="none" class="vec"/>
+  <text x="285" y="205" class="label">omega_0</text>
+  <text x="40" y="515" class="small">T: total thrust; W: weight; D: aerodynamic drag; omega_0: initial body angular rate.</text>
+</svg>
