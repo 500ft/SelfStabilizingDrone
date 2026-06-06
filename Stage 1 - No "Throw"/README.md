@@ -20,11 +20,10 @@ Stage 1 is successful when:
 
 | Item | Requirement |
 |---|---:|
-| Target mass | 140 g |
-| Absolute max mass | 170 g |
-| Preferred total thrust | 400 g+ |
-| Minimum thrust per motor | 85 g |
-| Preferred thrust per motor | 100 g+ |
+| Aspirational target mass | 140 g |
+| Provisional planning ceiling | 200 g |
+| Mass freeze abort threshold | 225 g |
+| Static thrust-to-weight | at least 2.0 |
 | Flight environment | indoor cage/netted enclosure |
 | First tracking target | ArUco, AprilTag, or large color marker |
 | Launch detection mode | log-only |
@@ -59,7 +58,7 @@ Budget allocation:
 | Test cage materials | $50-$150 |
 | Spares/contingency | 20-30% of total |
 
-Do not buy the final hardware stack until the mass and thrust budget closes under 170 g.
+Do not buy the final hardware stack until the sourced mass rollup and static/recovery propulsion requirements close.
 
 ## Work Package 2: Hardware Selection
 
@@ -77,7 +76,7 @@ Baseline architecture:
 |---|---|
 | Flight controller | micro STM32 board running ArduPilot or PX4 |
 | ESC | micro 4-in-1 or integrated whoop board |
-| Motors | brushless, 100 g+ thrust each preferred |
+| Motors | brushless; final requirement set by measured static and recovery cases |
 | Battery | 1S or 2S LiPo chosen from thrust/current data |
 | Frame | custom guarded whoop-style frame or modified guarded frame |
 | Vision | OpenMV or ESP32-S3 camera board |
@@ -238,7 +237,7 @@ Test cases:
 
 Pass criteria:
 
-- zero false live-arm decisions in handling tests
+- 95% confidence upper false-positive bound at or below 1%
 - above 90% detection on controlled drop/release tests after tuning
 - confusion matrix created
 - plots created for acceleration, gyro, attitude, and state transitions
@@ -262,7 +261,7 @@ Do not include full throw recovery in Stage 1. That becomes Stage 2 after Stage 
 
 Stage 1 is complete when:
 
-- complete flying mass is under 170 g
+- complete flying mass closes against the frozen maximum requirement
 - manual hover is reliable inside cage
 - marker tracking works slowly during normal hover
 - launch/drop classifier logs decisions without motor response

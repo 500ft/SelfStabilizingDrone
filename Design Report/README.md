@@ -22,19 +22,17 @@ Design a compact guarded micro-UAV that can eventually:
 
 V1 objective:
 
-> Build a guarded 140-170 g quadcopter test platform that manually hovers in a cage, tracks a defined marker, logs launch/drop events without automatic motor response, and prepares for controlled release recovery.
+> Build a guarded micro-quadcopter test platform that closes a sourced mass budget, manually hovers in a cage, tracks a defined marker, logs launch/drop events without automatic motor response, and prepares for controlled release recovery.
 
 ### Key Specifications
 
 | Parameter | V1 Specification |
 |---|---:|
 | Vehicle type | guarded quadcopter |
-| Target mass | 140 g |
-| Absolute max mass | 170 g |
-| Preferred total thrust | 400 g+ |
-| Minimum total thrust at 170 g | 340 g |
-| Minimum thrust per motor | 85 g |
-| Preferred thrust per motor | 100 g+ |
+| Aspirational target mass | 140 g |
+| Provisional planning ceiling | 200 g |
+| Mass freeze abort threshold | 225 g |
+| Static thrust-to-weight | at least 2.0 |
 | Propulsion voltage | 2S LiPo baseline |
 | Prop size | 2.0-2.3 in baseline |
 | Flight controller | ArduPilot-capable STM32 H7/F7 board |
@@ -48,15 +46,15 @@ V1 objective:
 
 | Requirement | Verification Method | V1 Pass Criteria |
 |---|---|---|
-| Mass limit | scale measurement | complete flying mass under 170 g |
-| Thrust margin | motor thrust table and bench test | at least 2:1 thrust-to-weight at max mass |
+| Mass limit | CAD/BOM rollup then scale measurement | worst case plus 5 g closes against frozen maximum |
+| Thrust margin | measured thrust stand data | at least 2:1 thrust-to-weight at frozen maximum |
 | Manual flight | cage hover test | 30 s hover without cage contact |
 | Guard safety | bump and clearance test | no prop contact with guards after minor bump |
 | Battery retention | shake and bump test | battery remains captured |
 | Vibration quality | flight log review | IMU data usable at hover throttle |
 | Marker tracking | cage tracking test | yaw-only centering before translation |
 | Target loss response | blocked/removed marker test | hold, then land after timeout |
-| Launch classifier | log dataset and confusion matrix | zero false live-arm decisions |
+| Launch classifier | log dataset and confidence bounds | 95% false-positive upper bound at or below the phase requirement |
 | Emergency response | bench and cage test | manual disarm/kill command works every time |
 
 ### Constraints and Engineering Considerations
@@ -68,6 +66,8 @@ V1 objective:
 - Launch detection must be proven in logs before it is allowed to trigger a live recovery.
 - General object following is not V1. The first target must be defined and measurable.
 - A tri-copter is not selected for V1 because adding servo tilt increases mechanical and controls complexity. A quadcopter gives simpler control allocation and easier use of existing flight stacks.
+- Recovery analysis must respect the verified gyro and estimator envelope. The simulator may not assume perfect state knowledge during high-rate motion.
+- Powered release testing remains blocked until the instrumentation, containment, release-rig FMEA, and safety review gates pass.
 
 ### Applicable Standards and Regulations
 
@@ -111,7 +111,7 @@ Reference links:
 
 ### Selected Concept Description
 
-The selected concept is a 2S guarded quadcopter with:
+The selected concept is a 2S guarded quadcopter architecture with:
 
 - four 1103-class brushless motors
 - 2.0-2.3 in props
@@ -127,15 +127,17 @@ The first target-following mode uses a visible marker. The future "mother drone"
 
 ## Development Section
 
-### Assumptions and Design Constants
+### Requirements and Estimate Policy
 
-| Constant | Value |
+Fixed requirements are stored in [requirements.csv](../Engineering%20Data/requirements.csv). Uncertain estimates are stored in [estimates.csv](../Engineering%20Data/estimates.csv) as best, nominal, and worst values with a basis and source.
+
+| Constant or Requirement | Value |
 |---|---:|
 | Gravity | 9.81 m/s^2 |
-| Target mass | 0.140 kg |
-| Max mass | 0.170 kg |
+| Aspirational target mass | 0.140 kg |
+| Provisional planning ceiling | 0.200 kg |
+| Mass freeze abort threshold | 0.225 kg |
 | Required T/W minimum | 2.0 |
-| Preferred total thrust | 0.400 kgf or higher |
 | Battery usable capacity | 80% of nominal |
 | Prop diameter baseline | 2.0-2.3 in |
 | Guard radial prop clearance | 2-3 mm |
@@ -155,17 +157,21 @@ Core sizing equations are maintained in [calculations.md](calculations.md). The 
 - estimated flight time: `t_min = 60 * C_usable / I_avg`
 - prop guard inner diameter: `D_inner = D_prop + 2 c`
 - prop guard outer diameter: `D_outer = D_inner + 2 t_wall`
+- frozen maximum mass: `roundup_to_5g(Sigma worst + 5 g)`
+- nominal mass margin: `frozen maximum - Sigma nominal`
+- guard elastic deflection: `delta = sqrt(2 E_impact / k)`
+- guard equivalent force: `F_eq = sqrt(2 E_impact k)`
 
 ### Parametric Analysis
 
-| Mass | 2:1 Total Thrust Required | Per-Motor Required | Preferred Per-Motor |
+| Mass | 2:1 Total Thrust Required | Per-Motor Required |
 |---:|---:|---:|---:|
-| 140 g | 280 g | 70 g | 100 g+ |
-| 150 g | 300 g | 75 g | 100 g+ |
-| 160 g | 320 g | 80 g | 100 g+ |
-| 170 g | 340 g | 85 g | 100 g+ |
+| 140 g | 280 g | 70 g |
+| 180 g proposed maximum | 360 g | 90 g |
+| 200 g provisional ceiling | 400 g | 100 g |
+| 225 g abort threshold | 450 g | 112.5 g |
 
-The 170 g case drives the propulsion requirement. Motors should not merely meet 85 g in ideal conditions; the selected set should show 100 g+ each with the chosen prop and battery voltage.
+Static thrust is not the only propulsion driver. Final selection must also satisfy recovery torque, angular acceleration, altitude-loss, battery-voltage, and estimator-envelope requirements using measured data.
 
 ### Final Calculated Dimensions and Performance
 
@@ -179,13 +185,13 @@ Initial V1 geometry:
 | Guard wall thickness | 1.5-2.5 mm |
 | Approximate outer footprint | 125-140 mm square envelope |
 | Stack height target | 35-45 mm |
-| Complete mass red line | 170 g |
+| Complete mass requirement | not frozen; current proposed value is 180 g |
 
 Initial performance target:
 
 | Metric | Target |
 |---|---:|
-| Peak thrust | 400 g+ total preferred |
+| Peak thrust | at least 2.0 times frozen maximum mass; recovery case may require more |
 | Hover throttle | below 55% preferred |
 | Manual hover duration | 30 s minimum test requirement |
 | Practical early flight time | 2-4 min expected |
@@ -204,6 +210,18 @@ Required checks:
 - flight-controller vibration in logs
 - CG location relative to motor center
 - wiring strain relief
+- CAD and experimentally checked mass properties: mass, CG, and inertia tensor
+- functional guard deflection and elastic stress safety factors
+
+The low-energy functional guard model uses:
+
+```text
+delta_impact = sqrt(2 E_impact / k)
+F_equivalent = sqrt(2 E_impact k)
+sigma_impact = c_sigma F_equivalent
+```
+
+The model does not establish fracture survival. Plasticity, layer separation, and high-rate failure require direct impact testing.
 
 Vibration check:
 
@@ -228,6 +246,16 @@ Minimum behaviors:
 - cage/test mode disabled blocks auto-spinup
 
 For V1, "emergency lowering" means a commanded controlled landing or immediate disarm depending on altitude, test setup, and cage condition. The exact behavior must be configured and tested before live recovery trials.
+
+## Instrumentation and Test Safety
+
+The [instrumentation plan](../Instrumentation/README.md) defines the truth source, uncertainty, synchronization, and calibration method for every validation measurement. High-speed calibrated video is the baseline external trajectory truth source; onboard barometric or integrated IMU altitude is not sufficient by itself for sub-meter recovery measurements.
+
+The [test safety plan](../Safety/README.md) and [FMEA](../Engineering%20Data/fmea.csv) are hard gates. No powered release testing is allowed until containment, abort controls, release-rig mitigations, estimator boundaries, and supervision requirements pass.
+
+![Recovery free-body diagram](../Figures/recovery-fbd.svg)
+
+![Guard load path](../Figures/guard-load-path.svg)
 
 ## CAD Assembly and Engineering Drawings
 
@@ -299,8 +327,8 @@ The working BOM is maintained in [BOM.md](BOM.md). The baseline is a 2S 1103-cla
 
 | Test | Purpose | Pass Criteria |
 |---|---|---|
-| mass measurement | verify packaging discipline | under 170 g complete |
-| thrust review | verify propulsion feasibility | 100 g+ per motor preferred |
+| mass rollup and measurement | verify packaging discipline | worst case plus 5 g closes against frozen maximum |
+| thrust review | verify propulsion feasibility | measured static T/W at least 2.0 and recovery case passes |
 | props-off motor test | prevent assembly error | correct motor order and direction |
 | emergency stop test | verify safety control | disarm works repeatedly |
 | cage hover | prove flight baseline | 30 s hover without cage contact |
@@ -308,7 +336,7 @@ The working BOM is maintained in [BOM.md](BOM.md). The baseline is a 2S 1103-cla
 | marker bench test | verify vision path | target detected in cage lighting |
 | marker hover test | verify tracking path | yaw-only centering first |
 | launch log test | verify classifier data | no live motor response |
-| false-positive test | prevent unsafe arming | zero false live-arm decisions |
+| false-positive test | prevent unsafe arming | 95% upper bound at or below 1% |
 
 ### Later Recovery Tests
 
@@ -326,11 +354,11 @@ This project is feasible if it is built as a staged learning platform. The first
 Recommended immediate work:
 
 1. Complete the mass, thrust, power, and cost spreadsheet.
-2. Select a 2S propulsion set with published 100 g+ per-motor thrust.
-3. CAD the guarded 90-100 mm wheelbase frame around the real component dimensions.
-4. Build the cage before live hover testing.
-5. Prove manual hover before adding marker tracking.
-6. Add launch/drop detection in log-only mode.
-7. Attempt controlled release recovery only after the earlier evidence exists.
+2. Select real components and replace estimates with datasheet values.
+3. CAD the complete guarded assembly and export mass, CG, and inertia.
+4. Freeze the maximum mass using the defined rollup rule.
+5. Measure thrust, current, RPM, and latency before final propulsion selection.
+6. Build the cage and validate instrumentation before live hover testing.
+7. Attempt powered controlled-release recovery only after every safety and verification gate passes.
 
 The long-term dream remains valid, but the project should earn each capability with data.
