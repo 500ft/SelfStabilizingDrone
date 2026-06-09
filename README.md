@@ -18,6 +18,7 @@ This repository documents a staged learning project for a protected micro-UAV th
 - [Project Evaluation: Hiring and Graduate-School Value](Project%20Evaluation/README.md)
 - [Stage 1 - No "Throw"](Stage%201%20-%20No%20%22Throw%22/README.md)
 - [Challenges](Challenges/README.md)
+- [Component and Propulsion Research](Research/Component%20Study/README.md)
 
 ## Current Status
 
