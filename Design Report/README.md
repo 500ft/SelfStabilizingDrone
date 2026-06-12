@@ -165,7 +165,7 @@ Core sizing equations are maintained in [calculations.md](calculations.md). The 
 ### Parametric Analysis
 
 | Mass | 2:1 Total Thrust Required | Per-Motor Required |
-|---:|---:|---:|---:|
+|---:|---:|---:|
 | 140 g | 280 g | 70 g |
 | 180 g proposed maximum | 360 g | 90 g |
 | 200 g provisional ceiling | 400 g | 100 g |

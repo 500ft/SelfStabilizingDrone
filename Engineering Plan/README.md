@@ -113,6 +113,8 @@ Status: **documentation baseline complete; physical containment, rig, approvals,
 
 The [control architecture](../Controls/README.md) is generated from one state source. The classifier requirements are confidence bounds, not claims of a true zero false-positive rate.
 
+A negative trial is one supervised handling segment (pick up, carry, set down, or place in pocket/bag) of fixed duration, conducted while the vehicle is disarmed or in Stage 1 log-only mode, during which the launch/release classifier must not produce a positive detection. The 300- and 1000-negative-trial counts below are the number of such segments required, run across varied handling conditions, before the corresponding false-positive bound is considered verified.
+
 Stage 1:
 
 ```text
