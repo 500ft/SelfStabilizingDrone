@@ -10,3 +10,15 @@ Track unresolved design decisions here. Close each item with evidence rather tha
 | OQ-004 | Which NYU facility can provide motion-capture or high-speed video access? | Faculty/lab outreach | Confirmed equipment access and supervision | OPEN |
 | OQ-005 | What gyro range and estimator envelope are reliable on the selected flight controller? | Flight-controller selection and test | Datasheet, firmware configuration, and external-truth comparison | OPEN |
 | OQ-006 | What release heights are testable in the available enclosure? | Test-facility design | Cage dimensions and recovery simulation | OPEN |
+
+## Milestone Schedule
+
+Target dates are placeholders until the student fills them in against their actual semester schedule.
+
+| Milestone | Target Date | Status |
+|---|---|---|
+| Mass freeze | TBD | Not started |
+| Manual hover test | TBD | Not started |
+| Classifier dataset collection | TBD | Not started |
+| Release-rig test | TBD | Not started |
+| Powered recovery test | TBD | Not started |
