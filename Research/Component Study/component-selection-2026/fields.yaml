@@ -1,0 +1,14 @@
+# Field definitions — become Excel columns per candidate row
+fields:
+  - {name: rank,            detail: brief,    desc: "Ranked position within the category (1 = top pick)"}
+  - {name: part_model,      detail: brief,    desc: "Manufacturer + exact model/SKU"}
+  - {name: key_specs,       detail: detailed, desc: "Category-relevant specs (e.g. KV, mounting, MCU, mAh/C-rating, resolution, current rating)"}
+  - {name: mass_g,          detail: moderate, desc: "Mass in grams; note if per-unit vs per-set"}
+  - {name: price_usd,       detail: moderate, desc: "Street price USD; note qty basis"}
+  - {name: pros,            detail: detailed, desc: "Concrete advantages for THIS sub-200g/2S/T-W>=2 build"}
+  - {name: cons,            detail: detailed, desc: "Concrete disadvantages / risks for this build"}
+  - {name: primary_source,  detail: moderate, desc: "Datasheet / vendor spec page / community bench data (URL)"}
+  - {name: confidence,      detail: brief,    desc: "confirmed (from primary source) | inferred (estimated/derived)"}
+  - {name: rationale,       detail: detailed, desc: "Why it ranks where it does vs the envelope (mass, thrust, compute, integration)"}
+
+uncertain: []   # auto-filled during deep phase for data that could not be confirmed

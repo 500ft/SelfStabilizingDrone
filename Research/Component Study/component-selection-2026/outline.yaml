@@ -1,0 +1,53 @@
+# Deep-research outline — SelfStabilizingDrone guarded micro-UAV component selection
+topic: "Hardware component selection for the guarded micro-UAV (sub-250g self-stabilizing drone)"
+date: "2026-06-19"
+
+design_envelope:
+  faa_class: "sub-250g"
+  planning_mass_target_g: 200
+  abort_mass_ceiling_g: 225
+  power: "2S LiPo"
+  motors: "1103-class, ~11000KV baseline (EX1103)"
+  props: "2.0-2.3 in (2023-3 baseline)"
+  thrust_to_weight_min: 2.0
+  autonomy: "onboard vision/compute for release-event detection + self-stabilization recovery"
+  control_link: "ExpressLRS (ELRS) 2.4 GHz"
+  frame: "printed PETG/nylon with prop guards"
+  architecture_decision: "research-all (analog FPV, digital FPV, GPS, and optical-flow all in scope)"
+
+depth_policy:
+  critical_top_n: "8-10"      # make-or-break parts
+  medium_top_n: "5-7"
+  commodity_top_n: "3-5"
+
+items:
+  # --- Cluster A: Propulsion (critical) ---
+  - {id: 03, name: "Brushless motors (1103-class)", tier: critical, cluster: A}
+  - {id: 04, name: "Propellers (2.0-2.3 in)",        tier: critical, cluster: A}
+  - {id: 05, name: "2S LiPo battery (450-650 mAh)",  tier: critical, cluster: A}
+  # --- Cluster B: Avionics core ---
+  - {id: 01, name: "Flight controller",              tier: critical, cluster: B}
+  - {id: 02, name: "ESC / AIO (4-in-1)",             tier: critical, cluster: B}
+  - {id: 08, name: "ELRS receiver",                  tier: medium,   cluster: B}
+  - {id: 09, name: "Antennas (control + video)",     tier: commodity,cluster: B}
+  # --- Cluster C: Vision / sensing / autonomy ---
+  - {id: 06, name: "Vision / compute board",         tier: critical, cluster: C}
+  - {id: 07, name: "Camera / image sensor",          tier: medium,   cluster: C}
+  - {id: 11a, name: "Optical-flow positioning",      tier: medium,   cluster: C}
+  - {id: 11b, name: "GPS positioning",               tier: medium,   cluster: C}
+  # --- Cluster D: FPV / video (research-all) ---
+  - {id: 10a, name: "FPV analog video system",       tier: medium,   cluster: D}
+  - {id: 10b, name: "FPV digital video system",      tier: medium,   cluster: D}
+  # --- Cluster E: Support / commodity ---
+  - {id: 12, name: "Buzzer + status LED",            tier: commodity,cluster: E}
+  - {id: 13, name: "Wiring / connectors",            tier: commodity,cluster: E}
+  - {id: 14, name: "LiPo charger",                   tier: commodity,cluster: E}
+  - {id: 16, name: "Fasteners / standoffs",          tier: commodity,cluster: E}
+  - {id: 17, name: "microSD (vision logging)",       tier: commodity,cluster: E}
+  - {id: 18, name: "Prop guards (safety-critical)",  tier: medium,   cluster: E}
+  - {id: 15, name: "Bench / test equipment",         tier: medium,   cluster: E}
+
+execution:
+  mode: "clustered deep research (5 clusters A-E)"
+  output_dir: "./results"
+  final_artifact: "Component_Selection_2026.xlsx (one sheet per item)"
