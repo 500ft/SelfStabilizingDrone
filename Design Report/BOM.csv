@@ -1,13 +1,17 @@
-Category,Item,Qty,Mass Best g,Mass Nominal g,Mass Worst g,Mass Basis,Cost Best USD,Cost Nominal USD,Cost Worst USD,Baseline Candidate,Notes
-Flight control,Flight controller,1,5.5,6.75,8.0,estimated,55,67.5,80,Holybro Kakute H7 Mini or Matek H743 Mini,Replace with selected-board datasheet
-Flight control,4-in-1 ESC,1,5.0,6.5,8.0,estimated,35,47.5,60,20x20 2S-4S 12 A class ESC,Current rating must match measured peak current
-Propulsion,Brushless motors,4,20.0,23.0,26.0,estimated,35,47.5,60,1103-class candidate,Replace with selected-motor datasheet; best case is optimistic
-Propulsion,Propeller flight set,1,1.0,2.5,4.0,estimated,2,4,7,2.0-2.3 in prop matching motor data,Buy multiple spare sets separately
-Power,Flight battery,1,25.0,32.5,40.0,estimated,8,12,18,2S 450-650 mAh LiPo,Replace with selected-pack datasheet and measurement
-Control,Receiver buzzer and status LED,1 set,2.0,4.0,6.0,estimated,20,30,45,ELRS micro receiver plus status hardware,Manual override required
-Vision,Vision processor and camera,1,10.0,17.5,25.0,estimated,20,85,150,OpenMV or ESP32-S3 camera board,Architecture not selected
-Mechanical,Frame guards mounts and fasteners,1 set,35.0,42.5,50.0,estimated,20,40,60,custom printed PETG or nylon,Replace with CAD mass model
-Electrical,Wiring and connectors,1 set,3.0,5.5,8.0,estimated,10,17.5,25,silicone wire connectors and heat shrink,Weigh completed harness
-Support,Battery charger,1,,,,N/A,25,42.5,60,2S LiPo-compatible charger,Support equipment not flying mass
-Test equipment,Test cage materials,1,,,,N/A,50,100,150,PVC or wood frame netting and padding,Build before hover tests
-Test equipment,Release fixture materials,1,,,,N/A,20,40,60,simple controlled-release rig,No powered release before safety gate
+Category,Item,Qty,Locked Part,Mass Best g,Mass Nominal g,Mass Worst g,Mass Basis,Evidence State,Cost Best USD,Cost Nominal USD,Cost Worst USD,Notes
+Flight control,Flight controller,1,Holybro Kakute H7 Mini,5.5,5.5,6.5,vendor datasheet,CONFIRMED,55,65,75,ArduPilot target; weigh on receipt. UART/timer/pad map under verification.
+Flight control,4-in-1 ESC,1,HGLRC 13A 2-3S BB2 (20x20),3.0,3.0,4.0,vendor datasheet,CONFIRMED,15,18,22,13 A/ch vs 9.2 A/motor claimed. Real peak current BENCH_REQUIRED.
+Propulsion,Brushless motors,4,Happymodel EX1103 11000KV,15.2,15.2,16.5,vendor datasheet,CONFIRMED,30,36,44,Mass confirmed; 121.9 gf/motor thrust is vendor figure - BENCH_REQUIRED.
+Propulsion,Propeller flight set,1,Gemfan Hurricane 2023-3,3.0,3.5,4.5,vendor datasheet,CONFIRMED,4,6,10,Baseline prop behind vendor thrust figure. Buy spare sets separately.
+Power,Flight battery,1,GNB 2S 550 mAh 100C (XT30),28.0,29.0,31.0,vendor datasheet,CONFIRMED,11,14,18,55 A cont vs 36.8 A peak. C-rating/sag BENCH_REQUIRED. Hazmat logistics UNVERIFIED.
+Control,Control link receiver,1,BetaFPV ELRS Lite + antenna,0.46,0.46,1.0,vendor datasheet,CONFIRMED,10,12,16,ELRS/CRSF on SERIAL6. Upgrade to RP3 diversity if guard shadows antenna.
+Control,Buzzer and status LED,1 set,VIFLY Finder Mini + WS2812,3.0,3.3,4.5,vendor datasheet,CONFIRMED,14,18,24,Self-powered finder survives ejection; WS2812 NeoPixel status.
+Vision,Vision processor and camera,1,Arduino Nicla Vision,19.8,19.8,21.0,vendor datasheet,CONFIRMED,80,90,105,Cam+IMU+ToF. Release-detection latency/FPS BENCH_REQUIRED (rolling-shutter risk).
+Positioning,Optical flow and lidar,1,Matek 3901-L0X,2.0,2.0,2.5,vendor datasheet,CONFIRMED,22,26,32,Flow+height over one MSP UART (SERIAL4). Native ArduPilot. GPS deferred to Stage 2.
+Vision,Vision logging,1,Samsung PRO Endurance 128 GB microSD,0.4,0.4,0.5,vendor datasheet,CONFIRMED,18,25,32,Endurance-class (>=V30/U3) for continuous logging.
+Electrical,Wiring and connectors,1 set,XT30 + 22/26 AWG + JST-SH,3.0,5.5,8.0,estimated,ASSUMED,6,8,12,Weigh completed harness. XT30 for 36.8 A peak headroom.
+Mechanical,Frame guards mounts and fasteners,1 set,Printed nylon frame + stiff guards + steel M2,35.0,42.5,50.0,estimated,ASSUMED,25,40,60,Design work. Guard <=1.0 mm deflection / SF>=2.0 BENCH_REQUIRED (FEA + push test).
+Support,Battery charger,1,ToolkitRC M6AC,,,,non-flying,ASSUMED,45,60,80,Support equipment; not flying mass.
+Test equipment,Test cage materials,1,PVC frame + net + padding,,,,non-flying,ASSUMED,25,40,60,Build before hover tests.
+Test equipment,Release fixture materials,1,Tethered controlled-release rig,,,,non-flying,ASSUMED,12,20,35,No powered release before safety gate.
+Test equipment,Thrust stand,1,DIY 1-2 kg load cell or used RCbenchmark 1520,,,,non-flying,ASSUMED,30,100,165,Required for propulsion gate before design freeze.

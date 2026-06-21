@@ -1,10 +1,13 @@
 id,component,best_g,nominal_g,worst_g,basis,source,status
-EST-MASS-001,Flight controller,5.5,6.75,8.0,estimated,Candidate product class,PENDING
-EST-MASS-002,4-in-1 ESC,5.0,6.5,8.0,estimated,Candidate product class,PENDING
-EST-MASS-003,Four motors,20.0,23.0,26.0,estimated,Typical 1103-class range,PENDING
-EST-MASS-004,Propeller set,1.0,2.5,4.0,estimated,Planning assumption,PENDING
-EST-MASS-005,Flight battery,25.0,32.5,40.0,estimated,2S 450-650 mAh planning range,PENDING
-EST-MASS-006,Receiver buzzer and status LED,2.0,4.0,6.0,estimated,Planning assumption,PENDING
-EST-MASS-007,Vision processor and camera,10.0,17.5,25.0,estimated,Architecture not selected,PENDING
-EST-MASS-008,Frame guards mounts and fasteners,35.0,42.5,50.0,estimated,Replace with CAD mass model,PENDING
-EST-MASS-009,Wiring and connectors,3.0,5.5,8.0,estimated,Planning assumption,PENDING
+EST-MASS-001,Flight controller,5.5,5.5,6.5,vendor datasheet,Holybro Kakute H7 Mini,CONFIRMED
+EST-MASS-002,4-in-1 ESC,3.0,3.0,4.0,vendor datasheet,HGLRC 13A 2-3S BB2 20x20,CONFIRMED
+EST-MASS-003,Four motors,15.2,15.2,16.5,vendor datasheet,Happymodel EX1103 11000KV,CONFIRMED
+EST-MASS-004,Propeller set,3.0,3.5,4.5,vendor datasheet,Gemfan Hurricane 2023-3,CONFIRMED
+EST-MASS-005,Flight battery,28.0,29.0,31.0,vendor datasheet,GNB 2S 550 mAh 100C,CONFIRMED
+EST-MASS-006,Control link receiver,0.46,0.46,1.0,vendor datasheet,BetaFPV ELRS Lite + antenna,CONFIRMED
+EST-MASS-007,Buzzer and status LED,3.0,3.3,4.5,vendor datasheet,VIFLY Finder Mini + WS2812,CONFIRMED
+EST-MASS-008,Vision processor and camera,19.8,19.8,21.0,vendor datasheet,Arduino Nicla Vision,CONFIRMED
+EST-MASS-009,Optical flow and lidar,2.0,2.0,2.5,vendor datasheet,Matek 3901-L0X,CONFIRMED
+EST-MASS-010,Vision logging microSD,0.4,0.4,0.5,vendor datasheet,Samsung PRO Endurance 128 GB,CONFIRMED
+EST-MASS-011,Wiring and connectors,3.0,5.5,8.0,estimated,Planning assumption; weigh harness,ASSUMED
+EST-MASS-012,Frame guards mounts and fasteners,35.0,42.5,50.0,estimated,Replace with CAD mass model,ASSUMED
