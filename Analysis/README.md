@@ -28,5 +28,7 @@ python3 Analysis/render_state_machine.py
 | `guard.py` | low-energy linear-elastic guard functional check | executable; not a fracture model |
 | `classifier_stats.py` | confidence upper-bound calculations | executable |
 | `render_state_machine.py` | render Mermaid from the authoritative JSON source | executable |
+| `gates.py` | pre-registered propulsion/current/vision decision thresholds | executable; awaiting measurements |
+| `hardware_resources.py` | validate UART/pad/timer allocation | executable; catalog map verified |
 
 Replace every placeholder input with CAD, datasheet, or measured values before using results for design freeze.

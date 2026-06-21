@@ -74,12 +74,13 @@ Baseline architecture:
 
 | Subsystem | Stage 1 Choice |
 |---|---|
-| Flight controller | micro STM32 board running ArduPilot or PX4 |
-| ESC | micro 4-in-1 or integrated whoop board |
-| Motors | brushless; final requirement set by measured static and recovery cases |
-| Battery | 1S or 2S LiPo chosen from thrust/current data |
+| Flight controller | Holybro Kakute H7 Mini v1.5 running ArduPilot 4.6+ |
+| ESC | HGLRC XJB BS13A 2-3S 4-in-1 |
+| Motors / props | EX1103 11000KV / Gemfan 2023-3; performance bench-gated |
+| Battery | GNB GNB5502S100AHV 2S 550 mAh LiHV XT30 |
 | Frame | custom guarded whoop-style frame or modified guarded frame |
-| Vision | OpenMV or ESP32-S3 camera board |
+| Vision | Arduino Nicla Vision ABX00051 |
+| Indoor positioning | Matek 3901-L0X flow + lidar |
 | Target | ArUco/AprilTag preferred; color marker acceptable backup |
 
 Battery decision:

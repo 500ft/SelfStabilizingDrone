@@ -19,10 +19,17 @@ This repository documents a staged learning project for a protected micro-UAV th
 - [Stage 1 - No "Throw"](Stage%201%20-%20No%20%22Throw%22/README.md)
 - [Challenges](Challenges/README.md)
 - [Component and Propulsion Research](Research/Component%20Study/README.md)
+- [Stage 1 Verification Gates and Resource Map](Engineering%20Plan/stage1-verification-gates.md)
+- [Pre-Purchase Verification Report](Research/Component%20Study/component-selection-2026/PREPURCHASE_VERIFICATION.md)
 
 ## Current Status
 
-The repository now contains executable preliminary analyses, structured requirements and estimates, an instrumentation plan, and a test-safety/FMEA baseline. It does **not** yet contain completed CAD, selected hardware, measured bench data, or flight-test evidence.
+The Stage 1 catalog hardware selection is locked and consolidated into the
+authoritative BOM. The repository also contains executable preliminary
+analyses, pre-registered propulsion/vision gates, a verified Kakute H7 Mini
+resource map, structured requirements, and a safety/FMEA baseline. It does
+**not** yet contain purchased-and-weighed hardware, completed CAD, measured
+bench data, or flight-test evidence.
 
 Run the repository checks with:
 

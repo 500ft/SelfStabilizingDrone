@@ -1,6 +1,6 @@
 # Stage 1 Locked BOM — Guarded Micro-UAV (SelfStabilizingDrone)
 
-**Date:** 2026-06-20 · **Status:** LOCKED for Stage 1 (buy / build / test) · **Source:** `Component_Selection_2026.xlsx` (deep-research, 2026-06-19)
+**Date:** 2026-06-20 · **Status:** LOCKED for Stage 1 (buy / build / test) · **Source:** `Component_Selection_2026.xlsx` (deep-research, 2026-06-19) · **Amended:** 2026-06-21 after interface verification
 
 This is the single recommended build. It exists to stop decision drift: one part per
 subsystem, with the reason it was chosen and the main option it beat. Full ranked
@@ -31,11 +31,11 @@ Two viable architectures:
 | Buzzer + LED | VIFLY Finder Mini + WS2812 | 3.3 | 18 | Self-powered finder survives LiPo ejection; LED status/orientation. |
 | Wiring / connectors | XT30 + 22/26 AWG + JST-SH | 5.5 | 8 | XT30 for 36.8 A peak headroom. Weigh finished harness. |
 | Frame + guards + fasteners | Printed nylon frame + stiff guards + steel M2 | 42.5 | 40 | **Design work** (items 10/16/18). Guard ring must meet ≤1.0 mm deflection (SF ≥ 2.0) — verify by FEA + push test. |
-| Vision logging | Samsung PRO Endurance 128 GB microSD | 0.4 | 25 | Endurance-class for continuous logging (≥ V30/U3). |
+| Vision logging | **Removed from Stage 1** | 0 | 0 | Nicla has no microSD socket. Send numeric event data to the FC over MAVLink; add an SPI reader only if image logging becomes required. |
 | FPV video | **Deferred to Stage 2** | 0 | 0 | Not needed for manual cage hover (REQ-FLIGHT-001, LOS). If added: analog Caddx Ant Lite + Reaper Nano (~3.6 g, needs 5 V BEC). |
 | GPS | **Deferred (outdoor only)** | 0 | 0 | Indoor recovery uses optical flow. Outdoor add-on: Matek M10Q-5883 (8 g). |
 
-**Nominal flying total: ~130 g · ~$358.**
+**Nominal flying total: ~129.8 g · ~$333.**
 Margin vs 200 g target: **+70 g** · vs 225 g abort ceiling: **+95 g** · **T/W ≈ 3.75** (≥ 2.0 required).
 Even worst-case (frame 50 g, vision 25 g) + Stage-2 FPV (~3.6 g) stays well under 225 g.
 
