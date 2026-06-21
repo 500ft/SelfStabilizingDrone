@@ -151,7 +151,7 @@ def default_cases() -> list[RecoveryCase]:
     return [
         RecoveryCase(
             "best",
-            0.1065,
+            0.11796,
             0.00020,
             2.0,
             pi / 6,
@@ -167,7 +167,7 @@ def default_cases() -> list[RecoveryCase]:
         ),
         RecoveryCase(
             "nominal",
-            0.14075,
+            0.12976,
             0.00035,
             5.0,
             pi / 3,
@@ -183,7 +183,7 @@ def default_cases() -> list[RecoveryCase]:
         ),
         RecoveryCase(
             "worst",
-            0.180,
+            0.155,
             0.00055,
             8.0,
             pi / 2,

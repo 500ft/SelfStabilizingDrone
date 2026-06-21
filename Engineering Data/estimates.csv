@@ -1,13 +1,16 @@
 id,parameter,best,nominal,worst,units,basis,source,uncertainty_direction,notes
-EST-MASS-001,Flight controller mass,5.5,6.75,8.0,g,estimated,Candidate product class,high_increases_risk,Replace with selected-board datasheet
-EST-MASS-002,4-in-1 ESC mass,5.0,6.5,8.0,g,estimated,Candidate product class,high_increases_risk,Replace with selected-ESC datasheet
-EST-MASS-003,Four motor mass,20.0,23.0,26.0,g,estimated,Typical 1103-class range,high_increases_risk,Best case is optimistic; replace with selected-motor datasheet
-EST-MASS-004,Propeller set mass,1.0,2.5,4.0,g,estimated,Planning assumption,high_increases_risk,Weigh selected prop set
-EST-MASS-005,Flight battery mass,25.0,32.5,40.0,g,estimated,2S 450-650 mAh planning range,high_increases_risk,Replace with selected-pack datasheet and measurement
-EST-MASS-006,Receiver and status hardware mass,2.0,4.0,6.0,g,estimated,Planning assumption,high_increases_risk,Includes receiver buzzer and LED
-EST-MASS-007,Vision processor and camera mass,10.0,17.5,25.0,g,estimated,OpenMV or ESP32-S3 planning range,high_increases_risk,Select one architecture
-EST-MASS-008,Frame guards mounts and fasteners mass,35.0,42.5,50.0,g,estimated,Early printed-frame planning range,high_increases_risk,Replace with CAD mass model
-EST-MASS-009,Wiring and connectors mass,3.0,5.5,8.0,g,estimated,Planning assumption,high_increases_risk,Weigh completed harness
+EST-MASS-001,Flight controller mass,5.5,5.5,6.5,g,confirmed,Holybro Kakute H7 Mini v1.5 official specification,high_increases_risk,Weigh delivered board with installed grommets
+EST-MASS-002,4-in-1 ESC mass,3.0,3.0,4.0,g,inferred,HGLRC XJB BS13A legacy catalog specification,high_increases_risk,Verify exact standalone SKU and weigh on receipt
+EST-MASS-003,Four motor mass,15.2,15.2,16.5,g,bench_required,Happymodel EX1103 11000KV catalog mass,high_increases_risk,Weigh all four delivered motors with final lead length
+EST-MASS-004,Propeller flight-set mass,3.0,3.5,4.5,g,confirmed,Gemfan Hurricane 2023-3 official 0.88 g each,high_increases_risk,Weigh balanced flight set
+EST-MASS-005,Flight battery mass,28.0,29.0,31.0,g,bench_required,GNB GNB5502S100AHV reseller specification,high_increases_risk,Weigh each pack and record capacity/sag test
+EST-MASS-006,Control-link receiver mass,0.46,0.46,1.0,g,confirmed,BetaFPV ELRS Lite Flat Antenna V1.2 official specification,high_increases_risk,Weigh with final leads
+EST-MASS-007,Buzzer and status LED mass,3.0,3.3,4.5,g,inferred,VIFLY Finder Mini 2.7 g plus WS2812 and wire allowance,high_increases_risk,Weigh completed status harness
+EST-MASS-008,Vision processor and camera mass,19.8,19.8,21.0,g,confirmed,Arduino Nicla Vision ABX00051 official store rounded weight,high_increases_risk,Weigh board with mounted headers and cable
+EST-MASS-009,Optical flow and lidar mass,2.0,2.0,2.5,g,confirmed,Matek 3901-L0X official specification,high_increases_risk,Weigh with cable
+EST-MASS-010,External vision logging mass,0,0,0,g,removed,Nicla has no microSD socket,high_increases_risk,Stage 1 numeric events go to the flight controller over MAVLink; external SPI storage deferred
+EST-MASS-011,Wiring and connectors mass,3.0,5.5,8.0,g,assumed,Engineering allowance,high_increases_risk,Weigh completed harness
+EST-MASS-012,Frame guards mounts and fasteners mass,35.0,42.5,50.0,g,assumed,Replace with CAD mass model,high_increases_risk,Update after complete assembly mass properties
 EST-REC-001,Drag coefficient,0.8,1.0,1.3,dimensionless,estimated,Bluff-body planning range,low_increases_recovery_height,Use no-drag case as analytical conservative bound
 EST-REC-002,Projected area,0.008,0.012,0.016,m2,estimated,Guarded 125-140 mm envelope,low_increases_recovery_height,Orientation dependent
 EST-REC-003,Detection latency,0.020,0.050,0.100,s,estimated,Planning assumption,high_increases_recovery_height,Replace with synchronized logs

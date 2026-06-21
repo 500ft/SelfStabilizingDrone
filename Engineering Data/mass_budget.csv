@@ -1,10 +1,12 @@
 id,component,best_g,nominal_g,worst_g,basis,source,status
-EST-MASS-001,Flight controller,5.5,6.75,8.0,estimated,Candidate product class,PENDING
-EST-MASS-002,4-in-1 ESC,5.0,6.5,8.0,estimated,Candidate product class,PENDING
-EST-MASS-003,Four motors,20.0,23.0,26.0,estimated,Typical 1103-class range,PENDING
-EST-MASS-004,Propeller set,1.0,2.5,4.0,estimated,Planning assumption,PENDING
-EST-MASS-005,Flight battery,25.0,32.5,40.0,estimated,2S 450-650 mAh planning range,PENDING
-EST-MASS-006,Receiver buzzer and status LED,2.0,4.0,6.0,estimated,Planning assumption,PENDING
-EST-MASS-007,Vision processor and camera,10.0,17.5,25.0,estimated,Architecture not selected,PENDING
-EST-MASS-008,Frame guards mounts and fasteners,35.0,42.5,50.0,estimated,Replace with CAD mass model,PENDING
-EST-MASS-009,Wiring and connectors,3.0,5.5,8.0,estimated,Planning assumption,PENDING
+EST-MASS-001,Flight controller,5.5,5.5,6.5,official product specification,Holybro Kakute H7 Mini v1.5,CONFIRMED
+EST-MASS-002,4-in-1 ESC,3.0,3.0,4.0,legacy specification; weigh on receipt,HGLRC XJB BS13A,INFERRED
+EST-MASS-003,Brushless motors,15.2,15.2,16.5,3.8 g each catalog mass; weigh set,Happymodel EX1103 11000KV,BENCH_REQUIRED
+EST-MASS-004,Propeller flight set,3.0,3.5,4.5,0.88 g each official mass; weigh set,Gemfan Hurricane 2023-3,CONFIRMED
+EST-MASS-005,Flight battery,28.0,29.0,31.0,reseller specification 29 g +/-1 g,GNB GNB5502S100AHV,BENCH_REQUIRED
+EST-MASS-006,Control link receiver,0.46,0.46,1.0,official product specification,BetaFPV ELRS Lite Flat Antenna V1.2,CONFIRMED
+EST-MASS-007,Buzzer and status LED,3.0,3.3,4.5,2.7 g official buzzer plus LED/wire allowance,VIFLY Finder Mini + WS2812,INFERRED
+EST-MASS-008,Vision processor and camera,19.8,19.8,21.0,official store weight rounded to 20 g,Arduino Nicla Vision ABX00051,CONFIRMED
+EST-MASS-009,Optical flow and lidar,2.0,2.0,2.5,official product specification,Matek 3901-L0X,CONFIRMED
+EST-MASS-011,Wiring and connectors,3.0,5.5,8.0,estimated,Planning assumption; weigh harness,ASSUMED
+EST-MASS-012,Frame guards mounts and fasteners,35.0,42.5,50.0,estimated,Replace with CAD mass model,ASSUMED
