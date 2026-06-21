@@ -108,6 +108,57 @@ class RepositoryTests(unittest.TestCase):
                 headers = set(next(csv.reader(handle)))
             self.assertTrue(required.issubset(headers), f"{filename} missing {required - headers}")
 
+    def test_stage1_component_selection_is_canonical(self):
+        expected = {
+            "Flight controller": "Holybro Kakute H7 Mini v1.5",
+            "4-in-1 ESC": "HGLRC XJB BS13A 2-3S BB2 4-in-1 ESC",
+            "Brushless motors": "Happymodel EX1103 11000KV",
+            "Propeller flight set": "Gemfan Hurricane 2023-3",
+            "Flight battery": "GNB GNB5502S100AHV 2S 550mAh 100C XT30",
+            "Vision processor and camera": "Arduino Nicla Vision ABX00051",
+            "Optical flow and lidar": "Matek 3901-L0X",
+        }
+        path = ROOT / "Design Report" / "BOM.csv"
+        with path.open(newline="", encoding="utf-8") as handle:
+            rows = {row["Item"]: row for row in csv.DictReader(handle)}
+        for item, part in expected.items():
+            self.assertEqual(rows[item]["Locked Part"], part)
+            self.assertEqual(rows[item]["Selection Status"], "LOCKED")
+
+    def test_bom_and_mass_budget_flying_rows_match(self):
+        with (ROOT / "Design Report" / "BOM.csv").open(
+            newline="", encoding="utf-8"
+        ) as handle:
+            bom = {row["Item"]: row for row in csv.DictReader(handle) if row["Flying Hardware"] == "yes"}
+        with (ROOT / "Engineering Data" / "mass_budget.csv").open(
+            newline="", encoding="utf-8"
+        ) as handle:
+            budget = {row["component"]: row for row in csv.DictReader(handle)}
+        self.assertEqual(set(bom), set(budget))
+        for item, row in bom.items():
+            self.assertEqual(float(row["Mass Nominal g"]), float(budget[item]["nominal_g"]))
+
+    def test_nominal_locked_bom_is_129_8g(self):
+        with (ROOT / "Design Report" / "BOM.csv").open(
+            newline="", encoding="utf-8"
+        ) as handle:
+            total = sum(
+                float(row["Mass Nominal g"])
+                for row in csv.DictReader(handle)
+                if row["Flying Hardware"] == "yes"
+            )
+        self.assertAlmostEqual(total, 129.8, places=1)
+
+    def test_component_blockers_are_resolved_or_removed(self):
+        path = ROOT / "Engineering Data" / "component_verification.csv"
+        with path.open(newline="", encoding="utf-8") as handle:
+            unresolved = [
+                row["component"]
+                for row in csv.DictReader(handle)
+                if row["evidence_state"] == "BLOCKER" and row["decision"] != "RESOLVED"
+            ]
+        self.assertEqual(unresolved, [])
+
 
 if __name__ == "__main__":
     unittest.main()

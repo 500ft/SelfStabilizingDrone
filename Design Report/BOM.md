@@ -1,6 +1,9 @@
 # Bill of Materials
 
-This BOM is a starting point for a protected micro-UAV. Prices and masses are planning values until parts are selected and weighed. Do not freeze the maximum mass until selected-component data and the complete CAD mass model exist.
+This is the canonical Stage 1 catalog selection. Component identities are
+locked for ordering, but catalog mass, thrust, current and price remain planning
+evidence until delivered parts are weighed and bench-tested. Do not freeze the
+maximum mass until the complete CAD mass model exists.
 
 A spreadsheet-friendly version is available in [BOM.csv](BOM.csv).
 
@@ -9,11 +12,12 @@ A spreadsheet-friendly version is available in [BOM.csv](BOM.csv).
 | Subsystem | Baseline Direction |
 |---|---|
 | Vehicle | guarded quadcopter |
-| Propulsion | 2S, 1103-class brushless motors, 2.0-2.3 in props |
-| Flight control | ArduPilot-capable STM32 H7/F7 flight controller |
-| ESC | 4-in-1 ESC, 12 A per channel minimum preferred |
-| Vision | OpenMV for AprilTag/marker tracking, or ESP32-S3 for lower-cost color tracking |
-| Battery | removable central 2S LiPo |
+| Propulsion | EX1103 11000KV motors with Gemfan 2023-3 props on 2S |
+| Flight control | Holybro Kakute H7 Mini v1.5 running ArduPilot 4.6+ |
+| ESC | HGLRC XJB BS13A 2-3S 4-in-1 |
+| Vision | Arduino Nicla Vision ABX00051 |
+| Positioning | Matek 3901-L0X optical flow + lidar over one MSP UART |
+| Battery | removable GNB GNB5502S100AHV 2S LiHV with XT30 |
 | Frame | custom guarded frame, PETG/nylon prototype |
 | Test setup | netted cage and release fixture |
 
@@ -21,19 +25,20 @@ A spreadsheet-friendly version is available in [BOM.csv](BOM.csv).
 
 The authoritative row-level BOM is [BOM.csv](BOM.csv), and the authoritative flying-mass rollup is [mass_budget.csv](../Engineering%20Data/mass_budget.csv). Every uncertain flying mass is recorded as best, nominal, and worst with a basis and source.
 
-## Initial Mass Budget
+## Current Catalog Mass Budget
 
 | Result | Current Planning Value |
 |---|---:|
-| Sigma best | 106.5 g |
-| Sigma nominal | 140.75 g |
-| Sigma worst | 175.0 g |
+| Sigma best | 117.96 g |
+| Sigma nominal | 129.76 g |
+| Sigma worst | 149.5 g |
 | Unmodeled-hardware allowance | 5.0 g |
-| Proposed frozen maximum | 180.0 g |
-| Nominal margin to proposed maximum | 39.25 g |
+| Proposed frozen maximum | 155.0 g |
+| Nominal margin to proposed maximum | 25.24 g |
 | Abort threshold | 225 g |
 
-The proposed `180 g` maximum is not frozen. It must be recalculated after component selection and completion of the CAD mass model.
+The proposed `155 g` maximum is not frozen. It must be recalculated after
+receipt measurements and completion of the CAD mass model.
 
 ## Cost Budget
 
@@ -50,17 +55,24 @@ The proposed `180 g` maximum is not frozen. It must be recalculated after compon
 
 Expected total: approximately $350-$650 depending on vision board, test cage, and spare parts.
 
-## Candidate Source Notes
+## Evidence Notes
 
-- The prior `15-18 g` total motor estimate was unsupported and has been replaced by a conservative `20 | 23 | 26 g` planning range until a motor is selected.
-- Holybro Kakute H7 Mini and Matek H743 Mini are useful reference classes because they support modern autopilot firmware and onboard logging, but exact availability must be checked before purchase.
-- OpenMV is the preferred marker-tracking path if AprilTag performance is the priority. ESP32-S3 is the lower-cost learning path if color-marker tracking is acceptable first.
+- Kakute H7 Mini **v1.5** is required; earlier revisions use different IMUs and
+  ArduPilot targets.
+- The HGLRC XJB BS13A is a legacy part. Its electrical and mass specifications
+  are supported by archived listings, but standalone stock must be verified.
+- The EX1103 thrust/current point is a vendor result, not independent evidence.
+  Acceptance is measured at 7.0 V under load.
+- Nicla image-capture current is documented; inference latency and peak current
+  remain bench-required.
+- Nicla has no microSD socket. The prior standalone-card line was removed;
+  Stage 1 numeric event data is sent to the FC over MAVLink.
 
 ## Do-Not-Buy-Yet List
 
 Do not buy these until the basic propulsion and mass budget closes:
 
-- expensive AI camera
+- alternate vision computer
 - larger battery for longer flight time
 - custom PCB
 - carbon or nylon production frame

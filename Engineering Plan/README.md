@@ -46,7 +46,8 @@ Required CAD evidence:
 - complete inertia tensor
 - mass-properties report
 
-Status: **blocked on physical component selection and CAD modeling**.
+Status: **catalog component selection complete; blocked on receipt measurements
+and CAD modeling**.
 
 ## Tier 2: Measurement and Instrumentation
 
@@ -145,11 +146,12 @@ Status: **state specification and statistical tooling complete; datasets pending
 
 ## Immediate Execution Order
 
-1. Select real flight-controller, motor, propeller, battery, and vision candidates.
-2. Replace their mass estimates with datasheet values.
-3. Create the complete CAD assembly and export mass properties.
-4. Freeze the maximum mass using the defined rule.
-5. Build and calibrate the thrust stand, inertia fixture, and video synchronization setup.
+1. Verify exact purchase SKUs, hardware interfaces, accessories, and stock.
+2. Order the locked Stage 1 stack and weigh each delivered component.
+3. Build and calibrate the thrust stand; characterize propulsion at 8.4, 7.6,
+   and 7.0 V.
+4. Create the complete CAD assembly and export mass properties.
+5. Freeze the maximum mass using the defined rule and measured thrust limit.
 6. Replace simulator placeholders with CAD and bench data.
 7. Build and validate the guard and release fixture.
 8. Collect unpowered release data before considering powered recovery.

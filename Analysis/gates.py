@@ -10,6 +10,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+try:  # package import in tests / module execution
+    from Analysis.hardware_resources import load_interfaces
+except ModuleNotFoundError:  # direct `python3 Analysis/gates.py`
+    from hardware_resources import load_interfaces
+
 # --- Requirements anchors -------------------------------------------------
 TW_MIN = 2.0  # REQ-PROP-001 static thrust-to-weight
 ABORT_CEILING_G = 225.0  # REQ-MASS-002
@@ -90,25 +95,20 @@ class Allocation:
     stage: str
 
 
-RESOURCE_MAP: tuple[Allocation, ...] = (
-    Allocation("ELRS/CRSF receiver", "SERIAL6", "UART6", None, "stage1"),
-    Allocation("Matek 3901-L0X flow+lidar (MSP)", "SERIAL4", "UART4", None, "stage1"),
-    Allocation("Nicla Vision MAVLink", "SERIAL2", "UART2", None, "stage1"),
-    Allocation("GPS", "SERIAL3", "UART3", None, "stage2_reserved"),
-    Allocation("FPV/VTX control", "SERIAL1", "UART1", None, "stage2_reserved"),
-    Allocation("ESC telemetry", "SERIAL7", "UART7", None, "optional"),
-    Allocation("Configuration/diagnostics", "SERIAL0", "USB", None, "bench"),
-    Allocation("Motor 1", None, "M1", "PWM_group_1", "stage1"),
-    Allocation("Motor 2", None, "M2", "PWM_group_2", "stage1"),
-    Allocation("Motor 3", None, "M3", "PWM_group_2", "stage1"),
-    Allocation("Motor 4", None, "M4", "PWM_group_1", "stage1"),
-    Allocation("Status LED (NeoPixel)", None, "LED", "PWM_group_5", "stage1"),
-    Allocation("Buzzer", None, "BUZZER", None, "stage1"),
+RESOURCE_MAP: tuple[Allocation, ...] = tuple(
+    Allocation(
+        row["function"],
+        row["serial"] or None,
+        row["pad"],
+        row["resource_group"] or None,
+        row["stage"],
+    )
+    for row in load_interfaces()
 )
 
 
 if __name__ == "__main__":
     print(f"Propulsion full-reserve floor @225g: {thrust_required_per_motor(ABORT_CEILING_G)} gf/motor")
-    print(f"Propulsion floor @130.2g nominal:   {thrust_required_per_motor(130.2):.1f} gf/motor")
+    print(f"Propulsion floor @129.8g nominal:   {thrust_required_per_motor(129.8):.1f} gf/motor")
     print(f"ESC pass ceiling:  {ESC_CONT_A / MARGIN_FACTOR:.1f} A/motor")
     print(f"Battery pass ceiling: {BATTERY_CONT_A / MARGIN_FACTOR:.1f} A pack")

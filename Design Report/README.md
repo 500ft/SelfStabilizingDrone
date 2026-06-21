@@ -95,7 +95,7 @@ Reference links:
 - FAA Part 107 Remote Pilot: https://www.faa.gov/uas/commercial_operators/become_a_drone_pilot
 - FAA LAANC: https://www.faa.gov/uas/getting_started/laanc
 - Mongolian Civil Aviation Law reference: https://legalinfo.mn/mn/detail?lawId=16760186591361
-- OpenMV AprilTag support: https://docs.openmv.io/
+- Arduino Nicla Vision documentation: https://docs.arduino.cc/hardware/nicla-vision
 
 ## Conceptual Design and Evaluation
 
@@ -113,13 +113,14 @@ Reference links:
 
 The selected concept is a 2S guarded quadcopter architecture with:
 
-- four 1103-class brushless motors
-- 2.0-2.3 in props
+- four Happymodel EX1103 11000KV brushless motors
+- Gemfan Hurricane 2023-3 props
 - modular circular prop guards
-- central removable 2S LiPo battery
-- ArduPilot-capable flight controller
-- 4-in-1 ESC
-- companion vision processor
+- central removable GNB 2S 550 mAh LiHV battery
+- Holybro Kakute H7 Mini v1.5 running ArduPilot 4.6+
+- HGLRC XJB BS13A 4-in-1 ESC
+- Arduino Nicla Vision companion processor
+- Matek 3901-L0X optical flow and rangefinder
 - forward/downward camera mount for marker tracking
 - external manual override and emergency disarm path
 
