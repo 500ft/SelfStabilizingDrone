@@ -19,17 +19,17 @@ class PropulsionGateTests(unittest.TestCase):
     def test_full_reserve_boundary_is_112_5(self):
         self.assertAlmostEqual(thrust_required_per_motor(225.0), 112.5)
 
-    def test_nominal_mass_floor_is_65_1(self):
-        self.assertAlmostEqual(thrust_required_per_motor(130.2), 65.1)
+    def test_nominal_mass_floor_is_64_9(self):
+        self.assertAlmostEqual(thrust_required_per_motor(129.8), 64.9)
 
     def test_mass_lever_two_grams_per_gram(self):
         self.assertAlmostEqual(allowable_mass(105.0), 210.0)
 
     def test_decision_tiers(self):
-        self.assertEqual(propulsion_decision(120.0, 130.2), "PASS_FULL_RESERVE")
-        self.assertEqual(propulsion_decision(105.0, 130.2), "PASS_200G_CEILING")
+        self.assertEqual(propulsion_decision(120.0, 129.8), "PASS_FULL_RESERVE")
+        self.assertEqual(propulsion_decision(105.0, 129.8), "PASS_200G_CEILING")
         self.assertEqual(propulsion_decision(80.0, 150.0), "CONDITIONAL_REDUCED_MASS")
-        self.assertEqual(propulsion_decision(60.0, 130.2), "BLOCKER")
+        self.assertEqual(propulsion_decision(60.0, 129.8), "BLOCKER")
 
 
 class CurrentGateTests(unittest.TestCase):

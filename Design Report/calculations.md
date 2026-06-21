@@ -8,10 +8,10 @@ The maximum mass is not frozen. Current planning rollup:
 
 | Value | Result |
 |---|---:|
-| Sigma best | 106.5 g |
-| Sigma nominal | 140.75 g |
-| Sigma worst | 175.0 g |
-| Proposed frozen maximum | 180.0 g |
+| Sigma best | 117.96 g |
+| Sigma nominal | 129.76 g |
+| Sigma worst | 149.5 g |
+| Proposed frozen maximum | 155.0 g |
 
 Freeze rule:
 
@@ -20,11 +20,11 @@ frozen maximum mass = roundup_to_5g(Sigma worst + 5 g)
 nominal margin = frozen maximum mass - Sigma nominal
 ```
 
-At the current proposed 180 g maximum:
+At the current proposed 155 g maximum:
 
 ```text
-T_required_total = 2.0 * 180 g = 360 g
-T_required_motor = 360 g / 4 = 90 g
+T_required_total = 2.0 * 155 g = 310 g
+T_required_motor = 310 g / 4 = 77.5 g
 ```
 
 This is only the static requirement. The recovery case may require greater thrust and torque.
@@ -45,9 +45,11 @@ T_hover_motor = mass / 4
 
 The selected motor/prop/battery combination should produce hover thrust well below maximum throttle.
 
-## Example Motor Data Check
+## Locked Propulsion Gate
 
-The prior candidate motor claim is not treated as settled. Select a motor only after its datasheet mass and a measured motor-prop-battery thrust/current curve are available.
+The catalog combination is EX1103 11000KV + Gemfan 2023-3 + GNB 2S 550 mAh.
+Its performance is not settled: the 121.9 gf/motor and 9.2 A/motor point is a
+vendor result and must be reproduced.
 
 Planning interpretation:
 
@@ -55,6 +57,18 @@ Planning interpretation:
 - Recovery torque and angular acceleration may drive a higher requirement.
 - ESC current rating should cover peak current with margin.
 - Hover current must be estimated from thrust data, then measured on the built vehicle.
+
+The bench sweep is performed at 8.4 V, 7.6 V, and **7.0 V at the ESC input under
+load**. The uncertainty-adjusted 7.0 V value controls acceptance:
+
+```text
+T_required_per_motor = 2 * vehicle_mass / 4
+M_allowable = 2 * measured_per_motor_thrust
+```
+
+At 225 g, the full-reserve threshold is 112.5 gf/motor. At the current 129.8 g
+nominal mass, the threshold is 64.9 gf/motor. A shortfall against 225 g first
+reduces the frozen mass; it does not automatically trigger a prop change.
 
 ## Battery and Flight Time
 

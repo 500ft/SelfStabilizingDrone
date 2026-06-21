@@ -1,6 +1,16 @@
 # Component and Propulsion Research
 
-> **Stage 1 selection is locked (2026-06-20).** See [`component-selection-2026/STAGE1_BOM.md`](component-selection-2026/STAGE1_BOM.md) for the single recommended build (one part per subsystem, with the reason each was chosen and the option it beat), and [`component-selection-2026/Component_Selection_2026.xlsx`](component-selection-2026/Component_Selection_2026.xlsx) for the full ranked candidate lists (top 5–10 per category, sourced, with confirmed-vs-inferred tags). The autonomy fork is resolved to the **H7/F7 ArduPilot/PX4 research path**; FPV and GPS are deferred to Stage 2. Nominal flying mass ~130 g (vs 200 g target), T/W ≈ 3.75.
+> **Stage 1 selection is locked (2026-06-20; interface amendment
+> 2026-06-21).** See
+> [`component-selection-2026/STAGE1_BOM.md`](component-selection-2026/STAGE1_BOM.md)
+> for the selected build,
+> [`component-selection-2026/PREPURCHASE_VERIFICATION.md`](component-selection-2026/PREPURCHASE_VERIFICATION.md)
+> for the order-readiness evidence, and
+> [`component-selection-2026/Component_Selection_2026.xlsx`](component-selection-2026/Component_Selection_2026.xlsx)
+> for the archived ranked candidates. The autonomy fork is resolved to the
+> **ArduPilot H7 research path**; FPV and GPS are deferred. Interface research
+> removed the incompatible standalone microSD line, leaving nominal flying mass
+> ~129.8 g and catalog cost ~$333.
 
 The [Drone Component and Propulsion Study](Drone_Component_and_Propulsion_Study.xlsx) is the first hardware-selection research package for the guarded micro-UAV.
 

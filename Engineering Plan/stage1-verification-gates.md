@@ -4,6 +4,13 @@
 `Analysis/gates.py` and enforced by `Analysis/tests/test_gates.py`. Do not edit a
 threshold to fit a result — record the result against the threshold as written.
 
+Authoritative supporting registers:
+
+- [`hardware_interfaces.csv`](../Engineering%20Data/hardware_interfaces.csv)
+- [`power_budget.csv`](../Engineering%20Data/power_budget.csv)
+- [`component_verification.csv`](../Engineering%20Data/component_verification.csv)
+- [`purchase_checklist.csv`](../Engineering%20Data/purchase_checklist.csv)
+
 Firmware target: **ArduPilot** (PX4 informational only). BOM change policy:
 retain locked parts unless evidence proves a **blocker** (incompatibility,
 unavailability in all target markets, unsafe margin, or unsupported critical
@@ -38,7 +45,14 @@ ArduPilot Kakute mapping
 
 Power: budget the 5 V rail at the **conservative 1.5 A** peripheral limit until
 the 1.5 A / 2 A doc discrepancy is resolved; require ≥25% margin; if it does not
-close, add a separate 5 V regulator rather than replacing the FC.
+close, add a separate 5 V regulator rather than replacing the FC. The current
+worst planning load is 550 mA, leaving **63.3% margin**; Nicla, ELRS and status
+hardware peak currents remain measurement items.
+
+Resolved interface blocker: Nicla Vision has no microSD socket. The standalone
+card was removed from the Stage 1 flying BOM; numeric events are logged through
+MAVLink to the flight controller. External SPI storage is deferred unless image
+logging becomes a demonstrated requirement.
 
 ## 2. Pre-registered propulsion gate
 
@@ -54,7 +68,7 @@ claim has only **8.4% reserve** over the 225 g boundary and is BENCH_REQUIRED.
 | frozen mass > 2 × measured | Propulsion BLOCKER |
 
 **Mass freeze is the primary response to a shortfall** (every gf/motor buys 2 g
-of frozen mass; at 130.2 g only 65.1 gf/motor is needed). Do not change
+of frozen mass; at 129.8 g only 64.9 gf/motor is needed). Do not change
 propulsion if the system still closes against the frozen mass. Reopen propulsion
 only when required frozen mass exceeds the limit, in this lever order:
 (1) higher-solidity 2-inch prop, (2) larger-diameter prop with revised guards,
