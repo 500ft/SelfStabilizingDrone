@@ -1,0 +1,24 @@
+{
+  "subsystem": "Cameras and perception sensors",
+  "value_pick": "Nicla Vision onboard GC2145 camera with onboard IMU/ToF fusion",
+  "value_cost_usd": "Included in the $90 Nicla line",
+  "value_rationale": "It is already the lowest-parts-count vision path. Its rolling shutter and unproven effective FPS are the reasons it is not the mission-optimal path.",
+  "premium_pick": "Luxonis OAK 4 D Pro W",
+  "premium_cost_usd": "$1,049 wide-field variant",
+  "premium_rationale": "OAK4 adds a Linux-capable 48-52 TOPS vision platform, stereo depth, global-shutter mono cameras, integrated storage and a modern standalone perception stack. It maximizes sensor/compute capability in one supported product.",
+  "optimal_pick": "Luxonis OAK-D Lite with fixed-focus/global-shutter stereo mono pair; use the mono stream for motion/release cues and stereo depth for scene geometry",
+  "optimal_cost_usd": "$169",
+  "optimal_rationale": "It provides two global-shutter OV7251 mono cameras, stereo depth, IMU, and onboard neural inference at about 2.5-4 W. This directly addresses the Nicla rolling-shutter/FPS risk without requiring a high-power Jetson.",
+  "key_specs": "OAK-D Lite: RVC2, 4 TOPS/1.4 AI TOPS, dual global-shutter OV7251 mono sensors, rolling-shutter IMX214 color sensor, BMI270 IMU, approximately 2.5-4 W. OAK 4 D Pro W: up to about 52 TOPS, integrated Linux-class compute, stereo depth; store listing mass 674 g.",
+  "interfaces": "OAK-D Lite uses USB to Pi Zero 2 W and a dedicated regulated 5 V rail. The perception pipeline should use global-shutter mono frames for recovery classification; color is optional. Output only time-stamped state/confidence to the FC over MAVLink.",
+  "evidence": [
+    {"url": "https://docs.luxonis.com/hardware/products/OAK-D%20Lite", "supports": "OAK-D Lite cameras, global shutter, IMU, compute and power"},
+    {"url": "https://shop.luxonis.com/collections/oak-cameras-col", "supports": "$169 OAK-D Lite price"},
+    {"url": "https://shop.luxonis.com/products/oak-4-d-ea", "supports": "$949/$1,049 OAK4 variants, 674 g listing mass and current availability signal"},
+    {"url": "https://shop.luxonis.com/", "supports": "OAK4 compute claims and product-family status"}
+  ],
+  "integration_risks": "OAK-D Lite's RGB camera remains rolling shutter, so the wrong pipeline choice would preserve the original failure mode. Stereo depth can fail on textureless surfaces and at close range. OAK4 availability is early-access/new-stock and its 674 g enclosure makes it unsuitable for the optimal 3.5-inch build.",
+  "bench_gates": "Use a rotating/release target to require >=40 effective global-shutter frames/s, p95 exposure-to-classification <=40 ms, total event-to-FC <=50 ms, >=95% release-event recall at the pre-registered false-trigger rate, and no dropped-frame burst longer than 25 ms. Validate lighting, motion blur, minimum range, and guard occlusion across the cage test envelope.",
+  "confidence": "Sensor types, power and prices CONFIRMED by Luxonis. Recovery classification accuracy, latency and stereo behavior BENCH_REQUIRED. OAK4 stock timing may change.",
+  "uncertain": []
+}

@@ -1,0 +1,24 @@
+{
+  "subsystem": "ESC and power distribution",
+  "value_pick": "HGLRC 13A 2-3S BB2 20 x 20 mm 4-in-1 ESC",
+  "value_cost_usd": "$18 baseline acquisition estimate",
+  "value_rationale": "It is already sized above the claimed 9.2 A motor peak and matches the locked 20 mm stack. No cheaper substitute has better project-specific evidence.",
+  "premium_pick": "Four T-Motor A6-M integrated 6S FOC 50A CAN/PWM propulsion modules plus a high-current distribution harness",
+  "premium_cost_usd": "$399.60 base catalog subtotal for four modules; prop-included variant price [uncertain]",
+  "premium_rationale": "Per-arm integrated FOC control, CAN telemetry, IPX6 construction, and matched motor/ESC/prop remove the largest compatibility uncertainty in a large professional vehicle.",
+  "optimal_pick": "Holybro Tekko32 F4 4-in-1 Mini 50A AM32 ESC plus Holybro PM02 V3 and separate 5 V regulator for perception",
+  "optimal_cost_usd": "$69.99 inferred standalone ESC price from the $128.98 Kakute stack minus $58.99 FC; PM02 V3 included with selected FC configuration; add $20.99 UBEC 5A if rail test requires it",
+  "optimal_rationale": "The 20 mm AM32 ESC provides large margin over the GEPRC motor's 34.9 A published maximum, digital protocol support, and compact wiring. Separating the perception regulator prevents OAK/Pi transients from contaminating the flight-controller rail.",
+  "key_specs": "Value: 13 A/channel, 2-3S. Optimal ESC: 50 A/channel mini class, 6S capable; selected motor publishes 34.9 A maximum. Holybro UBEC: 5 A, 3-14S. Premium A6-M: 6S, FOC 50A, PWM/CAN, 40 A stated short peak in the product table.",
+  "interfaces": "Optimal: battery to XT60/PDB; PM02 V3 supplies FC voltage/current measurement; ESC receives four DShot signals; isolated 5 V BEC supplies OAK-D Lite and Pi with a common signal ground. Premium CAN protocol support must be validated against the exact ArduPilot ESC driver before relying on it; PWM is the fallback.",
+  "evidence": [
+    {"url": "https://holybro.com/products/kakute-h7-mini-stacks", "supports": "$128.98 Kakute+Tekko32 Mini stack and AM32 50A selection"},
+    {"url": "https://holybro.com/collections/flight-controllers/products/kakute-h7-mini", "supports": "$58.99 FC price used to infer ESC subtotal"},
+    {"url": "https://holybro.com/collections/power-modules-pdbs", "supports": "$20.99 UBEC 5A and power-module catalog"},
+    {"url": "https://store.tmotor.com/product/a6-m-6s-uav-modular-propulsion-kit.html", "supports": "$99.90 base module, 6S FOC, CAN/PWM, rated and maximum thrust"}
+  ],
+  "integration_risks": "The Tekko standalone price is inferred, not a direct quote. AM32 bidirectional DShot and telemetry behavior must be proven with ArduPilot. The motor's published 34.9 A is at 5S despite a 6S application; the exact 6S prop current remains unknown. PM02 V3 current and connector ratings must exceed measured pack current.",
+  "bench_gates": "At minimum loaded voltage, require per-channel RMS and peak current within ESC ratings with >=20% continuous margin, pack connector temperature rise <20 C, no desync over repeated full-step commands, valid RPM telemetry if used, and no FC/perception brownout. Measure rail ripple and p95 voltage during synchronized motor and inference load steps.",
+  "confidence": "Value selection INFERRED from prior baseline evidence. Optimal ESC rating CONFIRMED at product-family level; exact standalone SKU/price and 6S current BENCH_REQUIRED. Premium CAN interoperability BENCH_REQUIRED.",
+  "uncertain": ["premium_cost_usd"]
+}

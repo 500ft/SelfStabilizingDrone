@@ -1,0 +1,24 @@
+{
+  "subsystem": "Safety, test and support hardware",
+  "value_pick": "VIFLY Finder Mini/LED, DIY 1-2 kg load-cell thrust stand, PVC/net cage, tethered release fixture and ToolkitRC-class charger",
+  "value_cost_usd": "Approximately $168 support subtotal: $18 flying status hardware plus $150 charger/stand/cage/release allowances",
+  "value_rationale": "These are sufficient to validate the current micro propulsion, execute tethered releases and recover logs without buying laboratory instrumentation.",
+  "premium_pick": "Tyto Robotics Series 1585 thrust-stand bundle, instrumented guarded flight stand/release rig, redundant independent kill path, high-speed camera and isolated battery fire enclosure",
+  "premium_cost_usd": "$1,075 for the Series 1585 bundle; custom flight rig, camera and enclosure excluded",
+  "premium_rationale": "Calibrated thrust/torque/RPM/electrical measurement and a mechanically constrained release rig provide defensible professional evidence. For a premium multi-kilogram vehicle, an open hand-release is unacceptable.",
+  "optimal_pick": "Tyto Series 1585 or verified equivalent for propulsion characterization, rigid netted cage, repeatable gimbaled/tethered release rig with angle encoder, independent RC kill, VIFLY finder, smoke-safe LiPo charging/storage",
+  "optimal_cost_usd": "$1,075 instrument bundle plus approximately $150-400 fabricated rig/cage [uncertain]",
+  "optimal_rationale": "The optimal vehicle is likely 0.5-0.65 kg, beyond the current DIY 1-2 kg stand's comfortable evidence margin once guarded transients are measured. A calibrated stand and repeatable release fixture buy more decision quality than premium airborne compute.",
+  "key_specs": "Series 1585/1580 class measures up to 5 kgf thrust and 2 N m torque. Tyto's 2026 Flight Stand successor advertises 1,000 Hz sampling. The selected 3.5-inch system needs guarded single-motor and, ideally, full-vehicle thrust characterization.",
+  "interfaces": "Log stand thrust/current/voltage/RPM against synchronized FC and companion timestamps. Release rig must constrain translation until commanded release, measure initial attitude/rate, and allow a hard mechanical tether independent of software. Kill switch must bypass companion logic.",
+  "evidence": [
+    {"url": "https://www.tytorobotics.com/products/series-1580-test-stand-bundle", "supports": "$1,075 Series 1585 bundle"},
+    {"url": "https://www.tytorobotics.com/pages/drone-test-stands/1000", "supports": "5 kgf thrust and 2 N m torque measurement range"},
+    {"url": "https://www.tytorobotics.com/blogs/updates/tyto-robotics-releases-new-drone-test-stand-the-flight-stand-15-50", "supports": "2026 successor, 1,000 Hz sampling and measured quantities"},
+    {"url": "https://download.ardupilot.org/downloads/wiki/pdf_guides/MultiCopter_Safety.pdf", "supports": "ArduPilot safety modes and controlled test principles"}
+  ],
+  "integration_risks": "A single-motor stand does not reproduce duct interactions or full-vehicle battery sag. The Series 1585 listing was out of stock when crawled, so an equivalent calibrated instrument may be required. Large premium propulsion exceeds this stand and requires a different facility.",
+  "bench_gates": "Calibrate before and after each propulsion campaign; require measurement uncertainty <=3% of the acceptance threshold. No free-flight release until prop-off state-machine tests, restrained motor tests, kill-switch test, tethered recovery attempts and guard proof test all pass. Abort on any uncommanded arming, estimator reset, prop contact, battery movement or lost kill path.",
+  "confidence": "Tyto specifications and listed bundle price CONFIRMED. Exact rig/cage cost [uncertain]. Safety exit sequence is an engineering requirement and must be validated in the project test plan.",
+  "uncertain": ["optimal_cost_usd"]
+}
