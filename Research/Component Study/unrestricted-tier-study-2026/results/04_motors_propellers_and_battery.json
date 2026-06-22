@@ -1,0 +1,24 @@
+{
+  "subsystem": "Motors, propellers and battery",
+  "value_pick": "4 x Happymodel EX1103 11000KV, Gemfan Hurricane 2023-3, GNB 2S 550 mAh 100C XT30",
+  "value_cost_usd": "$56 total baseline estimate: motors $36, props $6, battery $14",
+  "value_rationale": "This remains the lowest-cost tested architecture candidate and has a vendor motor/prop data point. The main limitation is not nominal thrust but the absence of independent 7.0 V guarded thrust data.",
+  "premium_pick": "4 x T-Motor A6-M KV280 integrated 6S propulsion units with MF2311P-M 23-inch props and an appropriately sized 6S high-rate pack",
+  "premium_cost_usd": "$399.60 base propulsion subtotal; battery and prop-included option [uncertain]",
+  "premium_rationale": "The matched industrial propulsion system publishes rated and maximum thrust, integrates FOC ESCs, and has enough reserve to carry premium compute. It is intentionally a capability ceiling, not the recommended recovery platform.",
+  "optimal_pick": "4 x GEPRC SPEEDX2 2105.5 2650KV, Gemfan D90-3 90 mm ducted tri-blades, 6S 1050-1300 mAh high-rate LiPo",
+  "optimal_cost_usd": "$87.96 motors plus approximately $5 props and $35-55 battery [uncertain]",
+  "optimal_rationale": "GEPRC uses the same motor family and 6S 1050-1300 mAh pack class on the 263.8 g CineLog35 V2. The motor is designed for 3-4 inch whoops and the D90 is explicitly designed for 3.5-inch ducts. This is the strongest coherent catalog propulsion match for the selected guarded frame.",
+  "key_specs": "Optimal motor: 21 g, 2-6S, 34.9 A and 559 W published maximum at 5S, 12 x 12 mm M2 mount. D90: 90 mm, 3-inch pitch, 2.3 g, 2203-2306 motor compatibility. Frame vendor recommends 6S 1050-1300 mAh. Premium A6-M: 390 g/arm including prop and wires, 2-2.5 kg rated thrust, 6 kg maximum.",
+  "interfaces": "Optimal motor and frame both use 12 x 12 mm M2 mounting. D90 supports M5 and T-mount adapters; verify the exact hub hardware against the 1.5 mm motor shaft. Use XT60, 6S-rated ESC/BEC, and a battery strap plus secondary retention.",
+  "evidence": [
+    {"url": "https://geprc.com/product/geprc-speedx2-2105-5-2650kv-3450kv-motor/", "supports": "$21.99, 21 g, voltage, current, power, mounting, and intended prop class"},
+    {"url": "https://www.gemfanhobby.com/d90-ducted-pc-3-blade-m5.html", "supports": "D90 geometry, 2.3 g mass, ducted application and motor compatibility"},
+    {"url": "https://geprc.com/product/geprc-cinelog35-v2-analog-fpv-drone/", "supports": "263.8 g reference craft, 2105.5 2650KV 6S use, and 1050-1300 mAh recommendation"},
+    {"url": "https://store.tmotor.com/product/a6-m-6s-uav-modular-propulsion-kit.html", "supports": "Premium module price and performance"}
+  ],
+  "integration_risks": "No primary source found for static thrust of the exact 2105.5+D90+guard combination at minimum loaded 6S voltage. The published motor maximum is at 5S and cannot size the 6S battery or ESC by itself. Larger vehicles increase angular inertia; premium thrust does not compensate for release safety and inertia penalties.",
+  "bench_gates": "Test the exact guarded assembly at full, nominal, and minimum loaded voltage. Require measured total static thrust >=2.0 x frozen takeoff mass using an uncertainty-adjusted lower bound; battery sag <=10% during the acceptance step; cell temperature <=60 C and connector rise <20 C; no prop/guard rub; and repeatable 10-90% thrust rise <=100 ms. Derive the final battery capacity from measured current, not C-rating alone.",
+  "confidence": "Motor/frame/prop compatibility is CONFIRMED by geometry and manufacturer application. Optimal thrust, current, battery endurance, and transient response are BENCH_REQUIRED. Battery price is [uncertain].",
+  "uncertain": ["premium_cost_usd", "optimal_cost_usd"]
+}
