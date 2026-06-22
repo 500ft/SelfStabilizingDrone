@@ -1,0 +1,24 @@
+{
+  "subsystem": "Optical flow, ranging and navigation",
+  "value_pick": "Matek 3901-L0X optical flow plus ToF module over one MSP UART",
+  "value_cost_usd": "$26 baseline estimate",
+  "value_rationale": "It is the lowest-cost and lightest integrated flow/range option already mapped to ArduPilot, with both functions sharing one serial resource.",
+  "premium_pick": "ARK Flow for nadir velocity/height plus LightWare SF45/B scanning lidar for wider obstacle and range awareness",
+  "premium_cost_usd": "$250 ARK Flow plus SF45/B price [uncertain]",
+  "premium_rationale": "The pair adds redundant ranging modalities, DroneCAN integration, an onboard IMU, long-range scanning, and far more environmental observability than the release controller requires.",
+  "optimal_pick": "ARK Electronics ARK Flow over DroneCAN",
+  "optimal_cost_usd": "$250",
+  "optimal_rationale": "At 5 g it provides PAW3902 low-light optical flow, AFBR ToF ranging and an ICM-42688 IMU on DroneCAN. CAN avoids consuming another serial port, offers device status, and is a cleaner Pixhawk integration than MSP UART.",
+  "key_specs": "ARK Flow: 5 g, 5 V, maximum stated 76 mA, PAW3902, AFBR range sensor with typical reach up to 30 m, ICM-42688, Pixhawk-standard CAN connector. SF45/B: 0.2-50 m, up to 5,000 readings/s, five sweeps/s, UART/I2C, about 59 g.",
+  "interfaces": "Optimal connects to CAN1 with a Pixhawk-standard four-pin cable and must be terminated correctly. ArduPilot configures optical flow and rangefinder as DroneCAN devices. Premium SF45/B needs a separate UART or I2C path, regulated 5 V, and a mechanically clear scan plane.",
+  "evidence": [
+    {"url": "https://arkelectron.com/product/ark-flow/", "supports": "$250, 5 g, sensor set, power, range and DroneCAN interface"},
+    {"url": "https://docs.arkelectron.com/sensor/ark-flow-mr/ardupilot-instructions", "supports": "ArduPilot DroneCAN configuration for optical flow and rangefinder"},
+    {"url": "https://lightwarelidar.com/shop/sf45-b-50-m/", "supports": "SF45/B product and 50 m class"},
+    {"url": "https://lightwarelidar.com/wp-content/uploads/2025/07/SF45B-Product-Guide-v3.pdf", "supports": "SF45/B range, rate, interfaces, mass and electrical specifications"}
+  ],
+  "integration_risks": "Optical flow is surface-, illumination-, height-, and vibration-dependent. The ARK Flow range figure is typical, not guaranteed acceptance performance. CAN node IDs, bus termination, orientation and EKF source switching require explicit configuration. SF45/B adds mass and scan latency without solving the core release classifier.",
+  "bench_gates": "Require valid flow quality and range throughout the intended height, lighting and floor-texture envelope; velocity error <=0.25 m/s RMS in the cage; range error <=5% or 5 cm, whichever is larger, in the recovery band; no CAN errors over 30 minutes; and clean EKF fallback when flow/range is blocked or invalid.",
+  "confidence": "ARK Flow hardware and ArduPilot setup CONFIRMED by manufacturer docs. Environmental performance and EKF behavior BENCH_REQUIRED. SF45/B price is [uncertain].",
+  "uncertain": ["premium_cost_usd"]
+}

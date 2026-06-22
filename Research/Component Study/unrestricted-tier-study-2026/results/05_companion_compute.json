@@ -1,0 +1,24 @@
+{
+  "subsystem": "Companion compute",
+  "value_pick": "Arduino Nicla Vision",
+  "value_cost_usd": "$90 baseline estimate",
+  "value_rationale": "It combines MCU, camera, IMU, and ToF in the existing 19.8 g architecture and avoids a Linux computer. It is the cheapest path already integrated into the project, provided it passes the 50 ms event-to-MAVLink gate.",
+  "premium_pick": "NVIDIA Jetson AGX Orin Industrial 64 GB production module on an airborne carrier",
+  "premium_cost_usd": "$2,899 suggested 1KU+ module price; carrier, storage, cooling and DC/DC excluded",
+  "premium_rationale": "Industrial temperature range, ECC, long operating life, large memory, and up to roughly 248 TOPS support multi-camera models and extensive onboard logging. The compute is vastly beyond the recovery classifier's demonstrated need.",
+  "optimal_pick": "Raspberry Pi Zero 2 W as MAVLink/DepthAI host, with inference executed on OAK-D Lite",
+  "optimal_cost_usd": "$15 Pi plus $169 OAK-D Lite accounted under perception",
+  "optimal_rationale": "The Pi handles orchestration, timestamps, logging and MAVLink while the OAK executes neural and stereo workloads on-device. This avoids the 7-25 W and thermal burden of a Jetson while replacing the Nicla rolling-shutter bottleneck.",
+  "key_specs": "Pi Zero 2 W: quad-core 64-bit Cortex-A53 at 1 GHz, 512 MB, 65 x 30 mm, $15. Jetson AGX Orin Industrial: 64 GB, ECC, industrial temperature support, up to about 248 TOPS and 15-75 W operating range. OAK RVC2 provides 4 TOPS/1.4 AI TOPS and typically a few watts.",
+  "interfaces": "Optimal: OAK-D Lite over USB host to Pi; Pi UART at 3.3 V to Pixhawk TELEM port using MAVLink2; separate regulated 5 V supply sized for Pi+OAK; common ground; hardware timestamps carried in logs. Companion sends bounded high-level commands only.",
+  "evidence": [
+    {"url": "https://www.raspberrypi.com/products/raspberry-pi-zero-2-w/", "supports": "$15, CPU, memory and board dimensions"},
+    {"url": "https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/jetson-agx-orin/", "supports": "Jetson performance and power families"},
+    {"url": "https://developer.nvidia.com/embedded/faq", "supports": "$2,899 Jetson AGX Orin Industrial suggested price and 10-year industrial product lifetime"},
+    {"url": "https://ardupilot.org/dev/docs/mavlink-basics.html", "supports": "MAVLink companion addressing, command acknowledgement limitations and transport behavior"}
+  ],
+  "integration_risks": "Pi Zero 2 has only 512 MB and one USB OTG path; the exact DepthAI pipeline must fit and remain deterministic. Linux scheduling can create latency tails. The Jetson industrial module requires a carrier, cooling, regulated high power, and startup management; listing price is not a complete airborne solution.",
+  "bench_gates": "Require p95 sensor-event-to-accepted-MAVLink latency <=50 ms, p99 <=75 ms, zero missed heartbeat failsafes over a 30-minute run, synchronized timestamps within 5 ms, and no compute reset during motor load steps. Demonstrate safe FC behavior when the companion freezes, reboots, sends malformed commands, or disconnects.",
+  "confidence": "Catalog compute specifications and prices CONFIRMED. Pi+OAK software fit and latency BENCH_REQUIRED. Jetson carrier mass, thermal solution, and complete cost are not included and remain ASSUMED.",
+  "uncertain": []
+}

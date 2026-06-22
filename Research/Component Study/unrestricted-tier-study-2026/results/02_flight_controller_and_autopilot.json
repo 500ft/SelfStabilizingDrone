@@ -1,0 +1,26 @@
+{
+  "subsystem": "Flight controller and autopilot",
+  "value_pick": "Holybro Kakute H7 Mini v1.5, SKU 11082, running ArduPilot",
+  "value_cost_usd": "$58.99",
+  "value_rationale": "It retains the six-UART resource map already proven at the desk, exposes enough DShot outputs, weighs 5.5 g, and is the least expensive H7 option in the current evidence set.",
+  "premium_pick": "Holybro Pixhawk 6X Pro Standard v2B with PM02D, SKU 11070+18125+15011",
+  "premium_cost_usd": "$797.99",
+  "premium_rationale": "The industrial ADIS16470 IMU, triple-IMU architecture, dual barometers, isolation, heating, Ethernet, and Pixhawk connector standard maximize sensor quality, redundancy, and development I/O.",
+  "optimal_pick": "Holybro Pixhawk 6C Mini Model A current revision with PM02 V3",
+  "optimal_cost_usd": "$149.98 configured price captured 2026-06-22",
+  "optimal_rationale": "It provides dual isolated/heated IMUs, an H743, I/O processor, 14 outputs, CAN, and standardized connectors without the cost, size, and payload penalty of the 6X Pro. For a violent release event, redundant isolated IMUs are a material upgrade over the single-IMU Kakute.",
+  "key_specs": "Kakute: H743, 6 UART, 9 PWM, 5.5 g, 2S-6S. 6C Mini: H743, ICM-42688-P plus BMI088, MS5611, 42.4 g Model A, 14 PWM, -40 to 85 C. 6X Pro: H753, industrial ADIS16470 plus redundant IMUs, dual barometers, Ethernet.",
+  "interfaces": "Value uses solder pads and the existing UART allocation. Optimal uses JST-GH serial ports, CAN for ARK Flow, UART for companion MAVLink and ELRS, analog PM02 V3, and microSD logs. Premium requires PM02D digital power; Holybro explicitly says the 6X does not accept analog power modules.",
+  "evidence": [
+    {"url": "https://holybro.com/collections/flight-controllers/products/kakute-h7-mini", "supports": "$58.99, SKU 11082, six UARTs and product availability"},
+    {"url": "https://docs.holybro.com/autopilot/kakute-h7-v1-v2-mini/kakute-h7-mini/overview", "supports": "Kakute processor, power, output and mass specifications"},
+    {"url": "https://holybro.com/products/pixhawk-6c-mini", "supports": "6C Mini price, current 42.4 g Model A, redundant IMUs, H743, isolation and heating"},
+    {"url": "https://docs.holybro.com/autopilot/pixhawk-6c-mini/technical-specification", "supports": "6C Mini detailed ports and electrical specifications"},
+    {"url": "https://holybro.com/products/pixhawk-6x-pro", "supports": "$797.99 Standard+PM02D configuration and compatibility warning"},
+    {"url": "https://docs.holybro.com/autopilot/pixhawk-6x-pro/overview", "supports": "ADIS16470, redundancy, isolation, heating and Ethernet"}
+  ],
+  "integration_risks": "ArduPilot target support does not prove every optional port or sensor path in the exact purchased revision. The optimal frame needs a custom FC adapter. Industrial IMU saturation range is useful, but recovery success still depends on estimator tuning and vibration, not FC price alone.",
+  "bench_gates": "Verify exact revision, ArduPilot boot, all assigned ports, microSD logging, CAN discovery, and DShot outputs before installing props. Replay or rig-test release angular rates without IMU clipping or EKF lane failure. Require no brownout at worst simultaneous peripheral load and motor step.",
+  "confidence": "Catalog hardware and prices CONFIRMED. ArduPilot recovery behavior and estimator performance BENCH_REQUIRED. The 6C Mini optimal ranking is an engineering decision based on redundancy-to-integration tradeoff.",
+  "uncertain": []
+}

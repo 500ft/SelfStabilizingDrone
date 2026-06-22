@@ -1,0 +1,42 @@
+topic: "Weight-unrestricted component architectures for the guarded self-stabilizing recovery drone"
+date: "2026-06-22"
+
+mission:
+  objective: "Guarded quadcopter for state-estimation, controlled-release recovery, marker tracking, synchronized logging, and later target following"
+  retained_constraints:
+    - "ArduPilot-compatible flight safety, estimator access, and logging"
+    - "Protected propulsion and positive battery retention"
+    - "Manual override and independent disarm"
+    - "Measured static thrust-to-weight >= 2.0 at frozen mass"
+    - "Companion computer sends bounded high-level commands, never direct motor commands"
+  removed_constraints:
+    - "225 g abort ceiling"
+    - "sub-250 g regulatory target"
+    - "2S battery requirement"
+    - "2-inch propeller requirement"
+
+architectures:
+  - id: value
+    objective: "Lowest total acquisition cost that remains credible and testable"
+  - id: premium
+    objective: "Highest professional capability and redundancy without a practical cost ceiling"
+  - id: mission_optimal
+    objective: "Best recovery-research performance, integration, safety, and evidence per unit complexity"
+
+items:
+  - {id: 01, name: "Vehicle scale, frame and prop guards", category: mechanical}
+  - {id: 02, name: "Flight controller and autopilot", category: avionics}
+  - {id: 03, name: "ESC and power distribution", category: propulsion}
+  - {id: 04, name: "Motors, propellers and battery", category: propulsion}
+  - {id: 05, name: "Companion compute", category: autonomy}
+  - {id: 06, name: "Cameras and perception sensors", category: autonomy}
+  - {id: 07, name: "Optical flow, ranging and navigation", category: sensing}
+  - {id: 08, name: "Control link, telemetry and logging", category: communications}
+  - {id: 09, name: "Safety, test and support hardware", category: safety}
+
+execution:
+  mode: "sequential primary-source deep research"
+  batch_size: 1
+  items_per_agent: 1
+  output_dir: "./results"
+  report: "report.md"

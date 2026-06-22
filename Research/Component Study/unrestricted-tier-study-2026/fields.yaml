@@ -1,0 +1,19 @@
+field_categories:
+  - category: Architecture comparison
+    fields:
+      - {name: subsystem, description: "Subsystem being researched", required: true, detail_level: brief}
+      - {name: value_pick, description: "Exact minimum-cost viable part or architecture", required: true, detail_level: moderate}
+      - {name: value_cost_usd, description: "Current approximate acquisition price", required: true, detail_level: brief}
+      - {name: value_rationale, description: "Why this is the lowest-cost credible choice", required: true, detail_level: detailed}
+      - {name: premium_pick, description: "Exact professional highest-capability part or architecture", required: true, detail_level: moderate}
+      - {name: premium_cost_usd, description: "Current approximate acquisition price", required: true, detail_level: brief}
+      - {name: premium_rationale, description: "Capability and redundancy gained", required: true, detail_level: detailed}
+      - {name: optimal_pick, description: "Exact mission-optimal part or architecture", required: true, detail_level: moderate}
+      - {name: optimal_cost_usd, description: "Current approximate acquisition price", required: true, detail_level: brief}
+      - {name: optimal_rationale, description: "Why this best fits guarded recovery research", required: true, detail_level: detailed}
+      - {name: key_specs, description: "Voltage, compute, sensor, interface, rating, or geometry specifications", required: true, detail_level: detailed}
+      - {name: interfaces, description: "Power, mechanical, protocol, and software interfaces", required: true, detail_level: detailed}
+      - {name: evidence, description: "Primary-source URLs and the facts each supports", required: true, detail_level: detailed}
+      - {name: integration_risks, description: "Compatibility, thermal, mechanical, software, and availability risks", required: true, detail_level: detailed}
+      - {name: bench_gates, description: "Measurements and numeric pass/fail thresholds still required", required: true, detail_level: detailed}
+      - {name: confidence, description: "confirmed, inferred, or bench-required by major claim", required: true, detail_level: moderate}
