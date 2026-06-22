@@ -2,6 +2,10 @@
 
 This repository documents a staged learning project for a protected micro-UAV that can eventually detect a toss/drop/release event, stabilize in midair, and follow a designated target.
 
+## Parts Reference for CAD / FEA
+
+- **[Three-Tier Drone Parts PDF (cheapest / most expensive / most efficient)](Drone_Parts_Three_Tiers.pdf)** — single-file parts reference with masses, mounting geometry, and structural load cases to start CAD and FEA. Regenerate with `python3 "Research/Component Study/unrestricted-tier-study-2026/generate_parts_pdf.py"`.
+
 ## Current Documents
 
 - [Executable Engineering Plan](Engineering%20Plan/README.md)
