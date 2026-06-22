@@ -1,0 +1,25 @@
+{
+  "subsystem": "Control link, telemetry and logging",
+  "value_pick": "BetaFPV ELRS Lite receiver using CRSF telemetry; FC microSD logs; USB download after each trial",
+  "value_cost_usd": "$12 receiver baseline estimate",
+  "value_rationale": "One low-cost link supplies manual override and basic telemetry. Full-rate logs remain onboard, so a second air radio is not required for the first recovery experiments.",
+  "premium_pick": "CubePilot Herelink 1.1 for RC/video/telemetry plus Holybro Microhard P900 V2 pair as an independent MAVLink data link",
+  "premium_cost_usd": "$449 Microhard pair plus Herelink price [uncertain]",
+  "premium_rationale": "Herelink combines control, HD video and telemetry while Microhard adds an independent high-power data path. This maximizes link redundancy and ground observability, at substantial cost, RF complexity and airborne power.",
+  "optimal_pick": "RadioMaster RP3 V2 diversity ELRS receiver for manual override plus Holybro SiK Telemetry Radio V3 100 mW pair for MAVLink; FC microSD as the authoritative log",
+  "optimal_cost_usd": "$19.99 RP3 plus $58.99 SiK pair = $78.98",
+  "optimal_rationale": "The RP3 adds antenna diversity and a TCXO for the safety-critical RC path. The independent SiK link supports live Mission Planner/QGroundControl observability without coupling control loss to telemetry loss. Onboard logs avoid treating an RF link as lossless.",
+  "key_specs": "RP3: dual-antenna diversity, up to 100 mW telemetry, ExpressLRS 2.4 GHz. SiK V3 100 mW: 23.5 g airborne unit with antenna, 5 V, 100 mA transmit, MAVLink-oriented firmware, up to 250 kbps RF data rate. Microhard P900: up to 1 W, 276 kbps, 81 g with antenna. Herelink: up to 20 km FCC, 110 ms video delay, 720p/1080p.",
+  "interfaces": "RP3 uses CRSF on a full UART. SiK uses a separate 3.3 V UART/JST-GH telemetry port. Logs from Pixhawk microSD and companion storage must share event IDs and synchronized timestamps. Ground link loss must not alter FC stabilization behavior.",
+  "evidence": [
+    {"url": "https://www.radiomasterrc.com/products/rp3-expresslrs-2-4ghz-nano-receiver", "supports": "$19.99 sale price, TCXO, diversity and telemetry PA"},
+    {"url": "https://holybro.com/products/sik-telemetry-radio-v3", "supports": "$58.99 pair, MAVLink support, link rates, mass and electrical data"},
+    {"url": "https://holybro.com/products/microhard-telemetry-radio-copy", "supports": "$449 pair, RF power, rates, mass and power"},
+    {"url": "https://docs.cubepilot.org/user-guides/herelink/herelink-overview", "supports": "Herelink range, video delay, resolution and system integration"},
+    {"url": "https://ardupilot.org/dev/docs/mavlink-basics.html", "supports": "MAVLink is not guaranteed delivery and commands require state/acknowledgement checks"}
+  ],
+  "integration_risks": "2.4 GHz RC and any 2.4 GHz Wi-Fi/video source can interfere if antennas and channels are poorly planned. The SiK air unit is 23.5 g, material on a 3.5-inch craft. Herelink plus Microhard duplicates functions and increases RF, power and configuration failure modes.",
+  "bench_gates": "Perform range and antenna-shadow tests in the complete guard/frame, verify independent RC and telemetry failsafes, require no RC packet-loss burst longer than the configured recovery tolerance, prove onboard logs survive link loss, and align FC/companion timestamps within 5 ms. Test loss and restoration of each link independently.",
+  "confidence": "Optimal link prices/specs CONFIRMED. RF performance in the completed craft BENCH_REQUIRED. Herelink acquisition price is [uncertain].",
+  "uncertain": ["premium_cost_usd"]
+}

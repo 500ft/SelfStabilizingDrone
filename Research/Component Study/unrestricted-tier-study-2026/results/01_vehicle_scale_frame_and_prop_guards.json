@@ -1,0 +1,23 @@
+{
+  "subsystem": "Vehicle scale, frame and prop guards",
+  "value_pick": "Existing custom 2-inch printed-nylon guarded frame, steel M2 fasteners, positive battery strap",
+  "value_cost_usd": "$40 engineering allowance",
+  "value_rationale": "The locked 129.8 g architecture is already the lowest-cost credible guarded vehicle. Removing the mass ceiling creates no reason to discard a frame that closes the current mass, mounting, and safety requirements.",
+  "premium_pick": "Custom carbon/composite guarded industrial quad sized around four T-Motor A6-M 23-inch propulsion modules",
+  "premium_cost_usd": "[uncertain] Custom frame and guard fabrication is not vendor-quoted; exclude it from the catalog subtotal",
+  "premium_rationale": "This is the coherent airframe scale for the premium sensors and industrial compute. It can provide large payload and redundant avionics capacity, but it is not safely hand-thrown and is a poor match to the original indoor recovery experiment.",
+  "optimal_pick": "GEPRC GEP-CL35 V2 3.5-inch guarded frame, SKU GP105886",
+  "optimal_cost_usd": "$69.99",
+  "optimal_rationale": "The 142 mm frame has one-piece injection guards, reinforced guard-to-frame joints, a shock-isolated camera mount, positive battery retention, and enough volume for a Pixhawk-class FC plus perception hardware. It is the smallest catalog frame with credible room for the optimal avionics stack.",
+  "key_specs": "Value: about 42.5 g design allowance, 2-inch guards. Premium: 23-inch propulsion class and multi-kilogram vehicle. Optimal: 142 mm motor-to-motor, 95 mm guard inside diameter, 3.5-inch props, 25.5 x 25.5 mm FC holes, 12 x 12 mm motor holes, 133.7 g frame.",
+  "interfaces": "The optimal frame does not natively accept the Pixhawk 6C Mini footprint; a stiff adapter plate and isolated avionics deck are required. Motor holes directly match the selected GEPRC 2105.5 motors. The integrated XT60 mount suits 6S current.",
+  "evidence": [
+    {"url": "https://geprc.com/product/gep-cl35-v2-frame/", "supports": "$69.99 price, 133.7 g mass, geometry, injection guards, reinforced joints, battery retention, and mounting patterns"},
+    {"url": "https://geprc.com/product/geprc-cinelog35-v2-analog-fpv-drone/", "supports": "263.8 g catalog aircraft using this frame, 6S 1050-1300 mAh recommendation, and selected motor family"},
+    {"url": "https://store.tmotor.com/product/a6-m-6s-uav-modular-propulsion-kit.html", "supports": "Premium scale: 23-inch prop, 390 g per arm, 2-2.5 kg rated and 6 kg maximum thrust per arm"}
+  ],
+  "integration_risks": "The GEP frame consumes 133.7 g before avionics and may be near the practical payload limit of a 3.5-inch cinewhoop once OAK, Pixhawk, telemetry, and a 6S pack are added. Guards alter propeller thrust and transient response. The premium frame would make release testing hazardous and changes the project into an industrial UAV program.",
+  "bench_gates": "Freeze actual takeoff mass after assembly. Require measured T/W >=2.0 at minimum loaded voltage, no prop-to-guard contact, <=1.0 mm lateral guard deflection at the defined proof load, and no permanent deformation after the release-envelope drop test. Reject the 3.5-inch scale if the fully integrated craft cannot meet T/W or guard clearance.",
+  "confidence": "Optimal frame geometry, price, and mass CONFIRMED by GEPRC. Adapter design and installed stiffness BENCH_REQUIRED. Premium custom frame cost and structural design ASSUMED.",
+  "uncertain": ["premium_cost_usd"]
+}
