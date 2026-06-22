@@ -21,6 +21,8 @@ This repository documents a staged learning project for a protected micro-UAV th
 - [Component and Propulsion Research](Research/Component%20Study/README.md)
 - [Stage 1 Verification Gates and Resource Map](Engineering%20Plan/stage1-verification-gates.md)
 - [Pre-Purchase Verification Report](Research/Component%20Study/component-selection-2026/PREPURCHASE_VERIFICATION.md)
+- [Three-Tier Architecture Decision (cheapest / capability ceiling / mission-optimal)](Research/Component%20Study/unrestricted-tier-study-2026/DECISION.md)
+- [Weight-Unrestricted Component Research](Research/Component%20Study/unrestricted-tier-study-2026/report.md)
 
 ## Current Status
 

@@ -55,10 +55,22 @@ receipt measurements and completion of the CAD mass model.
 
 Expected total: approximately $350-$650 depending on vision board, test cage, and spare parts.
 
+## Availability Risk (checked 2026-06-22)
+
+Procurement was verified against live listings. Several locked parts are EOL or
+legacy and must be re-confirmed (or substituted) before any order. Tracked as
+OQ-007 and OQ-008 in [OPEN_QUESTIONS.md](../OPEN_QUESTIONS.md).
+
+| Part | Status | Action |
+|---|---|---|
+| Holybro Kakute H7 Mini **v1.5** | ArduPilot docs indicate v1.5 effectively unavailable since ~mid-2025; only third-party listings found | **Blocker.** Re-confirm exact-revision stock or pick an H7 20x20 successor and re-verify the UART/DShot map (OQ-005). |
+| Matek 3901-L0X | CONFIRMED EOL; spotty distributor stock | Buy now if keeping, or pre-select a current flow/range substitute. |
+| HGLRC XJB BS13A | Legacy; mostly sold inside an F4 flytower, fragile standalone stock | Lock down standalone stock or substitute a current 2-3S 4-in-1. |
+
 ## Evidence Notes
 
 - Kakute H7 Mini **v1.5** is required; earlier revisions use different IMUs and
-  ArduPilot targets.
+  ArduPilot targets. See the availability risk above before ordering.
 - The HGLRC XJB BS13A is a legacy part. Its electrical and mass specifications
   are supported by archived listings, but standalone stock must be verified.
 - The EX1103 thrust/current point is a vendor result, not independent evidence.

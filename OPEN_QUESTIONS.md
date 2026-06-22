@@ -10,6 +10,8 @@ Track unresolved design decisions here. Close each item with evidence rather tha
 | OQ-004 | Which NYU facility can provide motion-capture or high-speed video access? | Faculty/lab outreach | Confirmed equipment access and supervision | OPEN |
 | OQ-005 | What gyro range and estimator envelope are reliable on the Holybro Kakute H7 Mini (ArduPilot)? | Bench + flight test on locked FC | Kakute IMU datasheet, ArduPilot EKF3 config, and external-truth comparison | OPEN (FC locked: Kakute H7 Mini) |
 | OQ-006 | What release heights are testable in the available enclosure? | Test-facility design | Cage dimensions and recovery simulation | OPEN |
+| OQ-007 | Is the locked flight controller (Holybro Kakute H7 Mini **v1.5**) still procurable in the exact revision? | Procurement before any order | Live first-party or authorized-reseller stock of v1.5; if unavailable, an H7 20x20 successor with a re-verified UART/DShot resource map | OPEN (2026-06-22 check: ArduPilot docs indicate v1.5 effectively unavailable since ~mid-2025; only third-party listings found. Blocks the avionics resource map in OQ-005.) |
+| OQ-008 | Are the EOL/legacy parts in the locked BOM (Matek 3901-L0X, HGLRC XJB BS13A) actually orderable now? | Procurement before any order | Confirmed in-stock standalone units, or pre-selected current substitutes | OPEN (2026-06-22 check: Matek 3901-L0X CONFIRMED EOL with spotty distributor stock; HGLRC BS13A mostly sold as part of an F4 flytower, fragile standalone stock.) |
 
 ## Milestone Schedule
 
