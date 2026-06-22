@@ -42,3 +42,7 @@ Run the repository checks with:
 ```bash
 python3 -m unittest discover -s Analysis/tests -v
 ```
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
