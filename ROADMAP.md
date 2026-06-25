@@ -36,14 +36,27 @@ Cheap, reliable, fully in your control. Build a 6-DoF dynamics + control
 simulation of the release-to-stabilization maneuver and produce a demonstrable
 result (plots + a short video).
 
-- [ ] 6-DoF rigid-body model. Mass/inertia: start from the locked-BOM estimate,
-      but **replace it with the CAD-extracted inertia tensor from Lane A+** as
-      soon as that exists (CAD feeds the sim — see Lane A+).
-- [ ] Toss/drop/release detection from simulated IMU.
-- [ ] Stabilization controller that arrests tumble and recovers to hover.
-- [ ] Characterize: recovery time, control-authority margin, max recoverable
-      release rate.
-- [ ] One figure set + a screen-recorded sim run.
+- [x] 6-DoF rigid-body model with the locked-BOM mass/inertia
+      (`Analysis/sim_release_recovery.py`: full quaternion attitude + translational
+      dynamics, attitude-coupled thrust). Mass/inertia still to be **replaced with the
+      CAD-extracted inertia tensor from Lane A+** when that exists.
+- [~] Release detection: modeled as the detection + motor-spool **latency** (motors off
+      during it, then closed-loop). The standalone IMU release *classifier* remains the
+      separate `Analysis/classifier_stats.py` / `gates.py` workstream.
+- [x] Stabilization controller that arrests tumble and recovers to hover (saturated
+      attitude PD + tilt-compensated altitude hold; respects locked-BOM torque/thrust limits).
+- [x] Characterize: recovery time, control-authority margin, max recoverable release rate
+      (`Analysis/run_release_recovery.py`; results in `Data/release_recovery_results.json`).
+- [~] Figure set done (`Figures/release_recovery_timeseries.*`, `_envelope.*`); animated
+      screen-recorded run still to add.
+
+**DELIVERED 2026-06-25 — Lane A is now a demonstrated control result, not a plan.** The
+closed-loop sim recovers the nominal-BOM drone from a 2 rad/s tumble + 60° tilt in **1.54 s**
+losing **0.44 / 3.0 m** of altitude. Recovery envelope by BOM tier (max recoverable tumble
+rate from 60° in the 3 m budget): **best ≥ 40 rad/s, nominal 3.5 rad/s, worst 1.0 rad/s** —
+i.e. the worst-case BOM has thin tumble-recovery margin and the design should bias toward the
+best-tier control authority (more torque/thrust, faster detection) or a larger height budget.
+Verified by 9 unit tests (`Analysis/tests/test_sim_release_recovery.py`); full suite 50 passed.
 
 Outcome: converts the project from "plan" to "demonstrated control result"
 without spending money or risking an 8-week hardware slip.
