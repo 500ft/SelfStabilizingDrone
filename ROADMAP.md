@@ -53,13 +53,32 @@ result (plots + a short video).
 **DELIVERED 2026-06-25 — Lane A is now a demonstrated control result, not a plan.** The
 closed-loop sim recovers the nominal-BOM drone from a 2 rad/s tumble + 60° tilt in **1.54 s**
 losing **0.44 / 3.0 m** of altitude. Recovery envelope by BOM tier (max recoverable tumble
-rate from 60° in the 3 m budget): **best ≥ 40 rad/s, nominal 3.5 rad/s, worst 1.0 rad/s** —
-i.e. the worst-case BOM has thin tumble-recovery margin and the design should bias toward the
-best-tier control authority (more torque/thrust, faster detection) or a larger height budget.
-Verified by 9 unit tests (`Analysis/tests/test_sim_release_recovery.py`); full suite 50 passed.
+rate from 60° in the 3 m budget): **best 34.5 rad/s (gyro-limited — recovery never failed up
+to the 2000 °/s sensor range, so the edge is the measurement cap, not authority), nominal
+3.5 rad/s, worst 1.0 rad/s** — i.e. the worst-case BOM has thin tumble-recovery margin and
+the design should bias toward best-tier control authority or a larger height budget.
+*(Corrected 2026-07-02: the earlier "best ≥ 40 rad/s" figure was the scan cap of the search
+loop, not a physical result, and exceeded what the gyro can even measure. The envelope scan
+is now capped at the gyro range and reports which edge it hit.)*
 
-Outcome: converts the project from "plan" to "demonstrated control result"
-without spending money or risking an 8-week hardware slip.
+**REVISED 2026-07-02 — the Monte Carlo dispersion gate FAILS at the placeholder torque
+authority (`Analysis/monte_carlo_recovery.py`, `Data/monte_carlo_results.json`).** The
+validation gates require recovery "across a Monte Carlo sweep, not only a single
+cherry-picked run" — run with CG offset, motor mismatch, gyro/attitude noise, battery sag,
+and mass/inertia/latency dispersion, the demo point recovers in only **4%** of as-toleranced
+builds (cg ≤ 5 mm) and **43–77%** even for balance-controlled builds (cg ≤ 1 mm). Root cause:
+the thrust-line-offset disturbance torque (`cg × thrust`) consumes the whole placeholder
+0.004 N·m budget at just **0.95 mm** of offset under recovery thrust — and the placeholder
+(EST-REC-007, explicitly "replace with measured thrust and arm length") is likely ~10×
+conservative against a real 4-motor mixer. **Lane A's single-point demo stands, but the
+robustness claim is NOT yet earned.** The two ways to pass the gate, in priority order:
+**(1)** bench-measure the real differential-torque authority (EST-REC-007 is now the
+highest-value measurement in the project), and **(2)** CAD-derived CG + an explicit balance
+requirement (thrust-line offset ≤ 0.5 mm target) from Lane A+ — one more reason Lane A+
+feeds Lane A rather than the other way around.
+
+Outcome: converts the project from "plan" to "demonstrated control result with a
+quantified, honestly-reported robustness gap" without spending money.
 
 ### Lane A+ — Mechanical CAD/FEA package (demonstrable, no hardware purchase)
 

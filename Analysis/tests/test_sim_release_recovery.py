@@ -8,10 +8,12 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from Analysis import rigid_body
-from Analysis.sim_release_recovery import (DroneParams, _control, axis_angle_quat,
-                                           best_params, max_recoverable_rate,
-                                           nominal_params, quat_mul, quat_to_rotmat,
-                                           simulate, worst_params)
+from Analysis.monte_carlo_recovery import clopper_pearson_lower, draw_case
+from Analysis.sim_release_recovery import (DroneParams, Imperfections, _control,
+                                           axis_angle_quat, best_params,
+                                           max_recoverable_rate, nominal_params,
+                                           quat_mul, quat_to_rotmat, simulate,
+                                           worst_params)
 
 
 class TestPrimitives(unittest.TestCase):
@@ -57,6 +59,59 @@ class TestRecovery(unittest.TestCase):
         for key, arr in log.items():
             self.assertFalse(np.any(np.isnan(arr)), f"NaN in {key}")
         self.assertTrue(np.all(log["tilt"] >= -1e-9) and np.all(log["tilt"] <= math.pi + 1e-9))
+
+
+class TestEnvelopeEdge(unittest.TestCase):
+    def test_scan_capped_at_gyro_limit(self):
+        # the envelope can never exceed what the gyro can measure
+        p = best_params()
+        rate, edge = max_recoverable_rate(p, math.radians(60), with_edge=True)
+        self.assertLessEqual(rate, p.gyro_limit_rad_s + 1e-9)
+        self.assertIn(edge, ("failure", "gyro_limit"))
+
+    def test_nominal_edge_is_a_real_failure(self):
+        rate, edge = max_recoverable_rate(nominal_params(), math.radians(60), with_edge=True)
+        self.assertEqual(edge, "failure")
+        self.assertGreater(rate, 0.0)
+
+
+class TestImperfections(unittest.TestCase):
+    def test_default_imperfections_change_nothing(self):
+        r0 = simulate(nominal_params(), 2.0, math.radians(60))
+        r1 = simulate(nominal_params(), 2.0, math.radians(60), imperfections=Imperfections())
+        np.testing.assert_allclose(r0["log"]["tilt"], r1["log"]["tilt"], atol=0.0)
+
+    def test_seeded_runs_are_repeatable(self):
+        imp = Imperfections(gyro_noise_rad_s=0.02, tilt_noise_rad=math.radians(2), seed=7)
+        a = simulate(nominal_params(), 2.0, math.radians(60), imperfections=imp)
+        b = simulate(nominal_params(), 2.0, math.radians(60), imperfections=imp)
+        np.testing.assert_allclose(a["log"]["tilt"], b["log"]["tilt"], atol=0.0)
+
+    def test_cg_offset_disturbance_defeats_placeholder_authority(self):
+        # documented finding: >=2 mm thrust-line offset exceeds the placeholder
+        # 0.004 N*m budget at recovery thrust and recovery fails
+        imp = Imperfections(cg_offset_m=(0.002, 0.0))
+        r = simulate(nominal_params(), 2.0, math.radians(60), imperfections=imp)
+        self.assertFalse(r["success"])
+
+    def test_battery_sag_caps_thrust(self):
+        imp = Imperfections(thrust_scale=0.9)
+        p = nominal_params()
+        r = simulate(p, 2.0, math.radians(60), imperfections=imp)
+        self.assertLessEqual(r["peak_thrust_n"], 0.9 * p.max_thrust_n + 1e-9)
+
+    def test_clopper_pearson_bounds(self):
+        self.assertEqual(clopper_pearson_lower(0, 100), 0.0)
+        self.assertAlmostEqual(clopper_pearson_lower(100, 100), 0.05 ** 0.01, places=6)
+        lb = clopper_pearson_lower(90, 100)
+        self.assertGreater(lb, 0.80)
+        self.assertLess(lb, 0.90)
+
+    def test_draw_case_respects_cg_cap(self):
+        rng = np.random.default_rng(0)
+        for _ in range(50):
+            _, imp = draw_case(rng, cg_offset_max_m=0.001)
+            self.assertLessEqual(math.hypot(*imp.cg_offset_m), 0.001 + 1e-12)
 
 
 class TestSaturation(unittest.TestCase):
