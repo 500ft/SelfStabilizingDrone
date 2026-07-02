@@ -1,5 +1,5 @@
 {
-  "note": "GATE RESULT: FAIL at the placeholder torque authority (EST-REC-007). Recovery is not robust to dispersions; the thrust-line-offset disturbance dominates. See Analysis/current-results.md for the derived requirement.",
+  "note": "GATE RESULT: FAIL at the placeholder torque authority (EST-REC-007) \u2014 scenarios A/B. Scenario C is the PREDICTION under the physically-derived mixer authority (ASSUMED 60 mm arm, datasheet thrust, PID+airmode controller): it is what the EST-REC-007 bench measurement must confirm before the robustness claim is made. See Analysis/current-results.md.",
   "scenarios": [
     {
       "label": "as-toleranced_cg5mm",
@@ -32,7 +32,9 @@
         "thrust_sag_x": [
           0.9,
           1.0
-        ]
+        ],
+        "authority_model": "placeholder",
+        "mixer_arm_m": null
       },
       "by_rate": {
         "1.0": {
@@ -92,7 +94,9 @@
         "thrust_sag_x": [
           0.9,
           1.0
-        ]
+        ],
+        "authority_model": "placeholder",
+        "mixer_arm_m": null
       },
       "by_rate": {
         "1.0": {
@@ -118,6 +122,68 @@
           "success_rate_95_lower": 0.32962636916504384,
           "descent_p50_m": 2.242855302755781,
           "descent_max_m": 2.9710037970216163
+        }
+      }
+    },
+    {
+      "label": "as-toleranced_cg5mm_mixer-authority",
+      "init_tilt_deg": 60.0,
+      "dispersions": {
+        "mass_x": [
+          0.95,
+          1.1
+        ],
+        "inertia_x": [
+          0.85,
+          1.25
+        ],
+        "torque_x": [
+          0.85,
+          1.1
+        ],
+        "thrust_x": [
+          0.85,
+          1.05
+        ],
+        "latency_x": [
+          0.8,
+          1.5
+        ],
+        "cg_offset_max_m": 0.005,
+        "torque_bias_max_frac": 0.1,
+        "gyro_noise_rad_s": 0.02,
+        "tilt_noise_deg": 2.0,
+        "thrust_sag_x": [
+          0.9,
+          1.0
+        ],
+        "authority_model": "mixer",
+        "mixer_arm_m": 0.06
+      },
+      "by_rate": {
+        "1.0": {
+          "n": 75,
+          "successes": 75,
+          "success_rate": 1.0,
+          "success_rate_95_lower": 0.9608441125278288,
+          "descent_p50_m": 0.32101097091252184,
+          "descent_max_m": 0.541061160235783
+        },
+        "2.0": {
+          "n": 150,
+          "successes": 150,
+          "success_rate": 1.0,
+          "success_rate_95_lower": 0.9802265618354915,
+          "descent_p50_m": 0.3851825087747699,
+          "descent_max_m": 0.8160910638594535
+        },
+        "3.0": {
+          "n": 75,
+          "successes": 75,
+          "success_rate": 1.0,
+          "success_rate_95_lower": 0.9608441125278288,
+          "descent_p50_m": 0.5181002381811306,
+          "descent_max_m": 1.0129521308893576
         }
       }
     }
