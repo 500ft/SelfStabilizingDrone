@@ -12,6 +12,19 @@ the maneuver the whole project is about.
 Frames: world z is up; body z is the thrust axis. Quaternion ``q = (w, x, y, z)`` maps body→world.
 All actuation respects the locked-BOM limits (max control torque, max collective thrust).
 Parameters are taken from ``recovery.py``'s characterized cases so the two analyses agree.
+
+The controller acts on MEASURED state: the body-rate measurement saturates at the BOM gyro
+range (``gyro_limit_rad_s`` — a rate the sensor cannot report cannot be controlled against),
+and an optional :class:`Imperfections` bundle injects the dispersions the validation gates
+require (CG offset, motor-to-motor thrust mismatch, gyro/attitude measurement noise, battery
+sag). Truth dynamics always integrate the true state.
+
+KNOWN LIMITATION (stated, not hidden): collective-thrust and control-torque saturations are
+treated as independent limits. On a real quad they share per-motor headroom — at full
+collective there is no differential left for torque. The locked-BOM ``max_torque_n_m`` is
+~10x conservative against the physically achievable differential torque at mid-collective,
+which covers most of the trajectory, but instants at full collective are optimistic. A
+per-motor mixer model is the follow-up that removes this.
 """
 
 from __future__ import annotations
@@ -45,6 +58,22 @@ class DroneParams:
     def inertia(self) -> np.ndarray:
         i = self.inertia_lateral_kg_m2
         return np.array([i, i, i * self.inertia_yaw_factor])
+
+
+@dataclass(frozen=True)
+class Imperfections:
+    """Dispersions/imperfections applied to one run (validation-gate test cases).
+
+    All default to "perfect", so ``simulate(...)`` without this argument is unchanged.
+    Measurement noises are white, applied per integration step, seeded for repeatability.
+    """
+
+    cg_offset_m: tuple[float, float] = (0.0, 0.0)   # thrust-line offset (body x, y)
+    thrust_scale: float = 1.0                       # battery-sag multiplier on max thrust
+    torque_bias_n_m: tuple[float, float, float] = (0.0, 0.0, 0.0)  # motor mismatch
+    gyro_noise_rad_s: float = 0.0                   # per-axis white rate-measurement noise
+    tilt_noise_rad: float = 0.0                     # white attitude-estimate error magnitude
+    seed: int = 0
 
 
 # control gains (tuned so the torque-limited arrest saturates, then eases — see __main__)
@@ -107,12 +136,21 @@ def _control(q, omega, pos, vel, p: DroneParams):
 
 def simulate(p: DroneParams, initial_rate_rad_s: float, initial_tilt_rad: float,
              *, tumble_axis=(1.0, 1.0, 0.0), tilt_axis=(0.0, 1.0, 0.0),
-             dt: float = 5e-4, t_max: float = 6.0) -> dict:
+             dt: float = 5e-4, t_max: float = 6.0,
+             imperfections: Imperfections | None = None) -> dict:
     """Release the drone with an initial tumble + tilt and run closed-loop recovery.
 
     Motors are off for ``detection_latency + motor_start_latency`` (passive tumble + free
-    fall), then the controller engages. Returns time-series arrays + recovery metrics.
+    fall), then the controller engages. The controller sees the MEASURED state: body rate
+    clipped to the gyro range, plus (optional) measurement noise and actuation dispersions
+    from ``imperfections``. Returns time-series arrays + recovery metrics.
     """
+    imp = imperfections or Imperfections()
+    rng = np.random.default_rng(imp.seed)
+    cg = np.asarray(imp.cg_offset_m, float)
+    torque_bias = np.asarray(imp.torque_bias_n_m, float)
+    max_thrust_avail = p.max_thrust_n * imp.thrust_scale
+
     q = axis_angle_quat(np.asarray(tilt_axis, float), initial_tilt_rad)
     omega = initial_rate_rad_s * (np.asarray(tumble_axis, float)
                                   / np.linalg.norm(tumble_axis))
@@ -132,7 +170,22 @@ def simulate(p: DroneParams, initial_rate_rad_s: float, initial_tilt_rad: float,
         tilt = acos(np.clip(R[2, 2], -1.0, 1.0))
         motors_on = t >= passive_time
         if motors_on:
-            torque, thrust, _ = _control(q, omega, pos, vel, p)
+            # measured state: gyro clips at its range; optional white noise on the rate
+            # and on the attitude estimate (small random rotation of q).
+            omega_meas = omega
+            if imp.gyro_noise_rad_s > 0.0:
+                omega_meas = omega_meas + rng.normal(0.0, imp.gyro_noise_rad_s, 3)
+            omega_meas = np.clip(omega_meas, -p.gyro_limit_rad_s, p.gyro_limit_rad_s)
+            q_meas = q
+            if imp.tilt_noise_rad > 0.0:
+                axis = rng.normal(size=3)
+                q_meas = quat_mul(q, axis_angle_quat(axis, rng.normal(0.0, imp.tilt_noise_rad)))
+                q_meas = q_meas / np.linalg.norm(q_meas)
+            torque, thrust, _ = _control(q_meas, omega_meas, pos, vel, p)
+            thrust = min(thrust, max_thrust_avail)          # battery sag caps thrust
+            # actuation imperfections: thrust line offset from CG -> disturbance torque
+            # tau = r_cg x F_body (F_body = [0,0,thrust]); plus motor-mismatch bias.
+            torque = torque + np.array([cg[1] * thrust, -cg[0] * thrust, 0.0]) + torque_bias
         else:
             torque, thrust = np.zeros(3), 0.0
 
@@ -193,21 +246,33 @@ def _result(p, log, *, success, crashed, recovery_time, initial_rate_rad_s):
 
 
 def max_recoverable_rate(p: DroneParams, initial_tilt_rad: float,
-                         hi: float = 40.0, step: float = 0.5) -> float:
+                         hi: float | None = None, step: float = 0.5,
+                         with_edge: bool = False):
     """Largest initial tumble rate that still recovers, scanning up to the first failure.
 
     Scanning to the *first* failure (rather than bisecting) defines the usable envelope edge
     robustly even if recovery is not perfectly monotonic in rate near the boundary.
+
+    The scan is capped at the BOM gyro range: a release faster than the gyro can measure
+    cannot be claimed as recoverable, whatever the dynamics say. With ``with_edge=True``
+    returns ``(rate, edge)`` where ``edge`` is ``"failure"`` (a real dynamic boundary was
+    found) or ``"gyro_limit"`` (recovery never failed up to the measurement cap — the
+    envelope is sensor-limited, not authority-limited).
     """
+    if hi is None:
+        hi = p.gyro_limit_rad_s
+    hi = min(hi, p.gyro_limit_rad_s)
     last_ok = 0.0
     rate = 0.0
+    edge = "gyro_limit"
     while rate <= hi:
         if simulate(p, rate, initial_tilt_rad)["success"]:
             last_ok = rate
             rate += step
         else:
+            edge = "failure"
             break
-    return last_ok
+    return (last_ok, edge) if with_edge else last_ok
 
 
 # locked-BOM cases, mirroring recovery.default_cases() so the two analyses agree

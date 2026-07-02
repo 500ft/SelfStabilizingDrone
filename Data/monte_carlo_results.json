@@ -1,0 +1,135 @@
+{
+  "note": "GATE RESULT: FAIL at the placeholder torque authority (EST-REC-007). Recovery is not robust to dispersions; the thrust-line-offset disturbance dominates. See Analysis/current-results.md for the derived requirement.",
+  "scenarios": [
+    {
+      "label": "as-toleranced_cg5mm",
+      "init_tilt_deg": 60.0,
+      "dispersions": {
+        "mass_x": [
+          0.95,
+          1.1
+        ],
+        "inertia_x": [
+          0.85,
+          1.25
+        ],
+        "torque_x": [
+          0.85,
+          1.1
+        ],
+        "thrust_x": [
+          0.85,
+          1.05
+        ],
+        "latency_x": [
+          0.8,
+          1.5
+        ],
+        "cg_offset_max_m": 0.005,
+        "torque_bias_max_frac": 0.1,
+        "gyro_noise_rad_s": 0.02,
+        "tilt_noise_deg": 2.0,
+        "thrust_sag_x": [
+          0.9,
+          1.0
+        ]
+      },
+      "by_rate": {
+        "1.0": {
+          "n": 75,
+          "successes": 3,
+          "success_rate": 0.04,
+          "success_rate_95_lower": 0.010989860023737226,
+          "descent_p50_m": 0.5644136535329985,
+          "descent_max_m": 0.822852707989006
+        },
+        "2.0": {
+          "n": 150,
+          "successes": 6,
+          "success_rate": 0.04,
+          "success_rate_95_lower": 0.017560962221703884,
+          "descent_p50_m": 1.1210407374694207,
+          "descent_max_m": 2.215501633045192
+        },
+        "3.0": {
+          "n": 75,
+          "successes": 1,
+          "success_rate": 0.013333333333333334,
+          "success_rate_95_lower": 0.000683676778290752,
+          "descent_p50_m": 1.8372976961154683,
+          "descent_max_m": 1.8372976961154683
+        }
+      }
+    },
+    {
+      "label": "balance-controlled_cg1mm",
+      "init_tilt_deg": 60.0,
+      "dispersions": {
+        "mass_x": [
+          0.95,
+          1.1
+        ],
+        "inertia_x": [
+          0.85,
+          1.25
+        ],
+        "torque_x": [
+          0.85,
+          1.1
+        ],
+        "thrust_x": [
+          0.85,
+          1.05
+        ],
+        "latency_x": [
+          0.8,
+          1.5
+        ],
+        "cg_offset_max_m": 0.001,
+        "torque_bias_max_frac": 0.1,
+        "gyro_noise_rad_s": 0.02,
+        "tilt_noise_deg": 2.0,
+        "thrust_sag_x": [
+          0.9,
+          1.0
+        ]
+      },
+      "by_rate": {
+        "1.0": {
+          "n": 75,
+          "successes": 45,
+          "success_rate": 0.6,
+          "success_rate_95_lower": 0.4985362119910084,
+          "descent_p50_m": 0.35443409634015016,
+          "descent_max_m": 1.0117192629486302
+        },
+        "2.0": {
+          "n": 150,
+          "successes": 115,
+          "success_rate": 0.7666666666666667,
+          "success_rate_95_lower": 0.7028049999994367,
+          "descent_p50_m": 0.837316404850968,
+          "descent_max_m": 2.405819457536124
+        },
+        "3.0": {
+          "n": 75,
+          "successes": 32,
+          "success_rate": 0.4266666666666667,
+          "success_rate_95_lower": 0.32962636916504384,
+          "descent_p50_m": 2.242855302755781,
+          "descent_max_m": 2.9710037970216163
+        }
+      }
+    }
+  ],
+  "static_cg_tolerance": {
+    "thrust_1.27N": {
+      "cg_100pct_budget_mm": 3.149606299212598,
+      "cg_50pct_margin_mm": 1.574803149606299
+    },
+    "thrust_4.20N": {
+      "cg_100pct_budget_mm": 0.9523809523809523,
+      "cg_50pct_margin_mm": 0.47619047619047616
+    }
+  }
+}

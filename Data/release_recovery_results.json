@@ -14,8 +14,9 @@
   },
   "envelope_by_tier": {
     "best": {
-      "max_recoverable_rate_rad_s": 40.0,
-      "max_recoverable_rate_deg_s": 2291.831180523293,
+      "max_recoverable_rate_rad_s": 34.5,
+      "max_recoverable_rate_deg_s": 1976.70439320134,
+      "envelope_edge": "gyro_limit",
       "max_torque_n_m": 0.006,
       "max_thrust_n": 5.0,
       "available_height_m": 3.0
@@ -23,6 +24,7 @@
     "nominal": {
       "max_recoverable_rate_rad_s": 3.5,
       "max_recoverable_rate_deg_s": 200.53522829578813,
+      "envelope_edge": "failure",
       "max_torque_n_m": 0.004,
       "max_thrust_n": 4.2,
       "available_height_m": 3.0
@@ -30,6 +32,7 @@
     "worst": {
       "max_recoverable_rate_rad_s": 1.0,
       "max_recoverable_rate_deg_s": 57.29577951308232,
+      "envelope_edge": "failure",
       "max_torque_n_m": 0.0025,
       "max_thrust_n": 3.5,
       "available_height_m": 3.0

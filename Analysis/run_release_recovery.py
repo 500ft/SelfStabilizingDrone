@@ -76,12 +76,17 @@ def envelope_figure(plt):
             r = simulate(p, rt, INIT_TILT)
             descent.append(r["max_descent_m"] if r["success"] else np.nan)
             ok_rate.append(r["success"])
-        mr = max_recoverable_rate(p, INIT_TILT)
+        mr, edge = max_recoverable_rate(p, INIT_TILT, with_edge=True)
         summary[name] = {"max_recoverable_rate_rad_s": mr,
                          "max_recoverable_rate_deg_s": float(np.degrees(mr)),
+                         "envelope_edge": edge,   # "failure" = real dynamic boundary;
+                         # "gyro_limit" = never failed up to the sensor range — the
+                         # envelope is measurement-limited, not authority-limited
                          "max_torque_n_m": p.max_torque_n_m, "max_thrust_n": p.max_thrust_n,
                          "available_height_m": p.available_height_m}
-        ax[0].plot(rates, descent, "o-", ms=4, color=colors[name], label=f"{name} (max {mr:.1f} rad/s)")
+        edge_tag = "" if edge == "failure" else " (gyro-limited)"
+        ax[0].plot(rates, descent, "o-", ms=4, color=colors[name],
+                   label=f"{name} (max {mr:.1f} rad/s{edge_tag})")
         ax[1].bar(name, np.degrees(mr), color=colors[name])
     ax[0].axhline(TIERS[1][1].available_height_m, ls=":", color="red", lw=1, label="height budget")
     ax[0].set_xlabel("initial tumble rate [rad/s]"); ax[0].set_ylabel("altitude lost [m]")
