@@ -21,7 +21,8 @@ from dataclasses import replace
 
 import numpy as np
 
-from Analysis.sim_release_recovery import DroneParams, Imperfections, nominal_params, simulate
+from Analysis.sim_release_recovery import (DroneParams, Imperfections, nominal_params,
+                                           simulate, with_mixer)
 
 # Dispersion bounds (uniform draws unless noted). Rationale in the table in
 # Analysis/current-results.md; all are multipliers on the locked nominal BOM values.
@@ -87,19 +88,30 @@ def clopper_pearson_lower(successes: int, n: int, alpha: float = 0.05) -> float:
 
 def run_sweep(rates_and_n: tuple[tuple[float, int], ...] = ((1.0, 75), (2.0, 150), (3.0, 75)),
               seed: int = 20260702, cg_offset_max_m: float = CG_OFFSET_MAX_M,
-              label: str = "as-toleranced") -> dict:
-    """Dispersion sweep at several tumble rates. Returns the results dict."""
+              label: str = "as-toleranced", mixer_arm_m: float | None = None) -> dict:
+    """Dispersion sweep at several tumble rates. Returns the results dict.
+
+    With ``mixer_arm_m`` set, every drawn vehicle uses the physically-derived
+    4-motor mixer authority (``with_mixer``) instead of the placeholder torque
+    clip; the torque dispersion multiplier then scales the arm (authority)
+    rather than the placeholder budget.
+    """
     rng = np.random.default_rng(seed)
     out: dict = {"label": label, "init_tilt_deg": 60.0, "dispersions": {
         "mass_x": MASS_RANGE, "inertia_x": INERTIA_RANGE, "torque_x": TORQUE_RANGE,
         "thrust_x": THRUST_RANGE, "latency_x": LATENCY_RANGE,
         "cg_offset_max_m": cg_offset_max_m, "torque_bias_max_frac": TORQUE_BIAS_MAX_FRAC,
         "gyro_noise_rad_s": GYRO_NOISE_RAD_S, "tilt_noise_deg": 2.0,
-        "thrust_sag_x": (0.90, 1.00)}, "by_rate": {}}
+        "thrust_sag_x": (0.90, 1.00),
+        "authority_model": ("mixer" if mixer_arm_m else "placeholder"),
+        "mixer_arm_m": mixer_arm_m}, "by_rate": {}}
     for rate, n in rates_and_n:
         succ, descents = 0, []
         for _ in range(n):
             p, imp = draw_case(rng, cg_offset_max_m)
+            if mixer_arm_m is not None:
+                arm_scale = p.max_torque_n_m / nominal_params().max_torque_n_m
+                p = with_mixer(p, arm_m=mixer_arm_m * arm_scale)
             r = simulate(p, rate, INIT_TILT_RAD, imperfections=imp)
             if r["success"]:
                 succ += 1
@@ -138,6 +150,11 @@ if __name__ == "__main__":
     a = run_sweep(label="as-toleranced_cg5mm")
     # Scenario B — balance-controlled build (cg <= 1 mm): isolates CG as the driver.
     b = run_sweep(seed=20260703, cg_offset_max_m=0.001, label="balance-controlled_cg1mm")
+    # Scenario C — as-toleranced build under the MIXER authority model (ASSUMED
+    # 60 mm arm + datasheet thrust): the prediction the EST-REC-007 bench
+    # measurement will confirm or kill.
+    c = run_sweep(seed=20260704, label="as-toleranced_cg5mm_mixer-authority",
+                  mixer_arm_m=0.060)
     static = cg_tolerance_scan()
     print("\nStatic CG-tolerance bound at the placeholder 0.004 N*m budget:")
     for k, v in static.items():
@@ -146,10 +163,12 @@ if __name__ == "__main__":
 
     repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     out = {"note": ("GATE RESULT: FAIL at the placeholder torque authority "
-                    "(EST-REC-007). Recovery is not robust to dispersions; the "
-                    "thrust-line-offset disturbance dominates. See "
-                    "Analysis/current-results.md for the derived requirement."),
-           "scenarios": [a, b], "static_cg_tolerance": static}
+                    "(EST-REC-007) — scenarios A/B. Scenario C is the PREDICTION "
+                    "under the physically-derived mixer authority (ASSUMED 60 mm "
+                    "arm, datasheet thrust, PID+airmode controller): it is what "
+                    "the EST-REC-007 bench measurement must confirm before the "
+                    "robustness claim is made. See Analysis/current-results.md."),
+           "scenarios": [a, b, c], "static_cg_tolerance": static}
     with open(os.path.join(repo, "Data", "monte_carlo_results.json"), "w") as fh:
         json.dump(out, fh, indent=2)
     print(f"\n[written] Data/monte_carlo_results.json")

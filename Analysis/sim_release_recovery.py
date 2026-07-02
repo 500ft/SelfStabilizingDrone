@@ -19,12 +19,20 @@ and an optional :class:`Imperfections` bundle injects the dispersions the valida
 require (CG offset, motor-to-motor thrust mismatch, gyro/attitude measurement noise, battery
 sag). Truth dynamics always integrate the true state.
 
-KNOWN LIMITATION (stated, not hidden): collective-thrust and control-torque saturations are
-treated as independent limits. On a real quad they share per-motor headroom — at full
-collective there is no differential left for torque. The locked-BOM ``max_torque_n_m`` is
-~10x conservative against the physically achievable differential torque at mid-collective,
-which covers most of the trajectory, but instants at full collective are optimistic. A
-per-motor mixer model is the follow-up that removes this.
+Two authority models are supported:
+
+* **Placeholder (default)**: independent per-axis torque clip at the BOM placeholder
+  ``max_torque_n_m`` (EST-REC-007) and an independent collective-thrust clip. Simple, but
+  optimistic at full collective (no headroom left for differential torque in reality) and
+  ~10x pessimistic at mid-collective.
+* **Mixer (:func:`with_mixer`)**: roll/pitch torque is bounded by what a 4-motor X mixer
+  can actually produce at the commanded collective — per-motor thrust in ``[0, T_max/4]``,
+  differential headroom ``d_max = min(T/4, T_max/4 - T/4)``, giving
+  ``tau_rp(T) = 2*sqrt(2)*arm*d_max`` (zero at both zero and full collective). Yaw keeps
+  the small placeholder bound (drag-generated, genuinely weak). While the >78 deg thrust
+  cut is active, the mixer holds a quarter-collective **control-authority floor** — motors
+  keep spinning to produce differential torque, the physical reason a real quad can right
+  itself while inverted. The arm length is an ASSUMED build parameter until CAD/bench.
 """
 
 from __future__ import annotations
@@ -53,11 +61,40 @@ class DroneParams:
     motor_start_latency_s: float = 0.06
     gyro_limit_rad_s: float = 2000.0 * np.pi / 180.0
     available_height_m: float = 3.0
+    arm_m: float | None = None             # motor arm; set via with_mixer() -> mixer authority
+    yaw_torque_n_m: float | None = None    # separate yaw bound in mixer mode (drag-generated)
 
     @property
     def inertia(self) -> np.ndarray:
         i = self.inertia_lateral_kg_m2
         return np.array([i, i, i * self.inertia_yaw_factor])
+
+
+def with_mixer(p: DroneParams, arm_m: float = 0.060) -> DroneParams:
+    """Switch a parameter set to the physically-derived mixer authority model.
+
+    ``arm_m`` is the motor-to-CG arm (ASSUMED 60 mm for the locked 2.0-2.3'' prop,
+    sub-250g class until CAD fixes it). The per-axis command clip is opened up (the
+    mixer clip in ``simulate`` becomes the binding roll/pitch limit) and the original
+    placeholder torque bound is kept as the yaw limit, since yaw torque is
+    drag-generated and genuinely small.
+    """
+    from dataclasses import replace
+    return replace(p, arm_m=arm_m, yaw_torque_n_m=p.max_torque_n_m,
+                   max_torque_n_m=1.0)
+
+
+def mixer_torque_limit(thrust_n: float, max_thrust_n: float, arm_m: float) -> float:
+    """Roll/pitch differential-torque capability of a 4-motor X mixer at a collective.
+
+    Motors sit at (+-arm/sqrt(2), +-arm/sqrt(2)); per-motor thrust in [0, T_max/4].
+    Raising one motor pair by d and lowering the other by d holds the collective and
+    yields torque 2*sqrt(2)*arm*d with d_max = min(T/4, T_max/4 - T/4). Zero at both
+    zero and full collective — the coupling the placeholder model ignored.
+    """
+    f_max = max_thrust_n / 4.0
+    d_max = max(0.0, min(thrust_n / 4.0, f_max - thrust_n / 4.0))
+    return 2.0 * sqrt(2.0) * arm_m * d_max
 
 
 @dataclass(frozen=True)
@@ -79,6 +116,17 @@ class Imperfections:
 # control gains (tuned so the torque-limited arrest saturates, then eases — see __main__)
 KP_ATT, KD_ATT = 0.012, 0.0026
 KP_ALT, KD_ALT = 2.2, 2.2
+# integral attitude trim, mixer mode only: a constant CG-offset disturbance leaves a PD
+# controller hovering at a steady tilt of tau_dist/KP_ATT (>25 deg at 2 mm offset) — the
+# standard fix is integral action. Clamped hard (anti-windup) well below the hover-collective
+# mixer capability so the trim can never consume the stabilization authority.
+KI_ATT = 0.010
+I_TORQUE_CLAMP = 0.020
+# mixer mode re-tune: the base PD gains were sized for the 0.004 N*m placeholder clip.
+# With mixer-level authority (~0.05 N*m at hover) the same gains leave the loop too soft
+# to out-torque a CG-offset disturbance at large tilt, so the attitude command is scaled
+# up (P and D together, preserving damping character) before the mixer clip.
+MIXER_ATT_GAIN_SCALE = 3.0
 
 
 def quat_to_rotmat(q: np.ndarray) -> np.ndarray:
@@ -158,6 +206,7 @@ def simulate(p: DroneParams, initial_rate_rad_s: float, initial_tilt_rad: float,
     vel = np.zeros(3)
     passive_time = p.detection_latency_s + p.motor_start_latency_s
     I = p.inertia
+    e_int = np.zeros(3)                    # integral attitude trim state (mixer mode)
 
     T = int(t_max / dt)
     log = {k: np.empty(T) for k in ("t", "tilt", "omega_mag", "z", "vz", "thrust")}
@@ -183,6 +232,30 @@ def simulate(p: DroneParams, initial_rate_rad_s: float, initial_tilt_rad: float,
                 q_meas = q_meas / np.linalg.norm(q_meas)
             torque, thrust, _ = _control(q_meas, omega_meas, pos, vel, p)
             thrust = min(thrust, max_thrust_avail)          # battery sag caps thrust
+            if p.arm_m is not None:
+                # mixer authority: keep a quarter-collective control floor while the
+                # >78deg thrust cut is active (motors spin for differential torque),
+                # then bound roll/pitch by the mixer capability at this collective.
+                if thrust <= 0.0:
+                    thrust = min(0.25 * p.max_thrust_n, max_thrust_avail)
+                # attitude-priority desaturation ("airmode"): never command full
+                # collective — cap at 75% so differential headroom cannot vanish
+                # (tau_avail(T_max) = 0). Costs peak climb thrust, preserves control.
+                thrust = min(thrust, 0.75 * max_thrust_avail)
+                torque = torque * MIXER_ATT_GAIN_SCALE
+                # integral trim of constant disturbances (CG offset, motor bias):
+                # integrate the attitude error only when upright-ish (tilt < 45 deg,
+                # past the arrest phase) and clamp the trim torque (anti-windup).
+                R_m = quat_to_rotmat(q_meas)
+                if R_m[2, 2] > 0.7071:
+                    e_b = R_m.T @ np.cross(R_m[:, 2], np.array([0.0, 0.0, 1.0]))
+                    e_int = e_int + e_b * dt
+                trim = np.clip(KI_ATT * e_int, -I_TORQUE_CLAMP, I_TORQUE_CLAMP)
+                torque = torque + trim
+                tau_rp = mixer_torque_limit(thrust, max_thrust_avail, p.arm_m)
+                torque[:2] = np.clip(torque[:2], -tau_rp, tau_rp)
+                yaw_lim = p.yaw_torque_n_m if p.yaw_torque_n_m is not None else tau_rp
+                torque[2] = np.clip(torque[2], -yaw_lim, yaw_lim)
             # actuation imperfections: thrust line offset from CG -> disturbance torque
             # tau = r_cg x F_body (F_body = [0,0,thrust]); plus motor-mismatch bias.
             torque = torque + np.array([cg[1] * thrust, -cg[0] * thrust, 0.0]) + torque_bias

@@ -11,9 +11,9 @@ from Analysis import rigid_body
 from Analysis.monte_carlo_recovery import clopper_pearson_lower, draw_case
 from Analysis.sim_release_recovery import (DroneParams, Imperfections, _control,
                                            axis_angle_quat, best_params,
-                                           max_recoverable_rate, nominal_params,
-                                           quat_mul, quat_to_rotmat, simulate,
-                                           worst_params)
+                                           max_recoverable_rate, mixer_torque_limit,
+                                           nominal_params, quat_mul, quat_to_rotmat,
+                                           simulate, with_mixer, worst_params)
 
 
 class TestPrimitives(unittest.TestCase):
@@ -112,6 +112,38 @@ class TestImperfections(unittest.TestCase):
         for _ in range(50):
             _, imp = draw_case(rng, cg_offset_max_m=0.001)
             self.assertLessEqual(math.hypot(*imp.cg_offset_m), 0.001 + 1e-12)
+
+
+class TestMixerAuthority(unittest.TestCase):
+    def test_mixer_limit_vanishes_at_zero_and_full_collective(self):
+        self.assertEqual(mixer_torque_limit(0.0, 4.2, 0.06), 0.0)
+        self.assertEqual(mixer_torque_limit(4.2, 4.2, 0.06), 0.0)
+
+    def test_mixer_limit_peaks_at_half_collective(self):
+        half = mixer_torque_limit(2.1, 4.2, 0.06)
+        self.assertGreater(half, mixer_torque_limit(1.0, 4.2, 0.06))
+        self.assertGreater(half, mixer_torque_limit(3.5, 4.2, 0.06))
+        # closed form at half collective: 2*sqrt(2)*arm*T_max/8
+        self.assertAlmostEqual(half, 2 * math.sqrt(2) * 0.06 * 4.2 / 8, places=12)
+
+    def test_mixer_authority_exceeds_placeholder_at_hover(self):
+        p = nominal_params()
+        hover = p.mass_kg * 9.81
+        self.assertGreater(mixer_torque_limit(hover, p.max_thrust_n, 0.06),
+                           10 * p.max_torque_n_m)
+
+    def test_mixer_recovers_the_cg_case_placeholder_cannot(self):
+        imp = Imperfections(cg_offset_m=(0.005, 0.0))
+        placeholder = simulate(nominal_params(), 2.0, math.radians(60), imperfections=imp)
+        mixer = simulate(with_mixer(nominal_params()), 2.0, math.radians(60),
+                         imperfections=imp)
+        self.assertFalse(placeholder["success"])
+        self.assertTrue(mixer["success"])
+
+    def test_airmode_caps_collective_at_75pct(self):
+        r = simulate(with_mixer(nominal_params()), 2.0, math.radians(60))
+        self.assertLessEqual(r["peak_thrust_n"],
+                             0.75 * nominal_params().max_thrust_n + 1e-9)
 
 
 class TestSaturation(unittest.TestCase):

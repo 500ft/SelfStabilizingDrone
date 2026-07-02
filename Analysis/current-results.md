@@ -118,3 +118,43 @@ unverifiable until measured. Derived actions:
    assembly. Relax only after (1) demonstrates margin.
 3. Until one of those lands, the single-point Lane A demo may be cited only alongside
    this gate result.
+
+## Scenario C — Mixer-Authority Prediction (added 2026-07-02, later same day)
+
+The follow-up the FAIL demanded: replace the placeholder torque clip with the
+**physically-derived 4-motor mixer authority** (`with_mixer`,
+`Analysis/sim_release_recovery.py`) — per-motor thrust in [0, T_max/4],
+differential headroom `d_max = min(T/4, T_max/4 − T/4)`, giving
+`τ_rp(T) = 2√2·arm·d_max` (zero at zero AND full collective — the coupling the
+placeholder ignored). Arm = **60 mm, ASSUMED** until CAD/bench. Making the
+authority real exposed three controller gaps, each fixed with the standard
+technique and stated in-code:
+
+1. **Integral trim** (clamped, upright-only): a PD loop trims a constant CG
+   disturbance with a steady tilt of `τ/KP ≈ 30°` at 2 mm offset — the classic
+   reason attitude stacks carry an I-term.
+2. **Attitude-priority desaturation ("airmode")**: collective capped at 75% so
+   differential headroom can never vanish at full thrust.
+3. **Control-authority floor while inverted**: quarter-collective while the
+   >78° thrust cut is active — motors keep spinning for torque, the physical
+   reason a real quad can right itself from inverted.
+4. **Gain rescale** (P and D together, 3×): the base gains were sized for the
+   0.004 N·m clip and are too soft to out-torque a CG disturbance at 60° tilt
+   once real authority exists.
+
+Result (scenario C in `Data/monte_carlo_results.json`), same as-toleranced
+dispersions as scenario A (cg ≤ 5 mm; the torque multiplier now scales the arm):
+
+| Scenario | 1.0 rad/s | 2.0 rad/s | 3.0 rad/s |
+|---|---:|---:|---:|
+| A: placeholder authority | 3/75 (4.0%) | 6/150 (4.0%) | 1/75 (1.3%) |
+| C: mixer authority (ASSUMED 60 mm arm) | **75/75 (100%, lb 96.1%)** | **150/150 (100%, lb 98.0%)** | **75/75 (100%, lb 96.1%)** |
+
+Worst altitude loss in scenario C: 1.01 m of the 3.0 m budget (3 rad/s case).
+
+**Status of this result: a PREDICTION, not a validation.** Everything above is
+conditional on the ASSUMED 60 mm arm and datasheet per-motor thrust. The
+scenario exists to make the EST-REC-007 bench measurement decisive: measure
+per-motor thrust and arm, plug them in, and the recovery-robustness claim is
+either earned or dead. Until then the honest summary is: *fails at placeholder
+authority, predicted to pass at mixer authority, measurement pending.*
