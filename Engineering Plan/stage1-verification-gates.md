@@ -21,7 +21,7 @@ claim). "A better part exists" is not a blocker.
 | Function | Serial | Pad | Timer group | Stage |
 |---|---|---|---|---|
 | ELRS/CRSF receiver | SERIAL6 | UART6 | — | Stage 1 |
-| Matek 3901-L0X flow+lidar (MSP v2) | SERIAL4 | UART4 | — | Stage 1 |
+| MicoAir MTF-01 flow+lidar (MAVLink1) | SERIAL4 | UART4 | — | Stage 1 |
 | Nicla Vision MAVLink | SERIAL2 | UART2 | — | Stage 1 |
 | GPS | SERIAL3 | UART3 | — | Stage 2 reserved |
 | FPV/VTX control | SERIAL1 | UART1 | — | Stage 2 reserved |
@@ -32,9 +32,11 @@ claim). "A better part exists" is not a blocker.
 | Status LED (NeoPixel) | — | LED | PWM group 5 | Stage 1 |
 | Buzzer | — | BUZZER pad | GPIO | Stage 1 |
 
-Notes: the 3901-L0X carries flow **and** lidar over one MSP UART (no separate
-I²C). M1/M4 and M2/M3 share timer groups and must run compatible output rates.
-Prefer bidirectional DShot for RPM telemetry, which frees SERIAL7. Confirm every
+Notes: the MTF-01 carries flow **and** lidar over one MAVLink UART
+(`SERIAL4_PROTOCOL=1`, `SERIAL4_OPTIONS=1024`, `FLOW_TYPE=5`,
+`RNGFND1_TYPE=10`, sensor `mav_id=200`). M1/M4 and M2/M3 share timer groups
+and must run compatible output rates. The G45M's AM32 supports bidirectional
+DShot natively for RPM telemetry, which frees SERIAL7. Confirm every
 pad is **physically broken out on the Mini** (it omits pads the full-size board
 has), and verify Nicla↔Kakute UART logic levels (3.3 V) and common ground.
 
@@ -46,8 +48,9 @@ ArduPilot Kakute mapping
 Power: budget the 5 V rail at the **conservative 1.5 A** peripheral limit until
 the 1.5 A / 2 A doc discrepancy is resolved; require ≥25% margin; if it does not
 close, add a separate 5 V regulator rather than replacing the FC. The current
-worst planning load is 550 mA, leaving **63.3% margin**; Nicla, ELRS and status
-hardware peak currents remain measurement items.
+worst planning load is 620 mA (updated 2026-07-03 for the MTF-01's 120 mA
+worst case), leaving **58.7% margin**; Nicla, ELRS and status hardware peak
+currents remain measurement items.
 
 Resolved interface blocker: Nicla Vision has no microSD socket. The standalone
 card was removed from the Stage 1 flying BOM; numeric events are logged through
@@ -68,7 +71,7 @@ claim has only **8.4% reserve** over the 225 g boundary and is BENCH_REQUIRED.
 | frozen mass > 2 × measured | Propulsion BLOCKER |
 
 **Mass freeze is the primary response to a shortfall** (every gf/motor buys 2 g
-of frozen mass; at 129.8 g only 64.9 gf/motor is needed). Do not change
+of frozen mass; at the 135.7 g nominal only 67.8 gf/motor is needed). Do not change
 propulsion if the system still closes against the frozen mass. Reopen propulsion
 only when required frozen mass exceeds the limit, in this lever order:
 (1) higher-solidity 2-inch prop, (2) larger-diameter prop with revised guards,
@@ -78,7 +81,11 @@ within current limits. Do not order a speculative fallback prop now.
 ## 3. ESC, battery, vision gates
 
 - **ESC** (per motor, peak + uncertainty): ≤10.4 A PASS · 10.4–13 A thermal
-  validation · >13 A sustained or >20 A transient FAIL.
+  validation · >13 A sustained or >20 A transient FAIL. (Thresholds were
+  registered against the discontinued 13 A BS13A and are **retained unchanged**
+  for the 45 A G45M — they now bound the motor/harness side, not the ESC. New
+  precondition, OQ-009: bench-verify G45M spin-up and full throttle at 7.0 V
+  2S before running this gate.)
 - **Battery** (pack peak): ≤44 A PASS · 44–55 A sag+thermal validation · >55 A
   or unacceptable sag/temp FAIL. C-rating BENCH_REQUIRED regardless of vendor
   spec.

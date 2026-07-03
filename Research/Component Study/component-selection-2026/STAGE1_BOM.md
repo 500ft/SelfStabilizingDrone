@@ -1,6 +1,25 @@
 # Stage 1 Locked BOM — Guarded Micro-UAV (SelfStabilizingDrone)
 
-**Date:** 2026-06-20 · **Status:** LOCKED for Stage 1 (buy / build / test) · **Source:** `Component_Selection_2026.xlsx` (deep-research, 2026-06-19) · **Amended:** 2026-06-21 after interface verification
+**Date:** 2026-06-20 · **Status:** LOCKED for Stage 1 (buy / build / test) · **Source:** `Component_Selection_2026.xlsx` (deep-research, 2026-06-19) · **Amended:** 2026-06-21 after interface verification · **Amended:** 2026-07-03 after availability audit (see below)
+
+> **Amendment 2026-07-03 — availability audit.** Two locked parts hit the
+> unavailability blocker and were substituted; one prior availability claim was
+> corrected:
+> - **ESC:** HGLRC 13A BB2 is **discontinued** (and was outdated regardless:
+>   8-bit BLHeli_S, 3S max, no current sensor). Substituted with **Flywoo GOKU
+>   G45M 45A 2-6S AM32 4-in-1** (6.4 g, ~$45): 32-bit AM32, bidirectional
+>   DShot, onboard current sensor. +3.4 g vs the BS13A. 2S-LiHV operation is a
+>   bench-verify item (OQ-009) — Flywoo says 2-6S, some retailers say 3-6S.
+>   Rejected: Hobbywing XRotor Micro 45A G2 (12 g, 3-6S — no 2S); iFlight
+>   Blitz Mini E55 (11.3 g, BLHeli_32 — firmware line EOL since 2024).
+> - **Flow/lidar:** Matek 3901-L0X is manufacturer-EOL. Substituted with
+>   **MicoAir MTF-01** (4.5 g, ~$30): PMW3901 flow + 8 m ToF, MAVLink over one
+>   UART, native ArduPilot support, in production. +2.5 g.
+> - **FC:** Kakute H7 Mini v1.5 is **in stock at Holybro direct ($58.99)** —
+>   the 2026-06-22 "effectively unavailable" note was stale. FC stays locked.
+>
+> Nominal flying mass moves 129.8 g → **135.7 g** (T/W ≈ 3.59); totals below
+> are updated. All other locked parts re-confirmed in production 2026-07-03.
 
 This is the single recommended build. It exists to stop decision drift: one part per
 subsystem, with the reason it was chosen and the main option it beat. Full ranked
@@ -21,12 +40,12 @@ Two viable architectures:
 | Subsystem | Locked part | Mass (g) | ~USD | Why this / rejected |
 |---|---|---:|---:|---|
 | Flight controller | Holybro Kakute H7 Mini | 5.5 | 65 | ArduPilot/PX4, 6 UART (MAVLink companion), baro, blackbox. Rejected: Happymodel X12 AIO (Betaflight-only — no estimator/failsafe depth). |
-| ESC 4-in-1 | HGLRC 13A 2-3S BB2 (20×20) | 3.0 | 18 | 20×20 matches the FC mount; 13 A/ch ≫ 9.2 A/motor; lightest. Rejected: FD13A (16×16, won't stack); Tekko32 45–50 A (over-spec, ≤15.6 g). |
+| ESC 4-in-1 | Flywoo GOKU G45M 45A 2-6S AM32 (20×20) | 6.4 | 45 | 20×20 matches the FC mount; 45 A/ch ≫ 9.2 A/motor; AM32 + current sensor. Substituted 2026-07-03 — original pick HGLRC 13A BB2 (3.0 g) is discontinued. Rejected: Hobbywing 45A G2 (3-6S, no 2S); Blitz Mini E55 (BLHeli_32 EOL). |
 | Motors ×4 | Happymodel EX1103 11000KV | 15.2 | 36 | Only motor with a published 2S+2023 thrust curve (121.9 g/motor). Rejected: <10000KV (fails T/W); T-Motor F1103 (+~5 g). |
 | Propellers (+spares) | Gemfan Hurricane 2023-3 | 3.5 | 6 | The exact prop behind the validated thrust figure. Rejected: 2.5″ pitch (more current); sub-2″ (less thrust). |
 | Battery | GNB 2S 550 mAh 100C (XT30) | 29.0 | 14 | 55 A cont ≫ 36.8 A peak. Rejected: 450 mAh 75C (33.75 A — FAILS current screen); BT2.0 (connector-limited). Budget alt: BetaFPV LAVA 550 75C. |
 | Vision / compute | Arduino Nicla Vision | 19.8 | 90 | Camera + IMU + ToF in 20 g — release detection is motion fusion. Rejected for Stage 1: Coral Micro (NPU, mass unpublished); OAK-D-Lite (61 g/5 W). |
-| Positioning | Matek 3901-L0X (flow + lidar) | 2.0 | 26 | Flow + height in 2 g, native ArduPilot. GPS deferred (outdoor only). |
+| Positioning | MicoAir MTF-01 (flow + lidar) | 4.5 | 30 | Flow + 8 m ToF over one MAVLink UART, native ArduPilot, in production. Substituted 2026-07-03 — original pick Matek 3901-L0X is EOL. GPS deferred (outdoor only). |
 | Control link RX | BetaFPV ELRS Lite (+ antenna) | 0.46 | 12 | Lightest; FC has no onboard RX. Upgrade: RadioMaster RP3 diversity if the guard shadows the antenna. |
 | Buzzer + LED | VIFLY Finder Mini + WS2812 | 3.3 | 18 | Self-powered finder survives LiPo ejection; LED status/orientation. |
 | Wiring / connectors | XT30 + 22/26 AWG + JST-SH | 5.5 | 8 | XT30 for 36.8 A peak headroom. Weigh finished harness. |
@@ -35,8 +54,8 @@ Two viable architectures:
 | FPV video | **Deferred to Stage 2** | 0 | 0 | Not needed for manual cage hover (REQ-FLIGHT-001, LOS). If added: analog Caddx Ant Lite + Reaper Nano (~3.6 g, needs 5 V BEC). |
 | GPS | **Deferred (outdoor only)** | 0 | 0 | Indoor recovery uses optical flow. Outdoor add-on: Matek M10Q-5883 (8 g). |
 
-**Nominal flying total: ~129.8 g · ~$333.**
-Margin vs 200 g target: **+70 g** · vs 225 g abort ceiling: **+95 g** · **T/W ≈ 3.75** (≥ 2.0 required).
+**Nominal flying total: ~135.7 g · ~$338** (2026-07-03 amendment: ESC/flow substitutions +5.9 g; FC $59 and Nicla ~$70 price drops absorb most of the ESC cost increase).
+Margin vs 200 g target: **+64 g** · vs 225 g abort ceiling: **+89 g** · **T/W ≈ 3.59** (≥ 2.0 required).
 Even worst-case (frame 50 g, vision 25 g) + Stage-2 FPV (~3.6 g) stays well under 225 g.
 
 **Support gear (non-flying, not in total):** ToolkitRC M6AC charger ~$60 · thrust stand (DIY 1–2 kg load cell ~$30, or used RCbenchmark 1520 ~$165) · PVC+net test cage ~$40 · tethered release fixture ~$20.

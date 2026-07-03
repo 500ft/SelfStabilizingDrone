@@ -111,12 +111,12 @@ class RepositoryTests(unittest.TestCase):
     def test_stage1_component_selection_is_canonical(self):
         expected = {
             "Flight controller": "Holybro Kakute H7 Mini v1.5",
-            "4-in-1 ESC": "HGLRC XJB BS13A 2-3S BB2 4-in-1 ESC",
+            "4-in-1 ESC": "Flywoo GOKU G45M 45A 2-6S AM32 4-in-1 ESC",
             "Brushless motors": "Happymodel EX1103 11000KV",
             "Propeller flight set": "Gemfan Hurricane 2023-3",
             "Flight battery": "GNB GNB5502S100AHV 2S 550mAh 100C XT30",
             "Vision processor and camera": "Arduino Nicla Vision ABX00051",
-            "Optical flow and lidar": "Matek 3901-L0X",
+            "Optical flow and lidar": "MicoAir MTF-01",
         }
         path = ROOT / "Design Report" / "BOM.csv"
         with path.open(newline="", encoding="utf-8") as handle:
@@ -138,7 +138,7 @@ class RepositoryTests(unittest.TestCase):
         for item, row in bom.items():
             self.assertEqual(float(row["Mass Nominal g"]), float(budget[item]["nominal_g"]))
 
-    def test_nominal_locked_bom_is_129_8g(self):
+    def test_nominal_locked_bom_is_135_7g(self):
         with (ROOT / "Design Report" / "BOM.csv").open(
             newline="", encoding="utf-8"
         ) as handle:
@@ -147,7 +147,7 @@ class RepositoryTests(unittest.TestCase):
                 for row in csv.DictReader(handle)
                 if row["Flying Hardware"] == "yes"
             )
-        self.assertAlmostEqual(total, 129.8, places=1)
+        self.assertAlmostEqual(total, 135.7, places=1)
 
     def test_component_blockers_are_resolved_or_removed(self):
         path = ROOT / "Engineering Data" / "component_verification.csv"

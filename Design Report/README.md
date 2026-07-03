@@ -118,9 +118,9 @@ The selected concept is a 2S guarded quadcopter architecture with:
 - modular circular prop guards
 - central removable GNB 2S 550 mAh LiHV battery
 - Holybro Kakute H7 Mini v1.5 running ArduPilot 4.6+
-- HGLRC XJB BS13A 4-in-1 ESC
+- Flywoo GOKU G45M 45A 2-6S AM32 4-in-1 ESC
 - Arduino Nicla Vision companion processor
-- Matek 3901-L0X optical flow and rangefinder
+- MicoAir MTF-01 optical flow and rangefinder
 - forward/downward camera mount for marker tracking
 - external manual override and emergency disarm path
 

@@ -1,13 +1,13 @@
 id,parameter,best,nominal,worst,units,basis,source,uncertainty_direction,notes
 EST-MASS-001,Flight controller mass,5.5,5.5,6.5,g,confirmed,Holybro Kakute H7 Mini v1.5 official specification,high_increases_risk,Weigh delivered board with installed grommets
-EST-MASS-002,4-in-1 ESC mass,3.0,3.0,4.0,g,inferred,HGLRC XJB BS13A legacy catalog specification,high_increases_risk,Verify exact standalone SKU and weigh on receipt
+EST-MASS-002,4-in-1 ESC mass,6.4,6.4,8.0,g,confirmed,Flywoo GOKU G45M manufacturer specification,high_increases_risk,Weigh on receipt with softmounts and capacitor
 EST-MASS-003,Four motor mass,15.2,15.2,16.5,g,bench_required,Happymodel EX1103 11000KV catalog mass,high_increases_risk,Weigh all four delivered motors with final lead length
 EST-MASS-004,Propeller flight-set mass,3.0,3.5,4.5,g,confirmed,Gemfan Hurricane 2023-3 official 0.88 g each,high_increases_risk,Weigh balanced flight set
 EST-MASS-005,Flight battery mass,28.0,29.0,31.0,g,bench_required,GNB GNB5502S100AHV reseller specification,high_increases_risk,Weigh each pack and record capacity/sag test
 EST-MASS-006,Control-link receiver mass,0.46,0.46,1.0,g,confirmed,BetaFPV ELRS Lite Flat Antenna V1.2 official specification,high_increases_risk,Weigh with final leads
 EST-MASS-007,Buzzer and status LED mass,3.0,3.3,4.5,g,inferred,VIFLY Finder Mini 2.7 g plus WS2812 and wire allowance,high_increases_risk,Weigh completed status harness
 EST-MASS-008,Vision processor and camera mass,19.8,19.8,21.0,g,confirmed,Arduino Nicla Vision ABX00051 official store rounded weight,high_increases_risk,Weigh board with mounted headers and cable
-EST-MASS-009,Optical flow and lidar mass,2.0,2.0,2.5,g,confirmed,Matek 3901-L0X official specification,high_increases_risk,Weigh with cable
+EST-MASS-009,Optical flow and lidar mass,4.5,4.5,5.0,g,confirmed,MicoAir MTF-01 manufacturer specification,high_increases_risk,Weigh with cable
 EST-MASS-010,External vision logging mass,0,0,0,g,removed,Nicla has no microSD socket,high_increases_risk,Stage 1 numeric events go to the flight controller over MAVLink; external SPI storage deferred
 EST-MASS-011,Wiring and connectors mass,3.0,5.5,8.0,g,assumed,Engineering allowance,high_increases_risk,Weigh completed harness
 EST-MASS-012,Frame guards mounts and fasteners mass,35.0,42.5,50.0,g,assumed,Replace with CAD mass model,high_increases_risk,Update after complete assembly mass properties

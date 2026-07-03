@@ -25,6 +25,9 @@ N_MOTORS = 4
 ACCEPTANCE_VOLTAGE_V = 7.0  # 3.5 V/cell under load; 8.4 V / 7.6 V are references only
 
 # Margin policy: keep >= 1.25x against the rated continuous limit.
+# ESC limits were pre-registered against the discontinued HGLRC BS13A (13 A)
+# and are retained unchanged for the 45 A Flywoo GOKU G45M: they now bound the
+# motor/harness side rather than the ESC rating (see stage1-verification-gates).
 MARGIN_FACTOR = 1.25
 ESC_CONT_A = 13.0
 ESC_BURST_A = 20.0
@@ -109,6 +112,6 @@ RESOURCE_MAP: tuple[Allocation, ...] = tuple(
 
 if __name__ == "__main__":
     print(f"Propulsion full-reserve floor @225g: {thrust_required_per_motor(ABORT_CEILING_G)} gf/motor")
-    print(f"Propulsion floor @129.8g nominal:   {thrust_required_per_motor(129.8):.1f} gf/motor")
+    print(f"Propulsion floor @135.7g nominal:   {thrust_required_per_motor(135.7):.1f} gf/motor")
     print(f"ESC pass ceiling:  {ESC_CONT_A / MARGIN_FACTOR:.1f} A/motor")
     print(f"Battery pass ceiling: {BATTERY_CONT_A / MARGIN_FACTOR:.1f} A pack")

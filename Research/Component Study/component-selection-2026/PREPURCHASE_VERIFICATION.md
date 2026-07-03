@@ -4,6 +4,16 @@
 **Firmware baseline:** ArduPilot 4.6+  
 **Decision policy:** retain the locked part unless evidence proves a blocker.
 
+> **Superseded in part — 2026-07-03 availability audit.** The HGLRC XJB BS13A
+> is discontinued and the Matek 3901-L0X is EOL; both hit the unavailability
+> blocker and were substituted (ESC → Flywoo GOKU G45M 45A 2-6S AM32; flow →
+> MicoAir MTF-01 on MAVLink instead of MSP). The Kakute H7 Mini v1.5 remains
+> locked and is in stock at Holybro direct. Nominal flying mass is now 135.66 g
+> and the worst-case 5 V load is 620 mA (58.7% margin). Current decisions live
+> in `Design Report/BOM.md`, `Engineering Data/*.csv`, and `OPEN_QUESTIONS.md`
+> (OQ-007/008 closed, OQ-009 opened); the tables below are the 2026-06-21
+> record and are kept for provenance.
+
 ## Decision summary
 
 The Stage 1 architecture closes at the desk: the Kakute H7 Mini exposes enough

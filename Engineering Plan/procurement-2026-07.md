@@ -6,15 +6,18 @@ the thrust stand is now the **decisive** purchase (EST-REC-007 must be measured 
 Monte Carlo scenario A vs C), and the checklist had **no radio transmitter** (RX only), which
 the manual cage hover requires.
 
-Prices are the 2026-06-19 catalog figures, ±10% + shipping. Stock risks: HGLRC 13A BB2
-(legacy — confirm stock), Matek 3901-L0X (EOL — buy early if Wave 2 is likely).
+Prices re-checked 2026-07-03, ±10% + shipping. The 2026-06 stock risks are resolved:
+the HGLRC 13A BB2 is **discontinued** and was substituted with the Flywoo GOKU G45M
+(45A 2-6S AM32, 6.4 g, current sensor); the EOL Matek 3901-L0X was substituted with
+the MicoAir MTF-01 (in production — no early-buy pressure). The Kakute H7 Mini v1.5
+is in stock at Holybro direct ($58.99). See OQ-007/OQ-008/OQ-009.
 
-## Wave 1 — bench-decisive (~$314). Order now.
+## Wave 1 — bench-decisive (~$335). Order now.
 
 | Item | Order qty | ~USD | Fallback use if the drone path dies |
 |---|---:|---:|---|
-| Holybro Kakute H7 Mini v1.5 | 1 | 65 | Generic ArduPilot/PX4 dev + logging IMU node for any vehicle |
-| HGLRC 13A BB2 4-in-1 (20x20) | 1 | 18 | Micro-BLDC driver, pairs with the motors |
+| Holybro Kakute H7 Mini v1.5 | 1 | 59 | Generic ArduPilot/PX4 dev + logging IMU node for any vehicle |
+| Flywoo GOKU G45M 45A 2-6S AM32 4-in-1 (20x20) | 1 | 45 | Micro-BLDC driver with current telemetry, pairs with the motors. **Bench-verify 2S at 7.0 V on arrival (OQ-009)** |
 | Happymodel EX1103 11000KV | 6 | 54 | Micro builds; BLDC characterization specimens |
 | Gemfan 2023-3 CW/CCW | 3 sets | 9 | Consumable |
 | GNB 2S 550 mAh 100C LiHV XT30 | 2 | 28 | Bench/portable power. Batteries age: buy minimum now, 3rd pack in Wave 2 |
@@ -34,8 +37,8 @@ criteria) — Wave 1 gear keeps ~80% of its value via reuse.
 
 | Item | Order qty | ~USD | Fallback use |
 |---|---:|---:|---|
-| Arduino Nicla Vision | 1 | 90 | Standalone cam+IMU+ToF; release-detection classifier is a standalone deliverable |
-| Matek 3901-L0X | 1 | 26 | Flow/height for any indoor robot (EOL — consider buying in Wave 1) |
+| Arduino Nicla Vision | 1 | 70 | Standalone cam+IMU+ToF; release-detection classifier is a standalone deliverable (official price dropped to $68.17) |
+| MicoAir MTF-01 | 1 | 30 | Flow/height for any indoor robot; in production, no early-buy pressure |
 | BetaFPV ELRS Lite RX | 1 | 12 | Needs an ELRS TX |
 | VIFLY Finder Mini + WS2812 | 1 | 18 | Any future UAV |
 | GNB 2S 550 (3rd pack) | 1 | 14 | As above |
@@ -44,7 +47,7 @@ criteria) — Wave 1 gear keeps ~80% of its value via reuse.
 | Tethered release fixture | 1 | 20 | Generic rigging |
 | RadioMaster Pocket ELRS TX | 1 | 65 | Any RC/UAV project. **Was missing from the checklist entirely.** Skip if a TX is already owned |
 
-**Totals: Wave 1 ~$314 · Wave 2 ~$325 · all-in ~$639 (~$574 with an owned TX).**
+**Totals: Wave 1 ~$335 · Wave 2 ~$309 · all-in ~$644 (~$579 with an owned TX).**
 
 ## CAD notes for the modeling pass (Lane A+)
 

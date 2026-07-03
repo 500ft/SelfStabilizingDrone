@@ -1,6 +1,6 @@
 function,resource_type,serial,pad,resource_group,protocol,stage,pad_exposed,evidence_state,source_url,notes
 ELRS/CRSF receiver,uart,SERIAL6,UART6,,CRSF,STAGE_1,yes,CONFIRMED,https://ardupilot.org/sub/docs/common-holybro-kakuteh7mini-v13.html,Full duplex RC and telemetry; SERIAL6_PROTOCOL=23
-Matek 3901-L0X flow+lidar,uart,SERIAL4,UART4,,MSP_V2,STAGE_1,yes,CONFIRMED,https://www.mateksys.com/?portfolio=3901-l0x,One UART carries both optical flow and rangefinder; SERIAL4_PROTOCOL=32
+MicoAir MTF-01 flow+lidar,uart,SERIAL4,UART4,,MAVLINK1,STAGE_1,yes,CONFIRMED,https://ardupilot.org/copter/docs/common-mtf-01.html,One UART carries both optical flow and rangefinder; SERIAL4_PROTOCOL=1 with SERIAL4_OPTIONS=1024; FLOW_TYPE=5 RNGFND1_TYPE=10; sensor mav_id=200 via MicoAssistant
 Nicla Vision MAVLink,uart,SERIAL2,UART2,,MAVLINK2,STAGE_1,yes,CONFIRMED,https://docs.arduino.cc/resources/datasheets/ABX00051-datasheet.pdf,Nicla exposes one level-translated UART; configure VDDIO_EXT=3.3 V and share ground
 GPS,uart,SERIAL3,UART3,,GPS,STAGE_2_RESERVED,yes,CONFIRMED,https://ardupilot.org/sub/docs/common-holybro-kakuteh7mini-v13.html,Reserved; UART3 is the ArduPilot default GPS port
 FPV/VTX control,uart,SERIAL1,UART1,,VTX_CONTROL,STAGE_2_RESERVED,yes,CONFIRMED,https://ardupilot.org/sub/docs/common-holybro-kakuteh7mini-v13.html,Reserved; default DJI/OSD serial allocation may be changed if needed
