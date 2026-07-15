@@ -8,6 +8,7 @@ Authoritative supporting registers:
 
 - [`hardware_interfaces.csv`](../Engineering%20Data/hardware_interfaces.csv)
 - [`power_budget.csv`](../Engineering%20Data/power_budget.csv)
+- [`wiring_harness.md`](../Engineering%20Data/wiring_harness.md) (interconnect + voltage domains; no separate regulator in the flying BOM)
 - [`component_verification.csv`](../Engineering%20Data/component_verification.csv)
 - [`purchase_checklist.csv`](../Engineering%20Data/purchase_checklist.csv)
 
