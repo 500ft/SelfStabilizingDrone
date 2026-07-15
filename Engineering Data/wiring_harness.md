@@ -21,6 +21,41 @@ two conversions the system requires already exist inside locked parts:
    a separate 5 V regulator is added only if that margin fails on the bench —
    it is not purchased speculatively.
 
+## Power topology — one battery connection, then a tree
+
+The battery physically connects to **exactly one thing: the ESC**. Nothing
+else touches the battery. Power then branches in a tree, sized by current:
+
+```
+Battery (XT30)
+   |
+   v  only physical battery connection in the vehicle
+  ESC ────────────────> 4x motors   (raw VBAT, ~37 A peak total: the firehose)
+   |
+   v  8-pin harness (VBAT passthrough + signals)
+   FC ────────────────> peripherals (BEC 5 V, ~0.6 A total: the tap line)
+```
+
+The order is dictated by current, not convenience: the motors pull ~37 A at
+full throttle while all electronics together pull ~0.6 A. The high-current
+path (battery → ESC → motors) stays on the one board with copper sized for
+it; the FC taps VBAT off the harness and regulates it down. Routing the
+battery through the FC first would put the full motor current through a board
+that cannot carry it.
+
+Two hubs, two roles — the naming is easy to misread:
+
+- **ESC = power hub** (breaker panel): all energy enters and branches here;
+  the motors are wired straight off it.
+- **FC = control hub** (power strip with a built-in adapter): all decisions
+  and data flow through it, and it feeds only the low-current 5 V loads.
+- The **8-pin harness is the single bridge** between the two — which is why
+  verifying its pin order before first power-up is a blocking receipt check
+  (see hazards below).
+
+The motors never connect to the FC: the FC only commands their speed via
+DShot signal lines inside the harness; their power comes from the ESC pads.
+
 ## Voltage domains
 
 | Domain | Source | Consumers |
