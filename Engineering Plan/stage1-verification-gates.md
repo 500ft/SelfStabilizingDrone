@@ -94,6 +94,20 @@ within current limits. Do not order a speculative fallback prop now.
   50–100 ms log-only · >100 ms ineligible. ≤25 ms acquisition + ≤25 ms
   inference/fusion/tx ⇒ a one-frame path needs ≥40 effective FPS.
 
+## 3A. Differential-authority and recovery gate
+
+At 7.0 V, the fifth-percentile measured roll/pitch authority must be at least
+0.020 N·m at every registered point from 25–75% collective. If it passes,
+rerun the fixed measured-distribution recovery evaluation: 1,000 primary trials
+at 2 rad/s, 60° tilt, CG ≤5 mm. PASS requires at least 962 recoveries, an exact
+one-sided 95% Clopper–Pearson lower bound ≥0.95, and maximum descent ≤3.0 m.
+The 250-trial cases at 1 and 3 rad/s are descriptive. See
+[`docs/specs/measured-authority-gate/design.md`](../docs/specs/measured-authority-gate/design.md).
+
+No energized propeller run begins until
+[`Instrumentation/propulsion-bench-safety-checklist.md`](../Instrumentation/propulsion-bench-safety-checklist.md)
+is signed for that session.
+
 ## 4. Research batches (5 working days, then stop)
 
 1. Exact FC revision, pads/resources, propulsion evidence, power, interfaces.

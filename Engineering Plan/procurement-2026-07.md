@@ -30,10 +30,13 @@ is in stock at Holybro direct ($58.99). See OQ-007/OQ-008/OQ-009.
 
 ## Wave 2 — gated on EST-REC-007 PASS (~$325)
 
-Gate: measured tau_rp(hover) comfortably above the 0.004 N*m placeholder and the MC re-run
-(`Analysis/monte_carlo_recovery.py` with measured authority) >= 95% lower-bound recovery at
-2 rad/s. If the gate FAILS, stop here and write the negative design study (see PLAN.md park
-criteria) — Wave 1 gear keeps ~80% of its value via reuse.
+Gate: at 7.0 V, the conservative fifth-percentile measured `tau_rp(T)` is
+**≥0.020 N·m at every point in the 25–75% collective band**, and the fixed
+measured-distribution Monte Carlo records at least **962/1,000** recoveries at
+2 rad/s (exact one-sided 95% Clopper–Pearson lower bound ≥0.95) with 60° tilt,
+CG ≤5 mm, and maximum descent ≤3.0 m. If the gate FAILS, stop here and write the
+negative design study (see PLAN.md park criteria) — Wave 1 gear keeps ~80% of
+its value via reuse.
 
 | Item | Order qty | ~USD | Fallback use |
 |---|---:|---:|---|

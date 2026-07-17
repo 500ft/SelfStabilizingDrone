@@ -18,6 +18,7 @@ conservative. Run:  python -m Analysis.monte_carlo_recovery
 from __future__ import annotations
 
 from dataclasses import replace
+import math
 
 import numpy as np
 
@@ -36,6 +37,19 @@ TORQUE_BIAS_MAX_FRAC = 0.10        # motor mismatch, fraction of max torque
 GYRO_NOISE_RAD_S = 0.02            # per-step white rate noise
 TILT_NOISE_RAD = np.radians(2.0)   # per-step white attitude-estimate error
 INIT_TILT_RAD = np.radians(60.0)
+
+# Frozen measured-authority gate. The 2 rad/s case is primary; the 1 and
+# 3 rad/s cases are descriptive sensitivity checks and cannot rescue it.
+PRIMARY_RATE_RAD_S = 2.0
+PRIMARY_TRIALS = 1000
+DESCRIPTIVE_TRIALS = 250
+PRIMARY_SUCCESS_LOWER_BOUND = 0.95
+MAX_DESCENT_M = 3.0
+DEFAULT_RATES_AND_N = (
+    (1.0, DESCRIPTIVE_TRIALS),
+    (PRIMARY_RATE_RAD_S, PRIMARY_TRIALS),
+    (3.0, DESCRIPTIVE_TRIALS),
+)
 
 
 def draw_case(rng: np.random.Generator,
@@ -67,17 +81,39 @@ def draw_case(rng: np.random.Generator,
 
 def clopper_pearson_lower(successes: int, n: int, alpha: float = 0.05) -> float:
     """Exact one-sided lower bound on a binomial proportion (no scipy dependency)."""
+    if n <= 0:
+        raise ValueError("n must be positive")
+    if successes < 0 or successes > n:
+        raise ValueError("successes must lie in [0, n]")
+    if not 0.0 < alpha < 1.0:
+        raise ValueError("alpha must lie in (0, 1)")
     if successes == 0:
         return 0.0
     if successes == n:
         return float(alpha ** (1.0 / n))
     # bisection on the Beta CDF via the incomplete-beta <-> binomial-tail identity:
-    # P(X >= s | p) = alpha  at the lower bound.
-    from math import comb
+    # P(X >= s | p) = alpha at the lower bound. Compute the binomial tail in
+    # log space so the preregistered n=1000 gate does not overflow ``comb`` or
+    # underflow the individual probability terms.
     def tail(pr: float) -> float:
-        return sum(comb(n, k) * pr**k * (1 - pr) ** (n - k) for k in range(successes, n + 1))
+        if pr <= 0.0:
+            return 0.0
+        if pr >= 1.0:
+            return 1.0
+        log_p = math.log(pr)
+        log_q = math.log1p(-pr)
+        terms = [
+            math.lgamma(n + 1)
+            - math.lgamma(k + 1)
+            - math.lgamma(n - k + 1)
+            + k * log_p
+            + (n - k) * log_q
+            for k in range(successes, n + 1)
+        ]
+        largest = max(terms)
+        return math.exp(largest) * sum(math.exp(term - largest) for term in terms)
     lo, hi = 0.0, successes / n
-    for _ in range(80):
+    for _ in range(100):
         mid = 0.5 * (lo + hi)
         if tail(mid) < alpha:
             lo = mid
@@ -86,7 +122,44 @@ def clopper_pearson_lower(successes: int, n: int, alpha: float = 0.05) -> float:
     return lo
 
 
-def run_sweep(rates_and_n: tuple[tuple[float, int], ...] = ((1.0, 75), (2.0, 150), (3.0, 75)),
+def required_successes_for_lower_bound(
+    n: int = PRIMARY_TRIALS,
+    target: float = PRIMARY_SUCCESS_LOWER_BOUND,
+    alpha: float = 0.05,
+) -> int:
+    """Smallest success count whose exact one-sided lower bound clears target."""
+
+    if not 0.0 < target < 1.0:
+        raise ValueError("target must lie in (0, 1)")
+    for successes in range(int(math.ceil(target * n)), n + 1):
+        if clopper_pearson_lower(successes, n, alpha) >= target:
+            return successes
+    raise RuntimeError("no success count can meet the requested lower bound")
+
+
+PRIMARY_REQUIRED_SUCCESSES = 962
+
+
+def evaluate_primary_gate(result: dict) -> dict:
+    """Apply the frozen statistical and altitude gate to one sweep result."""
+
+    row = result.get("by_rate", {}).get(f"{PRIMARY_RATE_RAD_S:.1f}")
+    if not row or row.get("n") != PRIMARY_TRIALS:
+        return {"pass": False, "reason": "primary 2 rad/s result must contain 1000 trials"}
+    checks = {
+        "successes_at_least_962": row["successes"] >= PRIMARY_REQUIRED_SUCCESSES,
+        "exact_lower_bound_at_least_0_95": (
+            row["success_rate_95_lower"] >= PRIMARY_SUCCESS_LOWER_BOUND
+        ),
+        "maximum_descent_at_most_3m": (
+            row.get("descent_max_all_m") is not None
+            and row["descent_max_all_m"] <= MAX_DESCENT_M
+        ),
+    }
+    return {"pass": all(checks.values()), "checks": checks}
+
+
+def run_sweep(rates_and_n: tuple[tuple[float, int], ...] = DEFAULT_RATES_AND_N,
               seed: int = 20260702, cg_offset_max_m: float = CG_OFFSET_MAX_M,
               label: str = "as-toleranced", mixer_arm_m: float | None = None) -> dict:
     """Dispersion sweep at several tumble rates. Returns the results dict.
@@ -106,26 +179,30 @@ def run_sweep(rates_and_n: tuple[tuple[float, int], ...] = ((1.0, 75), (2.0, 150
         "authority_model": ("mixer" if mixer_arm_m else "placeholder"),
         "mixer_arm_m": mixer_arm_m}, "by_rate": {}}
     for rate, n in rates_and_n:
-        succ, descents = 0, []
+        succ, recovered_descents, all_descents = 0, [], []
         for _ in range(n):
             p, imp = draw_case(rng, cg_offset_max_m)
             if mixer_arm_m is not None:
                 arm_scale = p.max_torque_n_m / nominal_params().max_torque_n_m
                 p = with_mixer(p, arm_m=mixer_arm_m * arm_scale)
             r = simulate(p, rate, INIT_TILT_RAD, imperfections=imp)
+            all_descents.append(r["max_descent_m"])
             if r["success"]:
                 succ += 1
-                descents.append(r["max_descent_m"])
+                recovered_descents.append(r["max_descent_m"])
         lb = clopper_pearson_lower(succ, n)
         out["by_rate"][f"{rate:.1f}"] = {
             "n": n, "successes": succ, "success_rate": succ / n,
             "success_rate_95_lower": lb,
-            "descent_p50_m": float(np.median(descents)) if descents else None,
-            "descent_max_m": float(np.max(descents)) if descents else None,
+            "descent_p50_m": (float(np.median(recovered_descents))
+                              if recovered_descents else None),
+            "descent_max_m": (float(np.max(recovered_descents))
+                              if recovered_descents else None),
+            "descent_max_all_m": float(np.max(all_descents)) if all_descents else None,
         }
         print(f"[{label}] rate {rate:.1f} rad/s: {succ}/{n} recovered "
               f"({100*succ/n:.1f}%, 95% lower bound {100*lb:.1f}%)"
-              + (f", worst descent {np.max(descents):.2f} m" if descents else ""))
+              + (f", worst descent {np.max(all_descents):.2f} m" if all_descents else ""))
     return out
 
 

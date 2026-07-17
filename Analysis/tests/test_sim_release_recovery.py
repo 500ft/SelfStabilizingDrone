@@ -8,7 +8,13 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from Analysis import rigid_body
-from Analysis.monte_carlo_recovery import clopper_pearson_lower, draw_case
+from Analysis.monte_carlo_recovery import (
+    PRIMARY_REQUIRED_SUCCESSES,
+    clopper_pearson_lower,
+    draw_case,
+    evaluate_primary_gate,
+    required_successes_for_lower_bound,
+)
 from Analysis.sim_release_recovery import (DroneParams, Imperfections, _control,
                                            axis_angle_quat, best_params,
                                            max_recoverable_rate, mixer_torque_limit,
@@ -106,6 +112,26 @@ class TestImperfections(unittest.TestCase):
         lb = clopper_pearson_lower(90, 100)
         self.assertGreater(lb, 0.80)
         self.assertLess(lb, 0.90)
+
+    def test_preregistered_success_count_matches_beta_quantile_reference(self):
+        # scipy.stats.beta.ppf(0.05, 962, 39) = 0.950487129744074
+        self.assertAlmostEqual(
+            clopper_pearson_lower(962, 1000), 0.950487129744074, places=12
+        )
+        self.assertLess(clopper_pearson_lower(961, 1000), 0.95)
+        self.assertEqual(required_successes_for_lower_bound(1000, 0.95), 962)
+        self.assertEqual(PRIMARY_REQUIRED_SUCCESSES, 962)
+
+    def test_primary_gate_checks_count_confidence_and_descent(self):
+        passing = {"by_rate": {"2.0": {
+            "n": 1000,
+            "successes": 962,
+            "success_rate_95_lower": clopper_pearson_lower(962, 1000),
+            "descent_max_all_m": 2.9,
+        }}}
+        self.assertTrue(evaluate_primary_gate(passing)["pass"])
+        passing["by_rate"]["2.0"]["descent_max_all_m"] = 3.1
+        self.assertFalse(evaluate_primary_gate(passing)["pass"])
 
     def test_draw_case_respects_cg_cap(self):
         rng = np.random.default_rng(0)

@@ -158,3 +158,17 @@ scenario exists to make the EST-REC-007 bench measurement decisive: measure
 per-motor thrust and arm, plug them in, and the recovery-robustness claim is
 either earned or dead. Until then the honest summary is: *fails at placeholder
 authority, predicted to pass at mixer authority, measurement pending.*
+
+## Frozen measured-authority verdict (registered 2026-07-17)
+
+The next result is no longer governed by “comfortably above” or “sufficient
+trials.” At 7.0 V, the empirical fifth-percentile `tau_rp(T)` must be at least
+**0.020 N·m at every registered point from 25–75% collective**. If that passes,
+the measured-distribution simulation runs 1,000 primary trials at 2 rad/s,
+60° tilt, and CG ≤5 mm. PASS requires at least **962/1,000** recoveries, exact
+one-sided 95% Clopper–Pearson lower bound ≥0.95, and maximum descent ≤3.0 m.
+The 250-trial 1 and 3 rad/s cases are descriptive only.
+
+The automated gate is committed in `Analysis/measured_authority_gate.py` and
+`Analysis/monte_carlo_recovery.py`; the physical result remains **measurement
+pending**. See `docs/specs/measured-authority-gate/`.
