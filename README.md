@@ -4,22 +4,22 @@ The Guarded Micro-UAV Project is a Python-backed engineering study for a
 protected drone that can detect release, stabilize in midair, and eventually
 follow a designated target.
 
-Midair recovery is unsafe to claim without measured control authority, descent
-limits, sensing performance, and guard strength. This repository turns those
-unknowns into staged simulations, hardware-selection records, safety plans, and
-preregistered bench gates before any recovery flight is attempted.
+Midair recovery depends on measured control authority, descent limits, sensing
+performance, and guard strength. This repository studies those factors through
+staged simulations, hardware-selection records, safety plans, and preregistered
+bench gates before any recovery flight is attempted.
 
 ![Predicted release-recovery envelope](Figures/release_recovery_envelope.png)
 
 ### Key capabilities
 
 - Simulates release detection, attitude recovery, and descent envelopes.
-- Maintains a mass-tracked bill of materials and component evidence.
+- Maintains a mass-tracked bill of materials and component records.
 - Defines propulsion, sensing, structural, and safety verification gates.
 - Documents the control state machine, test rig, CAD/FEA inputs, and open risks.
 
 **For:** drone researchers and engineering students developing guarded micro-UAV
-recovery systems with explicit safety evidence.
+recovery systems.
 
 **Start here:** run `python3 -m unittest discover -s Analysis/tests -v`, then
 review the [engineering plan](Engineering%20Plan/README.md) and
@@ -27,7 +27,7 @@ review the [engineering plan](Engineering%20Plan/README.md) and
 
 The current preregistered recovery sweep fails with the placeholder torque
 authority. The deciding EST-REC-007 bench experiment remains measurement
-pending; this repository does not yet claim validated recovery flight.
+pending, and no recovery flight has been completed.
 
 ## Parts Reference for CAD / FEA
 
@@ -59,12 +59,12 @@ pending; this repository does not yet claim validated recovery flight.
 
 ## Current Status
 
-The Stage 1 catalog hardware selection is locked and consolidated into the
-authoritative BOM. The repository also contains executable preliminary
-analyses, pre-registered propulsion/vision gates, a verified Kakute H7 Mini
+The Stage 1 catalog hardware selection is consolidated in the project BOM. The
+repository also contains executable preliminary
+analyses, pre-registered propulsion/vision gates, a Kakute H7 Mini
 resource map, structured requirements, and a safety/FMEA baseline. It does
 **not** yet contain purchased-and-weighed hardware, completed CAD, measured
-bench data, or flight-test evidence.
+bench data, or flight-test results.
 
 Wave 2 remains blocked until the 7.0 V fifth-percentile authority is at least
 0.020 N·m throughout 25–75% collective and the fixed 2 rad/s primary simulation
