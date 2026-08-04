@@ -1,12 +1,33 @@
 # Guarded Micro-UAV Project
 
-This repository documents a staged learning project for a protected micro-UAV that can eventually detect a toss/drop/release event, stabilize in midair, and follow a designated target.
+The Guarded Micro-UAV Project is a Python-backed engineering study for a
+protected drone that can detect release, stabilize in midair, and eventually
+follow a designated target.
 
-The strongest current result is an honest hinge: the preregistered recovery
-sweep **fails** with the 0.004 N·m placeholder authority but is predicted to
-pass with a physically derived mixer. The deciding EST-REC-007 bench experiment
-is frozen, executable, and **measurement pending**—not yet a validated flight or
-recovery claim.
+Midair recovery is unsafe to claim without measured control authority, descent
+limits, sensing performance, and guard strength. This repository turns those
+unknowns into staged simulations, hardware-selection records, safety plans, and
+preregistered bench gates before any recovery flight is attempted.
+
+![Predicted release-recovery envelope](Figures/release_recovery_envelope.png)
+
+### Key capabilities
+
+- Simulates release detection, attitude recovery, and descent envelopes.
+- Maintains a mass-tracked bill of materials and component evidence.
+- Defines propulsion, sensing, structural, and safety verification gates.
+- Documents the control state machine, test rig, CAD/FEA inputs, and open risks.
+
+**For:** drone researchers and engineering students developing guarded micro-UAV
+recovery systems with explicit safety evidence.
+
+**Start here:** run `python3 -m unittest discover -s Analysis/tests -v`, then
+review the [engineering plan](Engineering%20Plan/README.md) and
+[current results](Analysis/current-results.md).
+
+The current preregistered recovery sweep fails with the placeholder torque
+authority. The deciding EST-REC-007 bench experiment remains measurement
+pending; this repository does not yet claim validated recovery flight.
 
 ## Parts Reference for CAD / FEA
 
