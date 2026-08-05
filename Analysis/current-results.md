@@ -156,7 +156,7 @@ Worst altitude loss in scenario C: 1.01 m of the 3.0 m budget (3 rad/s case).
 conditional on the ASSUMED 60 mm arm and datasheet per-motor thrust. The
 scenario exists to make the EST-REC-007 bench measurement decisive: measure
 per-motor thrust and arm, plug them in, and the recovery-robustness claim is
-either earned or dead. Until then the honest summary is: *fails at placeholder
+either supported or rejected. Until then the summary is: *fails at placeholder
 authority, predicted to pass at mixer authority, measurement pending.*
 
 ## Frozen measured-authority verdict (registered 2026-07-17)

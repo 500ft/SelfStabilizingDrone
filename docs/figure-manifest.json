@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "project": "Guarded Micro-UAV",
+  "figures": [
+    {
+      "id": "release-recovery-simulation",
+      "evidence_type": "deterministic 6-DoF simulation",
+      "generator": "Analysis/run_release_recovery.py",
+      "command": "python -m Analysis.run_release_recovery",
+      "inputs": [
+        "Analysis/sim_release_recovery.py",
+        "Analysis/run_release_recovery.py"
+      ],
+      "outputs": [
+        "Figures/release_recovery_timeseries.png",
+        "Figures/release_recovery_timeseries.pdf",
+        "Figures/release_recovery_envelope.png",
+        "Figures/release_recovery_envelope.pdf"
+      ],
+      "data_outputs": ["Data/release_recovery_results.json"],
+      "notes": "Uses encoded parameter tiers and placeholder or catalog-derived values; it is not based on assembled-hardware measurements."
+    },
+    {
+      "id": "guard-load-path",
+      "evidence_type": "authored explanatory diagram",
+      "generator": null,
+      "command": null,
+      "inputs": ["Design Report/README.md"],
+      "outputs": ["Figures/guard-load-path.svg"]
+    },
+    {
+      "id": "recovery-free-body-diagram",
+      "evidence_type": "authored explanatory diagram",
+      "generator": null,
+      "command": null,
+      "inputs": ["Analysis/recovery.py"],
+      "outputs": ["Figures/recovery-fbd.svg"]
+    },
+    {
+      "id": "release-rig-safety-layout",
+      "evidence_type": "authored explanatory diagram",
+      "generator": null,
+      "command": null,
+      "inputs": ["Safety/README.md"],
+      "outputs": ["Figures/release-rig-safety.svg"]
+    }
+  ]
+}
