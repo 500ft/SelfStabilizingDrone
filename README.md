@@ -25,14 +25,22 @@ tables, test contracts, and staged stop/go gates.
 
 ```mermaid
 flowchart LR
-    I[Release cues] --> C[Classifier and state machine]
-    C --> R[6-DoF recovery simulation]
-    P[Propulsion authority] --> R
-    M[Mass, inertia, and CG] --> R
-    R --> G[Recovery and descent gates]
-    S[Guard and rig checks] --> F[Flight-test readiness]
+    classDef input    fill:#bbdefb,stroke:#1565c0,stroke-width:2px,color:#1f2933,font-weight:bold;
+    classDef process  fill:#b2dfdb,stroke:#00796b,stroke-width:2px,color:#1f2933;
+    classDef core     fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px,color:#1f2933,font-weight:bold;
+    classDef decision fill:#fff9c4,stroke:#f9a825,stroke-width:2px,color:#1f2933,font-weight:bold;
+    classDef endpoint fill:#f8bbd0,stroke:#c2185b,stroke-width:2px,color:#1f2933,font-weight:bold;
+
+    I[/Release cues/]:::input --> C[Classifier and state machine]:::process
+    C --> R{{6-DoF recovery simulation}}:::core
+    P[/Propulsion authority/]:::input --> R
+    M[/Mass, inertia, and CG/]:::input --> R
+    R --> G{Recovery and descent gates}:::decision
+    S[Guard and rig checks]:::process --> F([Flight-test readiness]):::endpoint
     G --> F
 ```
+
+*Shapes: parallelogram = input · rectangle = process · hexagon = core method · diamond = gate · pill = endpoint.*
 
 The current plots use estimated or catalog-derived parameters. The Monte Carlo
 study compares placeholder torque with an assumed mixer-authority model.
