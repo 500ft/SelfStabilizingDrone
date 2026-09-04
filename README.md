@@ -1,15 +1,16 @@
 # Guarded Micro-UAV
 
+**An engineering study of a protected micro-UAV that detects release and
+attempts attitude recovery within propulsion, descent, sensing, and guard-load
+limits.**
+
 [![CI](https://github.com/500ft/SelfStabilizingDrone/actions/workflows/ci.yml/badge.svg)](https://github.com/500ft/SelfStabilizingDrone/actions/workflows/ci.yml)
 [![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-276c6b)](LICENSE)
 
-An engineering study of a protected micro-UAV that detects release and attempts
-attitude recovery within propulsion, descent, sensing, and guard-load limits.
-
 **[Results](Analysis/current-results.md) · [Reproduce](#reproduce-the-analysis) · [Data and figures](docs/data-and-figures.md) · [Safety](#safety-boundary)**
 
-![Release-recovery envelope](Figures/release_recovery_envelope.png)
+![Simulated recovery envelope: altitude loss and recoverable tumble rate for three component tiers](Figures/release_recovery_envelope.png)
 
 *Simulated altitude loss and recoverable tumble rate for three component tiers.
 The [results](Analysis/current-results.md) explain the current gate state; the
@@ -37,6 +38,20 @@ The current plots use estimated or catalog-derived parameters. The Monte Carlo
 study compares placeholder torque with an assumed mixer-authority model.
 Hardware has not yet supplied the measured authority, mass properties, guard
 response, or recovery-flight data needed to close the registered gates.
+
+## Results and status
+
+Every number below is simulation or vendor-spec — **no hardware has been
+measured yet**. Full tables and lineage:
+[`Analysis/current-results.md`](Analysis/current-results.md).
+
+| Finding | Evidence state |
+| --- | --- |
+| The Monte Carlo dispersion gate **fails at the placeholder torque authority**: 4.0% recovery as-toleranced (CG ≤ 5 mm, 2 rad/s release). Root cause: thrust-line-offset torque consumes the placeholder 0.004 N·m budget at 0.95 mm offset under recovery thrust. | Simulation — registered gate result (FAIL) |
+| Under the physically derived four-motor mixer authority, the same as-toleranced sweep recovers **300/300** (exact 95% lower bounds 96.1–98.0%), worst altitude loss 1.01 m of the 3.0 m budget. | Simulation — **prediction, not a validation**; conditional on an **assumed 60 mm arm** and datasheet thrust |
+| Bench measurement **EST-REC-007** (per-motor thrust + arm length → measured differential-torque authority) decides between the two scenarios. | Pre-registered, **pending** — contract in [`docs/specs/measured-authority-gate/`](docs/specs/measured-authority-gate/) |
+
+Phase status and remaining milestones: [`ROADMAP.md`](ROADMAP.md).
 
 ## Reproduce the analysis
 
