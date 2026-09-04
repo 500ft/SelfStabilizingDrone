@@ -20,11 +20,11 @@ frozen maximum mass = roundup_to_5g(Sigma worst + 5 g)
 nominal margin = frozen maximum mass - Sigma nominal
 ```
 
-At the current proposed 155 g maximum:
+At the current proposed 165 g maximum:
 
 ```text
-T_required_total = 2.0 * 155 g = 310 g
-T_required_motor = 310 g / 4 = 77.5 g
+T_required_total = 2.0 * 165 g = 330 g
+T_required_motor = 330 g / 4 = 82.5 g
 ```
 
 This is only the static requirement. The recovery case may require greater thrust and torque.
