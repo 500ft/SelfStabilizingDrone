@@ -59,7 +59,7 @@ measured yet**. Full tables and lineage:
 | Under the physically derived four-motor mixer authority, the same as-toleranced sweep recovers **300/300** (exact 95% lower bounds 96.1–98.0%), worst altitude loss 1.01 m of the 3.0 m budget. | Simulation — **prediction, not a validation**; conditional on an **assumed 60 mm arm** and datasheet thrust |
 | Bench measurement **EST-REC-007** (per-motor thrust + arm length → measured differential-torque authority) decides between the two scenarios. | Pre-registered, **pending** — contract in [`docs/specs/measured-authority-gate/`](docs/specs/measured-authority-gate/) |
 
-Phase status and remaining milestones: [`ROADMAP.md`](ROADMAP.md).
+Open engineering questions and the milestone schedule: [`OPEN_QUESTIONS.md`](OPEN_QUESTIONS.md).
 
 ## Reproduce the analysis
 
@@ -90,7 +90,6 @@ complete data path is in [`docs/data-and-figures.md`](docs/data-and-figures.md).
 | [`Instrumentation/README.md`](Instrumentation/README.md) | Bench equipment and measurement procedures |
 | [`Safety/README.md`](Safety/README.md) | Release-rig plan and operating controls |
 | [`docs/specs/measured-authority-gate/`](docs/specs/measured-authority-gate/) | Registered propulsion and recovery acceptance contract |
-| [`ROADMAP.md`](ROADMAP.md) | Project phases and remaining milestones |
 
 The authoritative controller state names and guards are stored in
 [`Controls/state_machine.json`](Controls/state_machine.json).
