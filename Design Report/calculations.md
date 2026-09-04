@@ -8,10 +8,10 @@ The maximum mass is not frozen. Current planning rollup:
 
 | Value | Result |
 |---|---:|
-| Sigma best | 117.96 g |
-| Sigma nominal | 129.76 g |
-| Sigma worst | 149.5 g |
-| Proposed frozen maximum | 155.0 g |
+| Sigma best | 123.86 g |
+| Sigma nominal | 135.66 g |
+| Sigma worst | 156.0 g |
+| Proposed frozen maximum | 165.0 g |
 
 Freeze rule:
 
@@ -66,8 +66,8 @@ T_required_per_motor = 2 * vehicle_mass / 4
 M_allowable = 2 * measured_per_motor_thrust
 ```
 
-At 225 g, the full-reserve threshold is 112.5 gf/motor. At the current 129.8 g
-nominal mass, the threshold is 64.9 gf/motor. A shortfall against 225 g first
+At 225 g, the full-reserve threshold is 112.5 gf/motor. At the current 135.66 g
+nominal mass, the threshold is 67.83 gf/motor. A shortfall against 225 g first
 reduces the frozen mass; it does not automatically trigger a prop change.
 
 ## Battery and Flight Time

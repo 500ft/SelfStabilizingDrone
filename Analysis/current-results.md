@@ -7,12 +7,12 @@ not validated design results.
 
 | Result | Value |
 |---|---:|
-| Best-case mass | 117.96 g |
-| Nominal mass | 129.76 g |
-| Worst-case mass | 149.5 g |
+| Best-case mass | 123.86 g |
+| Nominal mass | 135.66 g |
+| Worst-case mass | 156.0 g |
 | Unmodeled-hardware allowance | 5.0 g |
-| Proposed frozen maximum | 155.0 g |
-| Nominal margin to proposed maximum | 25.24 g |
+| Proposed frozen maximum | 165.0 g |
+| Nominal margin to proposed maximum | 29.34 g |
 | Below 225 g abort threshold | PASS |
 
 The `155 g` value is a proposal only. It cannot become the fixed maximum until
