@@ -74,7 +74,7 @@ must replace those values before the simulation can close the gate.
 | Guard functional check | `Analysis/guard.py` | Encoded low-energy beam cases and clearance requirement |
 | Classifier confidence bounds | `Analysis/classifier_stats.py` | Trial and event counts |
 | Hardware resource checks | `Analysis/hardware_resources.py` | Interface and power CSV tables |
-| Measured-authority verdict | `Analysis/measured_authority_gate.py` | Future bench CSV with voltage, collective fraction, and roll/pitch torque |
+| Measured-authority verdict | `Analysis/measured_authority_gate.py` | Future derived CSV + hashed raw/calibration/uncertainty/derivation manifest, six sampled-motor IDs, unique observations; [format](specs/measured-authority-gate/evidence-contract.md) |
 | State-machine Mermaid | `Analysis/render_state_machine.py` | `Controls/state_machine.json` |
 
 Run the repository tests before updating result documents:

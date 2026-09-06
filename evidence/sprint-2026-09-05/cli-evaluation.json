@@ -1,0 +1,761 @@
+{
+  "scope": "developer synthetic consistency checks; not hardware or independent evaluation",
+  "python": "3.11.8 | packaged by conda-forge | (main, Feb 16 2024, 20:49:36) [Clang 16.0.6 ]",
+  "candidate_sha256": "d8de05fc5c239190f648323a681f934d5b286f9cc4fce3090b2822e3ecf0068e",
+  "case_count": 10,
+  "matched": 10,
+  "results": [
+    {
+      "case": "nominal synthetic",
+      "all_inputs_synthetic": true,
+      "expected": [
+        "DEVELOPMENT_ONLY",
+        3,
+        "PASS"
+      ],
+      "observed": [
+        "DEVELOPMENT_ONLY",
+        3,
+        "PASS"
+      ],
+      "matches": true,
+      "stdout": {
+        "classification": "DEVELOPMENT_ONLY",
+        "conservative_minimum_n_m": 0.024,
+        "decision_scope": "static authority only; not flight readiness or data authenticity",
+        "evidence_kind": "synthetic",
+        "evidence_sha256": "6f481018c23d28ff7f6fbdf592ef34364a0dd0d0fd19c9b61a9e1653baa5918f",
+        "numerical_result": "PASS",
+        "points": [
+          {
+            "collective_fraction": 0.25,
+            "fifth_percentile_tau_n_m": 0.024,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          },
+          {
+            "collective_fraction": 0.375,
+            "fifth_percentile_tau_n_m": 0.024,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          },
+          {
+            "collective_fraction": 0.5,
+            "fifth_percentile_tau_n_m": 0.024,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          },
+          {
+            "collective_fraction": 0.625,
+            "fifth_percentile_tau_n_m": 0.024,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          },
+          {
+            "collective_fraction": 0.75,
+            "fifth_percentile_tau_n_m": 0.024,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          }
+        ],
+        "reasons": [
+          "uncertainty-adjusted empirical fifth percentile clears 0.020 N m at every grid point",
+          "synthetic fixture is not a physical gate result",
+          "empirical quantile is not a confidence-qualified population bound; source assertions require human review"
+        ],
+        "threshold_n_m": 0.02,
+        "voltage_v": 7.0
+      },
+      "stderr": "",
+      "command": "python -m Analysis.measured_authority_gate TEMP/authority.csv --manifest TEMP/manifest.json"
+    },
+    {
+      "case": "below-threshold synthetic",
+      "all_inputs_synthetic": true,
+      "expected": [
+        "DEVELOPMENT_ONLY",
+        3,
+        "FAIL"
+      ],
+      "observed": [
+        "DEVELOPMENT_ONLY",
+        3,
+        "FAIL"
+      ],
+      "matches": true,
+      "stdout": {
+        "classification": "DEVELOPMENT_ONLY",
+        "conservative_minimum_n_m": 0.018,
+        "decision_scope": "static authority only; not flight readiness or data authenticity",
+        "evidence_kind": "synthetic",
+        "evidence_sha256": "551cacea57be34c145230049fe3e2e5997aa52450cd189822c191e97fb6cc115",
+        "numerical_result": "FAIL",
+        "points": [
+          {
+            "collective_fraction": 0.25,
+            "fifth_percentile_tau_n_m": 0.018,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          },
+          {
+            "collective_fraction": 0.375,
+            "fifth_percentile_tau_n_m": 0.018,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          },
+          {
+            "collective_fraction": 0.5,
+            "fifth_percentile_tau_n_m": 0.018,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          },
+          {
+            "collective_fraction": 0.625,
+            "fifth_percentile_tau_n_m": 0.018,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          },
+          {
+            "collective_fraction": 0.75,
+            "fifth_percentile_tau_n_m": 0.018,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          }
+        ],
+        "reasons": [
+          "uncertainty-adjusted empirical fifth percentile falls below 0.020 N m in the band",
+          "synthetic fixture is not a physical gate result",
+          "empirical quantile is not a confidence-qualified population bound; source assertions require human review"
+        ],
+        "threshold_n_m": 0.02,
+        "voltage_v": 7.0
+      },
+      "stderr": "",
+      "command": "python -m Analysis.measured_authority_gate TEMP/authority.csv --manifest TEMP/manifest.json"
+    },
+    {
+      "case": "missing calibration file",
+      "all_inputs_synthetic": true,
+      "expected": [
+        "INCONCLUSIVE",
+        2,
+        null
+      ],
+      "observed": [
+        "INCONCLUSIVE",
+        2,
+        null
+      ],
+      "matches": true,
+      "stdout": {
+        "classification": "INCONCLUSIVE",
+        "conservative_minimum_n_m": null,
+        "decision_scope": "static authority only; not flight readiness or data authenticity",
+        "evidence_kind": "missing",
+        "evidence_sha256": null,
+        "numerical_result": null,
+        "points": [],
+        "reasons": [
+          "evidence incomplete or inconsistent: missing or checksum-mismatched artifact: calibration.txt",
+          "row 1 has invalid provenance: 'raw-0'",
+          "row 2 has invalid provenance: 'raw-1'",
+          "row 3 has invalid provenance: 'raw-2'",
+          "row 4 has invalid provenance: 'raw-3'",
+          "row 5 has invalid provenance: 'raw-4'",
+          "row 6 has invalid provenance: 'raw-5'",
+          "row 7 has invalid provenance: 'raw-6'",
+          "row 8 has invalid provenance: 'raw-7'",
+          "row 9 has invalid provenance: 'raw-8'",
+          "row 10 has invalid provenance: 'raw-9'",
+          "row 11 has invalid provenance: 'raw-10'",
+          "row 12 has invalid provenance: 'raw-11'",
+          "row 13 has invalid provenance: 'raw-12'",
+          "row 14 has invalid provenance: 'raw-13'",
+          "row 15 has invalid provenance: 'raw-14'",
+          "row 16 has invalid provenance: 'raw-15'",
+          "row 17 has invalid provenance: 'raw-16'",
+          "row 18 has invalid provenance: 'raw-17'",
+          "row 19 has invalid provenance: 'raw-18'",
+          "row 20 has invalid provenance: 'raw-19'",
+          "row 21 has invalid provenance: 'raw-20'",
+          "row 22 has invalid provenance: 'raw-21'",
+          "row 23 has invalid provenance: 'raw-22'",
+          "row 24 has invalid provenance: 'raw-23'",
+          "row 25 has invalid provenance: 'raw-24'",
+          "row 26 has invalid provenance: 'raw-25'",
+          "row 27 has invalid provenance: 'raw-26'",
+          "row 28 has invalid provenance: 'raw-27'",
+          "row 29 has invalid provenance: 'raw-28'",
+          "row 30 has invalid provenance: 'raw-29'",
+          "collective 0.250 lacks six-motor coverage",
+          "collective 0.250 has 0 samples; 6 required",
+          "collective 0.375 lacks six-motor coverage",
+          "collective 0.375 has 0 samples; 6 required",
+          "collective 0.500 lacks six-motor coverage",
+          "collective 0.500 has 0 samples; 6 required",
+          "collective 0.625 lacks six-motor coverage",
+          "collective 0.625 has 0 samples; 6 required",
+          "collective 0.750 lacks six-motor coverage",
+          "collective 0.750 has 0 samples; 6 required"
+        ],
+        "threshold_n_m": 0.02,
+        "voltage_v": 7.0
+      },
+      "stderr": "",
+      "command": "python -m Analysis.measured_authority_gate TEMP/authority.csv --manifest TEMP/manifest.json"
+    },
+    {
+      "case": "reused raw observation",
+      "all_inputs_synthetic": true,
+      "expected": [
+        "INCONCLUSIVE",
+        2,
+        null
+      ],
+      "observed": [
+        "INCONCLUSIVE",
+        2,
+        null
+      ],
+      "matches": true,
+      "stdout": {
+        "classification": "INCONCLUSIVE",
+        "conservative_minimum_n_m": null,
+        "decision_scope": "static authority only; not flight readiness or data authenticity",
+        "evidence_kind": "missing",
+        "evidence_sha256": null,
+        "numerical_result": null,
+        "points": [],
+        "reasons": [
+          "evidence incomplete or inconsistent: duplicate raw record_id",
+          "row 1 has invalid provenance: 'duplicate'",
+          "row 2 has invalid provenance: duplicate derived sample or reused raw observation",
+          "row 3 has invalid provenance: 'raw-2'",
+          "row 4 has invalid provenance: 'raw-3'",
+          "row 5 has invalid provenance: 'raw-4'",
+          "row 6 has invalid provenance: 'raw-5'",
+          "row 7 has invalid provenance: 'raw-6'",
+          "row 8 has invalid provenance: 'raw-7'",
+          "row 9 has invalid provenance: 'raw-8'",
+          "row 10 has invalid provenance: 'raw-9'",
+          "row 11 has invalid provenance: 'raw-10'",
+          "row 12 has invalid provenance: 'raw-11'",
+          "row 13 has invalid provenance: 'raw-12'",
+          "row 14 has invalid provenance: 'raw-13'",
+          "row 15 has invalid provenance: 'raw-14'",
+          "row 16 has invalid provenance: 'raw-15'",
+          "row 17 has invalid provenance: 'raw-16'",
+          "row 18 has invalid provenance: 'raw-17'",
+          "row 19 has invalid provenance: 'raw-18'",
+          "row 20 has invalid provenance: 'raw-19'",
+          "row 21 has invalid provenance: 'raw-20'",
+          "row 22 has invalid provenance: 'raw-21'",
+          "row 23 has invalid provenance: 'raw-22'",
+          "row 24 has invalid provenance: 'raw-23'",
+          "row 25 has invalid provenance: 'raw-24'",
+          "row 26 has invalid provenance: 'raw-25'",
+          "row 27 has invalid provenance: 'raw-26'",
+          "row 28 has invalid provenance: 'raw-27'",
+          "row 29 has invalid provenance: 'raw-28'",
+          "row 30 has invalid provenance: 'raw-29'",
+          "collective 0.250 lacks six-motor coverage",
+          "collective 0.250 has 0 samples; 6 required",
+          "collective 0.375 lacks six-motor coverage",
+          "collective 0.375 has 0 samples; 6 required",
+          "collective 0.500 lacks six-motor coverage",
+          "collective 0.500 has 0 samples; 6 required",
+          "collective 0.625 lacks six-motor coverage",
+          "collective 0.625 has 0 samples; 6 required",
+          "collective 0.750 lacks six-motor coverage",
+          "collective 0.750 has 0 samples; 6 required"
+        ],
+        "threshold_n_m": 0.02,
+        "voltage_v": 7.0
+      },
+      "stderr": "",
+      "command": "python -m Analysis.measured_authority_gate TEMP/authority.csv --manifest TEMP/manifest.json"
+    },
+    {
+      "case": "missing uncertainty",
+      "all_inputs_synthetic": true,
+      "expected": [
+        "INCONCLUSIVE",
+        2,
+        null
+      ],
+      "observed": [
+        "INCONCLUSIVE",
+        2,
+        null
+      ],
+      "matches": true,
+      "stdout": {
+        "classification": "INCONCLUSIVE",
+        "conservative_minimum_n_m": null,
+        "decision_scope": "static authority only; not flight readiness or data authenticity",
+        "evidence_kind": "synthetic",
+        "evidence_sha256": "2740187f2ea5aa1333564774e40e2f96a18798794c463e1e8eab0fd3ab426285",
+        "numerical_result": null,
+        "points": [
+          {
+            "collective_fraction": 0.375,
+            "fifth_percentile_tau_n_m": 0.024,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          },
+          {
+            "collective_fraction": 0.5,
+            "fifth_percentile_tau_n_m": 0.024,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          },
+          {
+            "collective_fraction": 0.625,
+            "fifth_percentile_tau_n_m": 0.024,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          },
+          {
+            "collective_fraction": 0.75,
+            "fifth_percentile_tau_n_m": 0.024,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          }
+        ],
+        "reasons": [
+          "row 1 has missing/invalid numeric data: could not convert string to float: ''",
+          "collective 0.250 lacks six-motor coverage",
+          "collective 0.250 has 5 samples; 6 required"
+        ],
+        "threshold_n_m": 0.02,
+        "voltage_v": 7.0
+      },
+      "stderr": "",
+      "command": "python -m Analysis.measured_authority_gate TEMP/authority.csv --manifest TEMP/manifest.json"
+    },
+    {
+      "case": "raw operating-point mismatch with updated hash",
+      "all_inputs_synthetic": true,
+      "expected": [
+        "INCONCLUSIVE",
+        2,
+        null
+      ],
+      "observed": [
+        "INCONCLUSIVE",
+        2,
+        null
+      ],
+      "matches": true,
+      "stdout": {
+        "classification": "INCONCLUSIVE",
+        "conservative_minimum_n_m": null,
+        "decision_scope": "static authority only; not flight readiness or data authenticity",
+        "evidence_kind": "synthetic",
+        "evidence_sha256": "631bdaf5a03bb871a18a9d9d83d10a6aa3d7e3d260cbc663c28f60c9a75f42df",
+        "numerical_result": null,
+        "points": [
+          {
+            "collective_fraction": 0.375,
+            "fifth_percentile_tau_n_m": 0.024,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          },
+          {
+            "collective_fraction": 0.5,
+            "fifth_percentile_tau_n_m": 0.024,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          },
+          {
+            "collective_fraction": 0.625,
+            "fifth_percentile_tau_n_m": 0.024,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          },
+          {
+            "collective_fraction": 0.75,
+            "fifth_percentile_tau_n_m": 0.024,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          }
+        ],
+        "reasons": [
+          "row 1 has invalid provenance: derived operating point does not match raw source",
+          "collective 0.250 lacks six-motor coverage",
+          "collective 0.250 has 5 samples; 6 required"
+        ],
+        "threshold_n_m": 0.02,
+        "voltage_v": 7.0
+      },
+      "stderr": "",
+      "command": "python -m Analysis.measured_authority_gate TEMP/authority.csv --manifest TEMP/manifest.json"
+    },
+    {
+      "case": "malformed manifest array",
+      "all_inputs_synthetic": true,
+      "expected": [
+        "INCONCLUSIVE",
+        2,
+        null
+      ],
+      "observed": [
+        "INCONCLUSIVE",
+        2,
+        null
+      ],
+      "matches": true,
+      "stdout": {
+        "classification": "INCONCLUSIVE",
+        "conservative_minimum_n_m": null,
+        "decision_scope": "static authority only; not flight readiness or data authenticity",
+        "evidence_kind": "missing",
+        "evidence_sha256": null,
+        "numerical_result": null,
+        "points": [],
+        "reasons": [
+          "evidence incomplete or inconsistent: manifest schema_version must be integer 1",
+          "row 1 has invalid provenance: 'raw-0'",
+          "row 2 has invalid provenance: 'raw-1'",
+          "row 3 has invalid provenance: 'raw-2'",
+          "row 4 has invalid provenance: 'raw-3'",
+          "row 5 has invalid provenance: 'raw-4'",
+          "row 6 has invalid provenance: 'raw-5'",
+          "row 7 has invalid provenance: 'raw-6'",
+          "row 8 has invalid provenance: 'raw-7'",
+          "row 9 has invalid provenance: 'raw-8'",
+          "row 10 has invalid provenance: 'raw-9'",
+          "row 11 has invalid provenance: 'raw-10'",
+          "row 12 has invalid provenance: 'raw-11'",
+          "row 13 has invalid provenance: 'raw-12'",
+          "row 14 has invalid provenance: 'raw-13'",
+          "row 15 has invalid provenance: 'raw-14'",
+          "row 16 has invalid provenance: 'raw-15'",
+          "row 17 has invalid provenance: 'raw-16'",
+          "row 18 has invalid provenance: 'raw-17'",
+          "row 19 has invalid provenance: 'raw-18'",
+          "row 20 has invalid provenance: 'raw-19'",
+          "row 21 has invalid provenance: 'raw-20'",
+          "row 22 has invalid provenance: 'raw-21'",
+          "row 23 has invalid provenance: 'raw-22'",
+          "row 24 has invalid provenance: 'raw-23'",
+          "row 25 has invalid provenance: 'raw-24'",
+          "row 26 has invalid provenance: 'raw-25'",
+          "row 27 has invalid provenance: 'raw-26'",
+          "row 28 has invalid provenance: 'raw-27'",
+          "row 29 has invalid provenance: 'raw-28'",
+          "row 30 has invalid provenance: 'raw-29'",
+          "collective 0.250 lacks six-motor coverage",
+          "collective 0.250 has 0 samples; 6 required",
+          "collective 0.375 lacks six-motor coverage",
+          "collective 0.375 has 0 samples; 6 required",
+          "collective 0.500 lacks six-motor coverage",
+          "collective 0.500 has 0 samples; 6 required",
+          "collective 0.625 lacks six-motor coverage",
+          "collective 0.625 has 0 samples; 6 required",
+          "collective 0.750 lacks six-motor coverage",
+          "collective 0.750 has 0 samples; 6 required"
+        ],
+        "threshold_n_m": 0.02,
+        "voltage_v": 7.0
+      },
+      "stderr": "",
+      "command": "python -m Analysis.measured_authority_gate TEMP/authority.csv --manifest TEMP/manifest.json"
+    },
+    {
+      "case": "measured-label branch on synthetic records",
+      "all_inputs_synthetic": true,
+      "expected": [
+        "PASS",
+        0,
+        "PASS"
+      ],
+      "observed": [
+        "PASS",
+        0,
+        "PASS"
+      ],
+      "matches": true,
+      "stdout": {
+        "classification": "PASS",
+        "conservative_minimum_n_m": 0.024,
+        "decision_scope": "static authority only; not flight readiness or data authenticity",
+        "evidence_kind": "measured",
+        "evidence_sha256": "a7291a01687f40876476399f7029fd8bf45300f2e989e259dfca33fcee4c300b",
+        "numerical_result": "PASS",
+        "points": [
+          {
+            "collective_fraction": 0.25,
+            "fifth_percentile_tau_n_m": 0.024,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          },
+          {
+            "collective_fraction": 0.375,
+            "fifth_percentile_tau_n_m": 0.024,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          },
+          {
+            "collective_fraction": 0.5,
+            "fifth_percentile_tau_n_m": 0.024,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          },
+          {
+            "collective_fraction": 0.625,
+            "fifth_percentile_tau_n_m": 0.024,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          },
+          {
+            "collective_fraction": 0.75,
+            "fifth_percentile_tau_n_m": 0.024,
+            "motor_ids": [
+              "motor-0",
+              "motor-1",
+              "motor-2",
+              "motor-3",
+              "motor-4",
+              "motor-5"
+            ],
+            "samples": 6
+          }
+        ],
+        "reasons": [
+          "uncertainty-adjusted empirical fifth percentile clears 0.020 N m at every grid point",
+          "empirical quantile is not a confidence-qualified population bound; source assertions require human review"
+        ],
+        "threshold_n_m": 0.02,
+        "voltage_v": 7.0
+      },
+      "stderr": "",
+      "command": "python -m Analysis.measured_authority_gate TEMP/authority.csv --manifest TEMP/manifest.json"
+    },
+    {
+      "case": "empty derived file with matching hash",
+      "all_inputs_synthetic": true,
+      "expected": [
+        "INCONCLUSIVE",
+        2,
+        null
+      ],
+      "observed": [
+        "INCONCLUSIVE",
+        2,
+        null
+      ],
+      "matches": true,
+      "stdout": {
+        "classification": "INCONCLUSIVE",
+        "conservative_minimum_n_m": null,
+        "decision_scope": "static authority only; not flight readiness or data authenticity",
+        "evidence_kind": "missing",
+        "evidence_sha256": null,
+        "numerical_result": null,
+        "points": [],
+        "reasons": [
+          "CSV has missing or duplicated headers"
+        ],
+        "threshold_n_m": 0.02,
+        "voltage_v": 7.0
+      },
+      "stderr": "",
+      "command": "python -m Analysis.measured_authority_gate TEMP/authority.csv --manifest TEMP/manifest.json"
+    },
+    {
+      "case": "8.4 V reference rows only",
+      "all_inputs_synthetic": true,
+      "expected": [
+        "INCONCLUSIVE",
+        2,
+        null
+      ],
+      "observed": [
+        "INCONCLUSIVE",
+        2,
+        null
+      ],
+      "matches": true,
+      "stdout": {
+        "classification": "INCONCLUSIVE",
+        "conservative_minimum_n_m": null,
+        "decision_scope": "static authority only; not flight readiness or data authenticity",
+        "evidence_kind": "synthetic",
+        "evidence_sha256": "99d1c73d6045c13a7aadf01d32d85873761330066399cdf17ce612df191eada5",
+        "numerical_result": null,
+        "points": [],
+        "reasons": [
+          "collective 0.250 lacks six-motor coverage",
+          "collective 0.250 has 0 samples; 6 required",
+          "collective 0.375 lacks six-motor coverage",
+          "collective 0.375 has 0 samples; 6 required",
+          "collective 0.500 lacks six-motor coverage",
+          "collective 0.500 has 0 samples; 6 required",
+          "collective 0.625 lacks six-motor coverage",
+          "collective 0.625 has 0 samples; 6 required",
+          "collective 0.750 lacks six-motor coverage",
+          "collective 0.750 has 0 samples; 6 required"
+        ],
+        "threshold_n_m": 0.02,
+        "voltage_v": 7.0
+      },
+      "stderr": "",
+      "command": "python -m Analysis.measured_authority_gate TEMP/authority.csv --manifest TEMP/manifest.json"
+    }
+  ]
+}
