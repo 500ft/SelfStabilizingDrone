@@ -1,7 +1,5 @@
 # Guarded Micro-UAV
 
-CAD development is now broken into [individual work orders](docs/CAD_PLAN.md) and a [CAD task ledger](docs/CAD_TASKS.csv). These are planned models, fixtures and release drawings—not completed CAD or hardware evidence.
-
 **An engineering study of a protected micro-UAV that detects release and
 attempts attitude recovery within propulsion, descent, sensing, and guard-load
 limits.**

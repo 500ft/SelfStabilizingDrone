@@ -1,10 +1,12 @@
-# SelfStabilizingDrone — individual CAD tasks
+# SelfStabilizingDrone — revised CAD work orders
 
-Prepared 2026-09-06. **Planning only: no CAD model, drawing, fabrication, calibration or physical result was produced by this amendment.**
+Amended 2026-09-06 after source review. Planning only: no CAD, fixture, fabrication or calibration result exists from this amendment.
 
-[CAD_TASKS.csv](CAD_TASKS.csv) is the sole status ledger for this new CAD phase. The earlier [SPRINT_TASKS.csv](SPRINT_TASKS.csv) remains the authority for the separate 30-hour evidence-integrity sprint; its estimates and achieved software evidence are unchanged. This plan expands mechanical work orders, not publication or test permission. Scope tiers are in [scope.md](specs/cad-development/scope.md).
+**MERGE BLOCKED — owner decision pending.** The earlier public-planning cleanup has not been explicitly reversed. This draft PR keeps ledgers on its unmerged branch for review; it does not authorize them on main. See [CAD_REVIEW_DISPOSITION.md](CAD_REVIEW_DISPOSITION.md). Removing details from the current tree does not erase previous public commits.
 
-## Verified reason for the work
+[CAD_TASKS.csv](CAD_TASKS.csv) is the sole CAD status ledger. [SPRINT_TASKS.csv](SPRINT_TASKS.csv) remains byte-preserved for the earlier integrity sprint. [Scope tiers](specs/cad-development/scope.md) and [reproduction checks](CAD_PLAN_CHECKS.md) describe this amendment, not physical validation.
+
+## Verified source context
 
 The mass-property export is explicitly PENDING and the instrument plan requires pendulum validation. Bench safety names a stand, torque arm and guard but these lack individual design/release tasks.
 
@@ -15,124 +17,134 @@ Inspected source documents:
 - [Instrumentation/README.md](../Instrumentation/README.md)
 - [Instrumentation/propulsion-bench-safety-checklist.md](../Instrumentation/propulsion-bench-safety-checklist.md)
 
-## Outcome and boundaries
 
-A reviewer can reopen editable, version-pinned geometry; regenerate neutral STEP exports; understand the assembly, critical fits and measurement datums; and distinguish design assumptions from inspected hardware. STL is only a manufacturing derivative where appropriate, not the sole editable master. For hosted CAD retain a version-specific share reference and authorized portable source/export archive; record tool/version and export settings. Do not require a particular commercial tool before checking access.
+## Revised finish line and priority
 
-**Entry decision:** Owner confirms the actual four-motor vehicle, component interfaces, fabrication capability and bench/instrument envelope; later drop-fixture work requires separate readiness approval.
+Bench torque at 7.0 V first. DR-CAD-01 → bench inputs DR-CAD-02 and tooling DR-CAD-10 → stand DR-CAD-06 → bench release DR-CAD-08. Vehicle inputs/packaging cannot gate that path.
 
-**Excluded:** No motor operation, drop tests, purchases or flight release. Six test motors are a sampling requirement, not a six-motor airframe. Do not import the original checkout's untracked Onshape export without owner reconciliation.
+## Tool and verification decision
 
-Agent owns document preparation and modeling once inputs exist; Owner owns actual component/access choices and review authority; External fabricators/operators own quotes, manufacture and facility approval. No approval, purchase, fabrication booking, IP disclosure of third-party drawings, or test run is completed by checking in this plan. Unknown critical dimensions block fabrication; conceptual placeholders must be visible and cannot become as-built evidence.
+**Selected design approach:** CadQuery code-CAD for parameterized families and neutral STEP verification; Onshape for hand-modeled fixtures with confirmed owner account/access. No Onshape automation, credentials or paid access is assumed. Agent owns code-CAD generators/tests; Owner or an authorized CAD operator owns interactive Onshape work. Lack of Onshape access blocks only affected fixture modeling and requires a documented alternative, not the entire parameter pipeline.
 
-## Focused-hour allocation
+The dedicated tooling task budgets environment locking and CI setup. Pin actual Python/CadQuery/OCP versions only after a clean isolated install plus STEP export/reimport smoke test. No version, environment or geometry CI is claimed tested today. CadQuery's official [installation](https://cadquery.readthedocs.io/en/stable/installation.html) and [STEP import/export](https://cadquery.readthedocs.io/en/stable/importexport.html) docs establish the chosen workflow, not a completed build.
 
-The initial CAD phase is **28 estimated focused hours**, additional to the earlier software sprint. A further **5 hours** is deferred behind explicit triggers. These are estimates, not recorded work. Each day is a workload bucket after its prerequisites, not a calendar promise; quotes, calibration and facility lead times are not compressed into CAD hours.
+Required future automated sequence: read reviewed parameters.csv → reject invalid/missing dimensions and units → regenerate native geometry → export STEP → reimport into a fresh process → calculate geometric metrics → assert against predeclared tolerances. Geometry acceptance uses numeric JSON plus source/export identity; retain screenshots only for explanatory views. A golden image or a hash is not a geometry test. Tests include analytic nominal cases, registered bounds and invalid cases; expected values cannot be copied from the candidate's own output. CAD geometry tests do not validate physical stiffness, safety or fatigue.
 
-| Workload day | Hours | Ordered tasks |
+Proposed commands (files DO NOT exist yet): `python cad/generate.py --parameters <registered-parameters.csv> --output <temporary-output>`; `python -m pytest cad/tests -q`. The tooling task must replace placeholders with actual checked-in defaults and wire CI before a model task can close.
+
+## Rebaselined allocation
+
+**13 estimated hours in the prioritized phase; 24 estimated hours parked.** This supersedes the previous CAD allocation, not the original 30-hour software sprint. Only tasks marked todo are executable now; blocked/parked estimates are not scheduled work. Owner decisions, fabrication lead times and external calibration do not shrink into focused hours.
+
+| Workload day | Hours | Order |
 | --- | ---: | --- |
-| 1 | 4 | DR-CAD-01 → DR-CAD-02 |
-| 2 | 6 | DR-CAD-03 |
-| 3 | 4 | DR-CAD-04 |
-| 4 | 3 | DR-CAD-05 |
-| 5 | 5 | DR-CAD-06 |
-| 6 | 6 | DR-CAD-07 → DR-CAD-08 |
-
-Critical path follows the explicit task dependencies below: input register → owner decisions → parts/fixtures → release review. Independent branches may proceed after their shared inputs close.
+| 1 | 3 | DR-CAD-01 → DR-CAD-02 |
+| 2 | 3 | DR-CAD-10 |
+| 3 | 5 | DR-CAD-06 |
+| 4 | 2 | DR-CAD-08 |
 
 ## Individual work orders
 
-All output paths below are **proposed NEW deliverables**, not existing artifacts. Current task state appears only in the CSV; the headings below define acceptance, not completion.
+IDs retain continuity with the first PR. New IDs represent split inputs, tooling or release tasks; display order is execution priority rather than numerical ID order. Proposed deliverables below are NEW, not present artifacts. Current status exists only in CAD_TASKS.csv.
 
-### DR-CAD-01 — Create mechanical interface and coordinate-frame register
+### DR-CAD-01 — Prepare bench-first mechanical inputs and evidence mapping
 
-- Owner: Agent; priority: P1; estimate: 2 h; workload day: 1.
-- Dependencies: none; source inspection is available now.
-- Scope: initial CAD phase, subject to its input/owner gate.
-- Proposed deliverables: `cad/vehicle/interfaces.csv; cad/vehicle/design-inputs.md`.
-- Done when: Trace selected components to hardware_interfaces.csv and requirements; list mounting patterns, motor centers, prop sweep, battery restraint and common body axes. Unknown dimensions and masses remain pending, not guessed release inputs.
-- Verification and evidence to retain: Cross-check every component against the existing engineering tables and mass-property template; retain source and units per input.
+- Owner: Agent; priority: P1; estimate: 2 h; day: 1.
+- Dependencies: none.
+- Proposed output: `NEW cad/bench/parameters.csv; cad/bench/design-inputs.md`.
+- Done when: Source motor/prop/load-cell/stand mounting dimensions from actual vendor drawings or owner measurements. hardware_interfaces.csv is a UART/pad register, NOT mounting-pattern evidence. Separate stand axes, effective authority arm_m, measured thrust_n, calibration lever and uncertainty; unknowns remain pending.
+- Verification/evidence: Trace dimensions to inspected mechanical sources and map arm_m/thrust_n to docs/specs/measured-authority-gate/evidence-contract.md.
 
-### DR-CAD-02 — Approve actual component and bench geometry inputs
+### DR-CAD-02 — Approve bench-only geometry and access
 
-- Owner: Owner; priority: P1; estimate: 2 h; workload day: 1.
+- Owner: Owner; priority: P1; estimate: 1 h; day: 1.
 - Dependencies: DR-CAD-01.
-- Scope: initial CAD phase, subject to its input/owner gate.
-- Proposed deliverables: `cad/vehicle/owner-inputs.md`.
-- Done when: Supply fit-critical drawings or measurements for motor, props, electronics, battery, load cell and stand, fabrication method and limits. Reconcile any existing Onshape model and define reuse authority; identify qualified bench reviewer.
-- Verification and evidence to retain: Record actual part revisions, reviewed envelope and access decisions. Missing dimensions keep downstream fabrication blocked.
+- Proposed output: `NEW cad/bench/owner-inputs.md`.
+- Done when: Approve selected motor/prop, load cell, bench mounting, effective authority lever, 7.0 V operating envelope, metrology and qualified containment. Battery/electronics layout and complete vehicle CAD are NOT required.
+- Verification/evidence: Check actual motor-center geometry, guard and packaging fit drawings, bought-part mass sources, fabrication capability and authorized Onshape source access; bench calibration is handled in DR-CAD-02.
 
-### DR-CAD-03 — Model the full vehicle packaging assembly
+### DR-CAD-10 — Establish code-CAD regeneration and CI geometry tests
 
-- Owner: Agent; priority: P1; estimate: 6 h; workload day: 2.
-- Dependencies: DR-CAD-02.
-- Scope: initial CAD phase, subject to its input/owner gate.
-- Proposed deliverables: `cad/vehicle/assembly/ (editable source, STEP, layout drawing)`.
-- Done when: Model motor mounts, frame, electronics/battery retention, connector service space and wire routing using sourced envelopes. Assign mass basis per part; model all four rotor swept envelopes and retained fasteners.
-- Verification and evidence to retain: Retain interference report, top/side/section views and service-access checks at the documented configuration.
-
-### DR-CAD-04 — Model guard attachments and analyze geometric load paths
-
-- Owner: Agent; priority: P1; estimate: 4 h; workload day: 3.
-- Dependencies: DR-CAD-03.
-- Scope: initial CAD phase, subject to its input/owner gate.
-- Proposed deliverables: `cad/vehicle/guard/ (source, STEP, load-path drawing)`.
-- Done when: Detail attachment interfaces, joints and minimum prop clearance over declared tolerance/deflection assumptions; distinguish contact guard from blade-fragment containment. Do not claim a CAD guard is impact-qualified.
-- Verification and evidence to retain: Inspect worst-case fit and removal/access; link load paths to Analysis/guard.py assumptions and log mismatches for later analysis.
-
-### DR-CAD-05 — Export CAD mass, CG and inertia with source provenance
-
-- Owner: Agent; priority: P1; estimate: 3 h; workload day: 4.
-- Dependencies: DR-CAD-03, DR-CAD-04.
-- Scope: initial CAD phase, subject to its input/owner gate.
-- Proposed deliverables: `cad/vehicle/mass-properties.csv; cad/vehicle/mass-reconciliation.md`.
-- Done when: Use the existing Engineering Data/cad_mass_properties_template.csv columns; document inertia frame, origin, units, products-of-inertia convention, density/source and uncertain bought-part masses. Keep modeled values separate from measured values.
-- Verification and evidence to retain: Reconcile component sums with assembly mass; verify frame translations and symmetric/positive inertia; compare current mass budget without silently overwriting assumed inputs.
+- Owner: Agent; priority: P1; estimate: 3 h; day: 2.
+- Dependencies: DR-CAD-01.
+- Proposed output: `NEW cad/requirements.lock; cad/generate.py; cad/tests/; .github/workflows/cad-geometry.yml`.
+- Done when: Use CadQuery for parameter-driven families and neutral STEP checks, Onshape for hand-modeled fixtures after confirming account/access. Pin Python/CadQuery/OCP dependencies after a clean isolated install and export/reimport smoke test. Add geometry CI before accepting a parametric model; screenshots are supplementary, not acceptance.
+- Verification/evidence: Proposed commands, NOT YET IMPLEMENTED: python cad/generate.py --parameters <registered-parameters.csv> --output <temporary-output>; python -m pytest cad/tests -q. Assert geometry metrics against a reviewed contract with declared tolerances; prove failure on an altered parameter, invalid dimensions, missing inputs and bad STEP. Retain version lock, numeric JSON and STEP outputs.
 
 ### DR-CAD-06 — Model propulsion metrology stand and protective interfaces
 
-- Owner: Agent; priority: P1; estimate: 5 h; workload day: 5.
-- Dependencies: DR-CAD-02.
-- Scope: initial CAD phase, subject to its input/owner gate.
-- Proposed deliverables: `cad/bench/propulsion/ (source, STEP, drawings)`.
-- Done when: Specify load-cell mounts, thrust axis, calibrated torque-arm lever, hard mounting/ballast, cable restraint, remote stop access and independent containment interface. Document nominal applied loads and stability calculations; qualified containment is an external input, not a printed-shell claim.
-- Verification and evidence to retain: Review calibration-load path, tip-over/sliding/fastener assumptions and prop exclusion envelope against the existing safety checklist. Retain review issues; no energized approval implied.
+- Owner: Agent; priority: P0; estimate: 5 h; day: 3.
+- Dependencies: DR-CAD-02;DR-CAD-10.
+- Proposed output: `NEW cad/bench/propulsion/ (source, STEP, drawings)`.
+- Done when: Specify load-cell mounts, thrust axis, calibrated torque-arm lever, hard mounting/ballast, cable restraint, remote stop access and independent containment interface. Document nominal applied loads and stability calculations; qualified containment is an external input, not a printed-shell claim. Bind actual thrust_n and effective arm_m to the evidence contract, units/datums/calibration and mixer derivation. The stand calibration lever is not automatically the vehicle authority lever. Preserve 7.0 V and registered grid.
+- Verification/evidence: Review calibration-load path, tip-over/sliding/fastener assumptions and prop exclusion envelope against the existing safety checklist. Retain review issues; no energized approval implied. Numerically check STEP dimensions, effective lever and load-axis alignment; retain arm/thrust uncertainty and raw-to-tau_rp_n_m mapping.
+
+### DR-CAD-08 — Release bench-only fabrication and calibration-review pack
+
+- Owner: Agent; priority: P1; estimate: 2 h; day: 4.
+- Dependencies: DR-CAD-06;DR-CAD-10.
+- Proposed output: `NEW cad/bench/release/ (drawings, STEP, calibration mapping)`.
+- Done when: Release only stand, qualified-containment interface and instrument datums. Include arm_m/thrust_n mapping, load/stability calculations and pre-run uncertainty requirements. No vehicle packaging/pendulum dependency. Preserve 0.020 N m and 962/1000; no motor operation is authorized.
+- Verification/evidence: Reimport STEP and assert critical dimensions; owner reviews actual fabrication/safety/calibration separately.
+
+### DR-CAD-02V — Approve vehicle-only mechanical interfaces
+
+- Owner: Owner; priority: P2; estimate: 1 h; day: conditional.
+- Dependencies: DR-CAD-01.
+- Proposed output: `NEW cad/vehicle/owner-inputs.md`.
+- Done when: After bench authority supports proceeding, confirm four-motor vehicle, battery/electronics and guard interfaces and Onshape source access. This task cannot gate the bench.
+- Verification/evidence: Record actual fit-critical drawings, arm_m meaning/calibration and operator/facility availability; no approval is assumed.
+
+### DR-CAD-03 — Model the full vehicle packaging assembly
+
+- Owner: Agent; priority: P2; estimate: 6 h; day: conditional.
+- Dependencies: DR-CAD-02V.
+- Proposed output: `NEW cad/vehicle/assembly/ (editable source, STEP, layout drawing)`.
+- Done when: Model motor mounts, frame, electronics/battery retention, connector service space and wire routing using sourced envelopes. Assign mass basis per part; model all four rotor swept envelopes and retained fasteners.
+- Verification/evidence: Retain interference report, top/side/section views and service-access checks at the documented configuration.
+
+### DR-CAD-04 — Model guard attachments and analyze geometric load paths
+
+- Owner: Agent; priority: P2; estimate: 4 h; day: conditional.
+- Dependencies: DR-CAD-03.
+- Proposed output: `NEW cad/vehicle/guard/ (source, STEP, load-path drawing)`.
+- Done when: Detail attachment interfaces, joints and minimum prop clearance over declared tolerance/deflection assumptions; distinguish contact guard from blade-fragment containment. Do not claim a CAD guard is impact-qualified.
+- Verification/evidence: Inspect worst-case fit and removal/access; link load paths to Analysis/guard.py assumptions and log mismatches for later analysis.
+
+### DR-CAD-05 — Export CAD mass, CG and inertia with source provenance
+
+- Owner: Agent; priority: P2; estimate: 3 h; day: conditional.
+- Dependencies: DR-CAD-03;DR-CAD-04.
+- Proposed output: `NEW cad/vehicle/mass-properties.csv; cad/vehicle/mass-reconciliation.md`.
+- Done when: Use the existing Engineering Data/cad_mass_properties_template.csv columns; document inertia frame, origin, units, products-of-inertia convention, density/source and uncertain bought-part masses. Keep modeled values separate from measured values.
+- Verification/evidence: Reconcile component sums with assembly mass; verify frame translations and symmetric/positive inertia; compare current mass budget without silently overwriting assumed inputs.
 
 ### DR-CAD-07 — Model mass-property verification fixture
 
-- Owner: Agent; priority: P1; estimate: 3 h; workload day: 6.
-- Dependencies: DR-CAD-02, DR-CAD-05.
-- Scope: initial CAD phase, subject to its input/owner gate.
-- Proposed deliverables: `cad/bench/pendulum/ (source, STEP, datums)`.
+- Owner: Agent; priority: P2; estimate: 3 h; day: conditional.
+- Dependencies: DR-CAD-02V;DR-CAD-05.
+- Proposed output: `NEW cad/bench/pendulum/ (source, STEP, datums)`.
 - Done when: Define bifilar or trifilar suspension attachment, spacing, suspension-length measurement, body-frame alignment and securing points for a props-off vehicle. Include fixture inertia/tare identification in the measurement plan.
-- Verification and evidence to retain: Check support loads and unobstructed small-angle motion; retain dimensioned datums and fixture contribution calculation before an approved calibration run.
+- Verification/evidence: Check support loads and unobstructed small-angle motion; retain dimensioned datums and fixture contribution calculation before an approved calibration run.
 
-### DR-CAD-08 — Release vehicle and bench manufacturing-review pack
+### DR-CAD-11 — Release vehicle and inertia-verification pack
 
-- Owner: Agent; priority: P1; estimate: 3 h; workload day: 6.
-- Dependencies: DR-CAD-04, DR-CAD-05, DR-CAD-06, DR-CAD-07.
-- Scope: initial CAD phase, subject to its input/owner gate.
-- Proposed deliverables: `cad/release/ (BOM, drawings, source/export manifest, inspection plan)`.
+- Owner: Agent; priority: P2; estimate: 2 h; day: conditional.
+- Dependencies: DR-CAD-04;DR-CAD-05;DR-CAD-07.
+- Proposed output: `NEW cad/release/ (BOM, drawings, source/export manifest, inspection plan)`.
 - Done when: Include vehicle/bench revisions, material/process and critical fits, assembly/exploded views and inspection checks. List mass-property physical validation and safety approval as unresolved until observed; preserve 0.020 N m and 962/1000 gates.
-- Verification and evidence to retain: Reopen neutral exports, compare selected dimensions and mass against native source; review every critical interface and hardware-data dependency.
+- Verification/evidence: Reopen neutral exports, compare selected dimensions and mass against native source; review every critical interface and hardware-data dependency.
 
 ### DR-CAD-09 — Design a restrained release/synchronization fixture
 
-- Owner: Agent; priority: P2; estimate: 5 h; workload day: conditional.
-- Dependencies: DR-CAD-08.
-- Scope: trigger-gated extension; not required for initial CAD release.
-- Proposed deliverables: `cad/bench/release-fixture/ (source and reviewed concept drawing)`.
+- Owner: Agent; priority: P2; estimate: 5 h; day: conditional.
+- Dependencies: DR-CAD-11.
+- Proposed output: `NEW cad/bench/release-fixture/ (source and reviewed concept drawing)`.
 - Done when: Only after qualified operator approves a bounded recovery campaign and measured propulsion readiness exists: define restraint, release clearance and common trigger/visible-LED mounts. No free-flight claim or test authorization from CAD.
-- Verification and evidence to retain: Review prop/vehicle trajectory envelope and release-failure modes with the facility; record approval separately from geometry.
+- Verification/evidence: Review prop/vehicle trajectory envelope and release-failure modes with the facility; record approval separately from geometry.
 
-## Release review and overrun rule
+## Stop and release rules
 
-Every release includes an assembly/exploded view, a critical section/detail view and a measurement/inspection setup view. Captions identify the question illustrated, source revision, dimensions/units and **CAD prediction—not measured** state; cite vendor/hand-calculation references actually used. Render quality is not evidence of fit or performance.
+Do not equate prepared drawings with fabricated/inspected apparatus. Unknown fit-critical dimensions block manufacture. Owner/facility review, actual metrology and prospective reference freezes remain separate gates. No spending, manufacture, pressurization, rotor operation, flight, publication or new third-party drawing disclosure is authorized here.
 
-Before marking a CAD task done, attach real source/export identities, regeneration instructions and the corresponding acceptance evidence in CAD_TASKS.csv. A second AI pass is a development check, not independent human or laboratory validation. Retain failed fits and unresolved assumptions; do not silently tune experimental geometry after observing confirmation data.
-
-If the phase overruns, postpone decorative renders, optional variants and mechanism extensions first. Do not remove required fits, safety interfaces, reference controls, source traceability or measurement access. Fabrication-release review, apparatus commissioning and physical evaluation remain separate future actions; updated geometry may require a new prospective analysis/reference freeze. Preparing drawings does not close an existing physical-readiness or publication blocker.
-
-## PR review scope
-
-This amendment changes task planning and navigation only. It is stacked on the open evidence-integrity PR so its diff excludes earlier fixes. No software behavior or frozen scientific threshold is changed. Review task dependencies and claim boundaries now; actual CAD acceptance is assessed when those artifacts exist.
+If time overruns, cut decorative views and already-parked variants first. Keep reference controls, fit/clearance tests, source provenance, filled measurement budgets and pre-load model freeze. Update estimates explicitly rather than claiming blocked hours as progress. Every future public visual needs a source/version, problem explained and CAD-only label.

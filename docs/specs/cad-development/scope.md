@@ -1,35 +1,37 @@
-# SelfStabilizingDrone — CAD adaptive scope
+# SelfStabilizingDrone — amended CAD scope
 
-Date: 2026-09-06. Task definitions: [CAD_PLAN.md](../../CAD_PLAN.md); authoritative CAD state: [CAD_TASKS.csv](../../CAD_TASKS.csv).
+2026-09-06. Owner placement decision pending: these ledgers are draft branch material, not approved for main. [Work orders](../../CAD_PLAN.md); [sole CAD status ledger](../../CAD_TASKS.csv).
 
-## Must-have for the initial CAD deliverable
+## Must-have for the prioritized CAD package
 
-- DR-CAD-01: Create mechanical interface and coordinate-frame register.
-- DR-CAD-02: Approve actual component and bench geometry inputs.
-- DR-CAD-03: Model the full vehicle packaging assembly.
-- DR-CAD-04: Model guard attachments and analyze geometric load paths.
-- DR-CAD-05: Export CAD mass, CG and inertia with source provenance.
-- DR-CAD-06: Model propulsion metrology stand and protective interfaces.
-- DR-CAD-07: Model mass-property verification fixture.
-- DR-CAD-08: Release vehicle and bench manufacturing-review pack.
+- DR-CAD-01 — Prepare bench-first mechanical inputs and evidence mapping
+- DR-CAD-02 — Approve bench-only geometry and access
+- DR-CAD-10 — Establish code-CAD regeneration and CI geometry tests
+- DR-CAD-06 — Model propulsion metrology stand and protective interfaces
+- DR-CAD-08 — Release bench-only fabrication and calibration-review pack
 
-“Must-have” applies only to this CAD package, not every paper or software milestone. Entry decision: Owner confirms the actual four-motor vehicle, component interfaces, fabrication capability and bench/instrument envelope; later drop-fixture work requires separate readiness approval.
+## Nice-to-have
 
-## Nice-to-have after the package
-
-- Additional presentation renders or animation, only after source/STEP/drawing reproduction succeeds; they add explanation, not test evidence.
+- Additional explanatory views only after numerical geometry verification and the release contract pass; not a parallel modeling lane.
 
 ## Maybe-later
 
-- DR-CAD-09: Design a restrained release/synchronization fixture. Trigger and acceptance: Only after qualified operator approves a bounded recovery campaign and measured propulsion readiness exists: define restraint, release clearance and common trigger/visible-LED mounts. No free-flight claim or test authorization from CAD. Why wait: avoid detailed hardware work before its scientific and resource gate closes.
+- DR-CAD-02V — Approve vehicle-only mechanical interfaces. Trigger: Vehicle branch parked until bench decision and owner promotion.
+- DR-CAD-03 — Model the full vehicle packaging assembly. Trigger: Vehicle work parked until measured authority supports proceeding and owner promotes this branch.
+- DR-CAD-04 — Model guard attachments and analyze geometric load paths. Trigger: Vehicle work parked until measured authority supports proceeding and owner promotes this branch.
+- DR-CAD-05 — Export CAD mass, CG and inertia with source provenance. Trigger: Vehicle work parked until measured authority supports proceeding and owner promotes this branch.
+- DR-CAD-07 — Model mass-property verification fixture. Trigger: Vehicle work parked until measured authority supports proceeding and owner promotes this branch.
+- DR-CAD-11 — Release vehicle and inertia-verification pack. Trigger: Vehicle branch parked until bench gate and owner promotion.
+- DR-CAD-09 — Design a restrained release/synchronization fixture. Trigger: Vehicle work parked until measured authority supports proceeding and owner promotes this branch.
 
 ## Out
 
-- No motor operation, drop tests, purchases or flight release. Six test motors are a sampling requirement, not a six-motor airframe. Do not import the original checkout's untracked Onshape export without owner reconciliation.
+- Physical-test authorization, manufacture, certified performance and claims of independent validation from CAD alone.
+- Main-branch planning-ledger publication without the owner placement decision.
 
 ## Milestone watch
 
-- Check owner-input records before moving from a parameterized concept to released fits.
-- Check the CAD_TASKS.csv predecessor IDs and linked acceptance evidence before starting dependent geometry.
-- Check source/export regeneration and inspection drawings before a fabrication-review decision.
-- Check qualified apparatus/measurement approval separately before any physical claim or energized run.
+- Bench torque at 7.0 V first. DR-CAD-01 → bench inputs DR-CAD-02 and tooling DR-CAD-10 → stand DR-CAD-06 → bench release DR-CAD-08. Vehicle inputs/packaging cannot gate that path.
+- Check owner/research decision evidence before promotion; completion is not inferred from elapsed time.
+- Check code-CAD environment/CI acceptance before closing parametric models.
+- Check physical readiness and pre-load reference/uncertainty requirements independently of geometry export.
