@@ -1,5 +1,9 @@
 # Sprint progress — SelfStabilizingDrone
 
+## 2026-09-06 — CAD task amendment
+
+Added [individual CAD work orders](CAD_PLAN.md) and [CAD_TASKS.csv](CAD_TASKS.csv), separating component modeling, fixtures, inspection and release deliverables. This is planning only: no CAD or physical task is complete. The original sprint ledger and evidence are unchanged. CAD branch: `plan/cad-tasks-20260906`; the PR supplies the committed source identity. Next CAD action: the first input-register task in the CAD ledger; owner-gated successors remain blocked. Verification of this amendment is recorded in [CAD_PLAN_CHECKS.md](CAD_PLAN_CHECKS.md).
+
 Task status authority: [SPRINT_TASKS.csv](SPRINT_TASKS.csv).
 
 ## 2026-09-05 — preparation and baseline
