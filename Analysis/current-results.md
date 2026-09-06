@@ -152,11 +152,14 @@ dispersions as scenario A (cg ≤ 5 mm; the torque multiplier now scales the arm
 
 Worst altitude loss in scenario C: 1.01 m of the 3.0 m budget (3 rad/s case).
 
-**Status of this result: a PREDICTION, not a validation.** Everything above is
+**Status of this result: a PREDICTION, not a validation.** The A→C contrast changes
+both the authority model and controller behavior; it does not isolate a causal
+effect of torque, nor demonstrate measured recovery. Everything above is
 conditional on the ASSUMED 60 mm arm and datasheet per-motor thrust. The
 scenario exists to make the EST-REC-007 bench measurement decisive: measure
 per-motor thrust and arm, plug them in, and the recovery-robustness claim is
-either supported or rejected. Until then the summary is: *fails at placeholder
+evaluated under those measured inputs; static thrust/arm data alone cannot
+validate dynamic recovery or motor response. Until then the summary is: *fails at placeholder
 authority, predicted to pass at mixer authority, measurement pending.*
 
 ## Frozen measured-authority verdict (registered 2026-07-17)
@@ -172,3 +175,10 @@ The 250-trial 1 and 3 rad/s cases are descriptive only.
 The automated gate is committed in `Analysis/measured_authority_gate.py` and
 `Analysis/monte_carlo_recovery.py`; the physical result remains **measurement
 pending**. See `docs/specs/measured-authority-gate/`.
+
+The evidence-admission correction dated 2026-09-05 requires a source manifest,
+six sampled-motor identities, calibrated uncertainty, and unique raw references.
+It validates supplied file consistency, not source authenticity or calibration
+quality. The empirical fifth percentile (the minimum with six observations)
+is not a confidence-qualified population bound. Synthetic bundles cannot issue
+a physical PASS. The fixed thresholds above are unchanged.

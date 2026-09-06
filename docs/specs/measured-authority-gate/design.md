@@ -26,11 +26,37 @@ current 4.2 N, 60 mm assumed mixer predicts about 0.0445 N·m at both band edges
 The direct gate CSV has one row per derived authority sample:
 
 ```text
-voltage_v,collective_fraction,tau_rp_n_m
+sample_id,raw_record_id,motor_id,voltage_v,collective_fraction,tau_rp_n_m,expanded_uncertainty_n_m
 ```
 
 Raw thrust, current, temperature, RPM, arm measurement, calibration, and motor
 identifier remain in the source dataset and must trace to each derived sample.
+
+### Evidence-admission correction — 2026-09-05
+
+The original three-column checker did not enforce this protocol and could
+accept nonfinite torque. The [evidence contract](evidence-contract.md) adds
+traceable records and a manifest without changing 0.020 N·m, the grid, voltage,
+or the 962/1,000 recovery requirement. Six motors means six sampled motors
+characterizing the four-motor aircraft, not a six-motor airframe.
+
+Apply the supplied expanded torque uncertainty once to each nominal derived
+sample: `max(0, tau_rp_n_m - expanded_uncertainty_n_m)`. The uncertainty artifact
+must explain calibration and motor-variation propagation, coverage assumptions,
+and dependencies; the checker does not invent an uncertainty value or validate
+that derivation. Owner review is required before calling a bundle measured.
+
+The fifth percentile is empirical over admitted observations. With six samples
+it is the sample minimum, not a 95%-confidence population quantile. Repeated
+observations are not additional independent motors; selection and repeat counts
+must be documented in the reviewed derivation. The future sampling plan must
+be fixed before data collection. No new population-confidence claim is made.
+
+Missing/inconsistent evidence produces INCONCLUSIVE. A synthetic bundle returns
+DEVELOPMENT_ONLY with a separate numerical result; it cannot close a physical
+gate. Hash checks and review metadata establish supplied-bundle consistency,
+not authenticity or scientific adequacy. PASS is static authority only and
+still requires the independent end-to-end and safety gates below.
 
 ## End-to-end gate
 

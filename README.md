@@ -56,8 +56,8 @@ measured yet**. Full tables and lineage:
 | Finding | Evidence state |
 | --- | --- |
 | The Monte Carlo dispersion gate **fails at the placeholder torque authority**: 4.0% recovery as-toleranced (CG ≤ 5 mm, 2 rad/s release). Root cause: thrust-line-offset torque consumes the placeholder 0.004 N·m budget at 0.95 mm offset under recovery thrust. | Simulation — registered gate result (FAIL) |
-| Under the physically derived four-motor mixer authority, the same as-toleranced sweep recovers **300/300** (exact 95% lower bounds 96.1–98.0%), worst altitude loss 1.01 m of the 3.0 m budget. | Simulation — **prediction, not a validation**; conditional on an **assumed 60 mm arm** and datasheet thrust |
-| Bench measurement **EST-REC-007** (per-motor thrust + arm length → measured differential-torque authority) decides between the two scenarios. | Pre-registered, **pending** — contract in [`docs/specs/measured-authority-gate/`](docs/specs/measured-authority-gate/) |
+| With the physically derived four-motor mixer **and revised controller behavior**, the as-toleranced sweep recovers **300/300** (exact 95% lower bounds 96.1–98.0%), worst altitude loss 1.01 m of the 3.0 m budget. | Simulation — **prediction, not a validation**; assumed 60 mm arm and datasheet thrust; not an isolated torque intervention |
+| Bench measurement **EST-REC-007** (per-motor thrust + arm length → measured differential-torque authority) supplies inputs for a new fixed-controller recovery evaluation; static authority does not validate recovery. | Pre-registered, **pending** — contract in [`docs/specs/measured-authority-gate/`](docs/specs/measured-authority-gate/) |
 
 Open engineering questions and the milestone schedule: [`OPEN_QUESTIONS.md`](OPEN_QUESTIONS.md).
 
