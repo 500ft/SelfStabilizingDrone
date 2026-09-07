@@ -15,7 +15,7 @@ not validated design results.
 | Nominal margin to proposed maximum | 29.34 g |
 | Below 225 g abort threshold | PASS |
 
-The `155 g` value is a proposal only. It cannot become the fixed maximum until
+The `165 g` value is a proposal only. It cannot become the fixed maximum until
 delivered components are weighed and the complete CAD mass model exists.
 
 ## Pre-Registered Component Gates
