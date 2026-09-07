@@ -1,5 +1,9 @@
 # SelfStabilizingDrone — evidence-integrity sprint
 
+## Separate CAD phase — added 2026-09-06
+
+Individual mechanical work orders now live in [CAD_PLAN.md](CAD_PLAN.md), with their own authoritative [CAD_TASKS.csv](CAD_TASKS.csv). They are additional, unexecuted work outside this original 30-hour integrity sprint. Existing physical-readiness and publication gates remain open until their actual evidence arrives.
+
 Prepared 2026-09-05. Budget: six workload days, 30 focused hours (27 Agent + 3 Owner); no unattended execution. This sprint repairs software admission of measurement evidence, not the vehicle.
 
 ## A. Outcome and baseline

@@ -1,5 +1,7 @@
 # Measurement and Instrumentation Plan
 
+Mechanical prerequisites now have [individual CAD tasks](../docs/CAD_PLAN.md) and a [CAD status ledger](../docs/CAD_TASKS.csv): vehicle packaging/guard, modeled mass properties, propulsion metrology stand and pendulum fixture. Approved calibration and energized-test safety remain separate requirements; no fixture has been built by this planning amendment.
+
 Analysis is only accepted when the measurement system can resolve the predicted difference. The authoritative register is [instrumentation.csv](../Engineering%20Data/instrumentation.csv).
 
 ## Dynamic-Test Synchronization
