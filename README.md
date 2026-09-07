@@ -1,5 +1,7 @@
 # Guarded Micro-UAV
 
+Planned mechanical parts and assemblies are listed in [CAD_ITEMS.md](docs/CAD_ITEMS.md). This is a design inventory, not completed CAD or hardware evidence.
+
 **An engineering study of a protected micro-UAV that detects release and
 attempts attitude recovery within propulsion, descent, sensing, and guard-load
 limits.**
