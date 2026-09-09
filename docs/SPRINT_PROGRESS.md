@@ -2,6 +2,8 @@
 
 ## Day-3 work — 2026-09-09
 
+Delivery update: the preparation was committed as 500ft and pushed; [day-3 PR](https://github.com/500ft/SelfStabilizingDrone/pull/12) is open against main. Initial implementation source: `7b13fa1d314e711fe5ff298cb42c32ef400359ca` (later review/documentation commits are visible in the PR). This supersedes the pre-push stopping state below. Original day-1/day-2 PRs are merged; this new PR is not merged. Resume from the named unresolved project gates in [DAY3_PLAN.md](DAY3_PLAN.md), not from the already completed push step.
+
 Both reviewed PR layers merged into main; new work starts from `3658f038f115f0c2d831333eed935b13caf032c0` on `task/day-three-20260909`. Six request-sheet tests cover exact pending-row coverage, a newly added unknown pending row, invalid units, a filled pending value, duplicates and snapshot drift. 29 CAD tests pass. The load-cell choice is sourced and proposed; no fixture geometry, hole pattern or measurement was invented.
 
 The [evidence record](../evidence/task-day3-2026-09-09/README.md) contains checks and limits. All 91 existing analysis tests passed in 143.964 seconds, alongside 29 CAD tests. Work is locally verified and not yet recorded here as pushed/merged. Current edits belong to this task; original checkouts were preserved. Next: commit the bounded change and open the new PR; preserve all stated external gates.
