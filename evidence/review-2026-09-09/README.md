@@ -1,5 +1,14 @@
 # CAD adversarial review amendment — 2026-09-09
 
+## Hosted tooling acceptance — 2026-09-09
+
+DR-CAD-10 is now **done**: hosted geometry and existing CI passed for source
+`82a652bd615f17862dbeed326828289b2af73b58`. The uploaded STEP was downloaded, hash-checked,
+reimported and checked for one solid and contracted volume. See
+[hosted checks and artifact identity](hosted-verification.json). This supersedes the
+intermediate in-progress statements below. Owner/physical gates remain open.
+
+
 Review base: `dc7810a2cbdb74bb0c580ea6c71f69d30a375aba` (day-2 PR head). Candidate
 identity is the containing commit / PR head, not a self-embedded hash.
 Scope: input admission and verification for the existing **motor envelope** family.

@@ -1,5 +1,14 @@
 # Partial handoff — software integrity ready for review
 
+## Hosted tooling acceptance — 2026-09-09
+
+DR-CAD-10 is now **done**: hosted geometry and existing CI passed for source
+`82a652bd615f17862dbeed326828289b2af73b58`. The uploaded STEP was downloaded, hash-checked,
+reimported and checked for one solid and contracted volume. See
+[hosted checks and artifact identity](../evidence/review-2026-09-09/hosted-verification.json). This supersedes the
+intermediate in-progress statements below. Owner/physical gates remain open.
+
+
 ## Latest follow-up — 2026-09-09
 
 [Day-2 adversarial review](../evidence/review-2026-09-09/README.md) supersedes
