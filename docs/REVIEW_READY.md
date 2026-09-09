@@ -1,6 +1,13 @@
 # Partial handoff — software integrity ready for review
 
-## Latest follow-up — 2026-09-08
+## Latest follow-up — 2026-09-09
+
+[DR-CAD-10 geometry-tooling handoff](../evidence/task-2026-09-09/README.md) adds a parameter-driven
+CadQuery generator, a reviewed geometry contract with 12 fail-closed tests, and a pinned
+toolchain. It regenerates model geometry from the register; it is not a fixture design, part or
+measurement. Geometry CI awaits the owner applying `ci-proposed/cad-geometry-workflow.patch`.
+
+## Follow-up — 2026-09-08
 
 [DR-CAD-01 input-register handoff](../evidence/task-2026-09-08/README.md) completes
 one planning-input task, not a CAD model. Hardware/metrology owner gates remain

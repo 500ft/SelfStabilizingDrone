@@ -1,0 +1,15 @@
+{
+ "generate": {
+  "rc": 0,
+  "seconds": 1.1,
+  "stdout": "motor_envelope: volume 2218.652 mm^3  bbox [13.5, 13.5, 15.5]  -> evidence/task-2026-09-09/cad-out\nnot generated (pending owner inputs): prop_swept_envelope, motor_mount_pattern, motor_shaft\n"
+ },
+ "pytest": {
+  "rc": 0,
+  "seconds": 2.9,
+  "tail": "st_regenerates_and_matches_contract\n  /Users/redhose/.claude-science/conda/envs/cadq/lib/python3.11/site-packages/ezdxf/queryparser.py:74: PyparsingDeprecationWarning: 'setResultsName' deprecated - use 'set_results_name'\n    AttribQueryOptions = Literal(\"i\").setResultsName(\"AttribQueryOptions\")\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n12 passed, 7 warnings in 2.32s\n"
+ },
+ "apply_check": {
+  "rc": 0
+ }
+}

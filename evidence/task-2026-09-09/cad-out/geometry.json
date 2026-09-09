@@ -1,0 +1,70 @@
+{
+ "family": "motor_envelope",
+ "parameters_file": "cad/bench/parameters.csv",
+ "parameters_sha256": "37fcd36e3ff9063c923dc8ba327fe6ced1160e9637959360131d58a438777349",
+ "inputs": {
+  "motor_body_diameter": 13.5,
+  "motor_body_diameter__evidence_state": "vendor_nominal",
+  "motor_body_length": 15.5,
+  "motor_body_length__evidence_state": "vendor_nominal",
+  "prop_diameter": 52.17,
+  "prop_diameter__evidence_state": "vendor_nominal"
+ },
+ "analytic": {
+  "volume_mm3": 2218.6516368273665,
+  "mass_kg": null,
+  "bbox_mm": [
+   13.5,
+   13.5,
+   15.5
+  ],
+  "prop_swept_diameter_mm": 52.17,
+  "note": "no density is registered for the motor envelope, so no mass is claimed"
+ },
+ "measured_direct": {
+  "volume_mm3": 2218.651636827367,
+  "bbox_mm": [
+   13.5,
+   13.5,
+   15.5
+  ],
+  "n_solids": 1,
+  "mass_kg": null
+ },
+ "measured_after_step_reimport": {
+  "volume_mm3": 2218.651636827367,
+  "bbox_mm": [
+   13.5,
+   13.5,
+   15.5
+  ],
+  "n_solids": 1,
+  "mass_kg": null
+ },
+ "step_file": "motor_envelope.step",
+ "step_sha256": "0fd6047eafba5188bf63b1f454aeb612340805f7554251b1b971beda605a8ef5",
+ "versions": {
+  "python": "3.11.16",
+  "cadquery": "2.8.0",
+  "numpy": "2.4.6",
+  "OCP": "7.9.3.1"
+ },
+ "not_generated_pending_owner_inputs": {
+  "prop_swept_envelope": "prop_diameter is registered (52.17 mm vendor_nominal) but no blade height / swept thickness is; a disc needs both",
+  "motor_mount_pattern": "motor_mount_pitch_circle, motor_mount_hole_diameter and thread engagement are pending owner inputs (DR-CAD-02)",
+  "motor_shaft": "motor_shaft_diameter is registered but shaft length is not"
+ },
+ "pending_parameters_in_register": [
+  "arm_expanded_uncertainty",
+  "authority_arm_measured",
+  "load_cell_capacity",
+  "load_cell_mount_spacing",
+  "motor_mount_hole_diameter",
+  "motor_mount_pitch_circle",
+  "motor_mount_thread_engagement",
+  "prop_mount_screw_spacing",
+  "stand_anchor_spacing",
+  "stand_calibration_lever",
+  "thrust_expanded_uncertainty"
+ ]
+}
