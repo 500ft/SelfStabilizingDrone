@@ -1,0 +1,13 @@
+{
+  "scope": "Local developer checks; not independent or physical validation",
+  "checks": [
+    {
+      "cmd": "python -m unittest Analysis.tests.test_repository Analysis.tests.test_bench_inputs -v",
+      "chunk_id": "bb7422",
+      "wall_time_seconds": 0.013063084,
+      "exit_code": 0,
+      "original_token_count": 412,
+      "output": "test_bom_and_mass_budget_flying_rows_match (Analysis.tests.test_repository.RepositoryTests.test_bom_and_mass_budget_flying_rows_match) ... ok\ntest_bom_and_mass_budget_nominal_totals_agree (Analysis.tests.test_repository.RepositoryTests.test_bom_and_mass_budget_nominal_totals_agree) ... ok\ntest_component_blockers_are_resolved_or_removed (Analysis.tests.test_repository.RepositoryTests.test_component_blockers_are_resolved_or_removed) ... ok\ntest_engineering_register_headers (Analysis.tests.test_repository.RepositoryTests.test_engineering_register_headers) ... ok\ntest_flying_bom_rows_have_locked_part_and_evidence_state (Analysis.tests.test_repository.RepositoryTests.test_flying_bom_rows_have_locked_part_and_evidence_state) ... ok\ntest_local_markdown_links_exist (Analysis.tests.test_repository.RepositoryTests.test_local_markdown_links_exist) ... ok\ntest_no_stale_selections_in_canonical_sources (Analysis.tests.test_repository.RepositoryTests.test_no_stale_selections_in_canonical_sources) ... ok\ntest_nominal_locked_bom_is_135_7g (Analysis.tests.test_repository.RepositoryTests.test_nominal_locked_bom_is_135_7g) ... ok\ntest_nominal_mass_below_planning_ceiling (Analysis.tests.test_repository.RepositoryTests.test_nominal_mass_below_planning_ceiling) ... ok\ntest_stage1_component_selection_is_canonical (Analysis.tests.test_repository.RepositoryTests.test_stage1_component_selection_is_canonical) ... ok\ntest_register_states_units_and_sources (Analysis.tests.test_bench_inputs.BenchInputTests.test_register_states_units_and_sources) ... ok\n\n----------------------------------------------------------------------\nRan 11 tests in 0.015s\n\nOK\n"
+    }
+  ]
+}

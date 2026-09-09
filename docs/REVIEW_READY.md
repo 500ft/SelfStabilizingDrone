@@ -1,5 +1,11 @@
 # Partial handoff — software integrity ready for review
 
+## Latest follow-up — 2026-09-08
+
+[DR-CAD-01 input-register handoff](../evidence/task-2026-09-08/README.md) completes
+one planning-input task, not a CAD model. Hardware/metrology owner gates remain
+open. Earlier sprint evidence below is historical and unchanged.
+
 Prepared 2026-09-05; software handoff completed 2026-09-06. Physical validation and Owner review remain pending.
 
 ## Identity and scope
