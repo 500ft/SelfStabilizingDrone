@@ -1,0 +1,50 @@
+{
+  "source_commit": "82a652bd615f17862dbeed326828289b2af73b58",
+  "observed_date": "2026-09-09",
+  "pr": "https://github.com/500ft/SelfStabilizingDrone/pull/11",
+  "checks": [
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-09-09T15:49:09Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/500ft/SelfStabilizingDrone/actions/runs/34372498504/job/102536954027",
+      "name": "geometry",
+      "startedAt": "2026-09-09T15:47:01Z",
+      "status": "COMPLETED",
+      "workflowName": "CAD geometry"
+    },
+    {
+      "__typename": "CheckRun",
+      "completedAt": "2026-09-09T15:49:59Z",
+      "conclusion": "SUCCESS",
+      "detailsUrl": "https://github.com/500ft/SelfStabilizingDrone/actions/runs/34372498389/job/102536953721",
+      "name": "analysis-tests",
+      "startedAt": "2026-09-09T15:47:01Z",
+      "status": "COMPLETED",
+      "workflowName": "CI"
+    }
+  ],
+  "artifacts": [
+    {
+      "digest": "sha256:4ad14767b6d95c1f943e6b7547c2a0e30bff05cc14d576a6b082191cb364f736",
+      "expired": false,
+      "id": 10112564177,
+      "name": "cad-geometry-d1bb34c991f28ea3c97c64a270b9645255c731ce",
+      "size_in_bytes": 2853,
+      "workflow_run": {
+        "head_branch": "task/priority-two-20260909",
+        "head_repository_id": 1352536355,
+        "head_sha": "82a652bd615f17862dbeed326828289b2af73b58",
+        "id": 34372498504,
+        "repository_id": 1352536355
+      }
+    }
+  ],
+  "consumer_verification": {
+    "command": "gh run download <run-id> --repo 500ft/SelfStabilizingDrone --name <artifact-name> --dir <new-directory>; import STEP with CadQuery and compare SHA256, one-solid count, and volume to cad/contract.json",
+    "result": "PASS",
+    "local_artifact_directory": "/private/tmp/review-cad-artifacts-20260909/SelfStabilizingDrone",
+    "scope": "Hosted generated nominal-model artifact, not hardware or fabrication approval"
+  },
+  "commit_note": "This record is added after successful source-code CI; its documentation-only containing commit is identified by the PR, avoiding self-reference."
+}
