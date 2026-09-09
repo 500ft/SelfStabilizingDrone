@@ -1,5 +1,11 @@
 # Sprint progress — SelfStabilizingDrone
 
+## Day-3 work — 2026-09-09
+
+Both reviewed PR layers merged into main; new work starts from `3658f038f115f0c2d831333eed935b13caf032c0` on `task/day-three-20260909`. Six request-sheet tests cover exact pending-row coverage, a newly added unknown pending row, invalid units, a filled pending value, duplicates and snapshot drift. 29 CAD tests pass. The load-cell choice is sourced and proposed; no fixture geometry, hole pattern or measurement was invented.
+
+The [evidence record](../evidence/task-day3-2026-09-09/README.md) contains checks and limits. All 91 existing analysis tests passed in 143.964 seconds, alongside 29 CAD tests. Work is locally verified and not yet recorded here as pushed/merged. Current edits belong to this task; original checkouts were preserved. Next: commit the bounded change and open the new PR; preserve all stated external gates.
+
 ## Hosted tooling acceptance — 2026-09-09
 
 DR-CAD-10 is now **done**: hosted geometry and existing CI passed for source
