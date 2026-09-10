@@ -1,124 +1,123 @@
-# Guarded Micro-UAV
+# Multirotor Recovery Dynamics
 
-Planned mechanical parts and assemblies are listed in [CAD_ITEMS.md](docs/CAD_ITEMS.md). This is a design inventory, not completed CAD or hardware evidence.
+Model the conditions under which a protected micro-UAV could recover attitude
+after release—and identify the measurements needed to test that prediction.
 
-**An engineering study of a protected micro-UAV that detects release and
-attempts attitude recovery within propulsion, descent, sensing, and guard-load
-limits.**
+[![CI](https://github.com/500ft/multirotor-recovery-dynamics/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/500ft/multirotor-recovery-dynamics/actions/workflows/ci.yml)
+![Evidence: simulation and nominal CAD](https://img.shields.io/badge/evidence-simulation_%2B_nominal_CAD-475569)
+[![License: MIT](https://img.shields.io/badge/license-MIT-0f766e)](LICENSE)
 
-[![CI](https://github.com/500ft/SelfStabilizingDrone/actions/workflows/ci.yml/badge.svg)](https://github.com/500ft/SelfStabilizingDrone/actions/workflows/ci.yml)
-[![Python 3.11](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![License: MIT](https://img.shields.io/badge/license-MIT-276c6b)](LICENSE)
+[Start here](docs/START_HERE.md) · [Evidence](#evidence-snapshot) · [Quick start](#quick-start) · [Documentation](#documentation) · [Safety](#safety-and-limits)
 
-**[Results](Analysis/current-results.md) · [Reproduce](#reproduce-the-analysis) · [Data and figures](docs/data-and-figures.md) · [Safety](#safety-boundary)**
+![Conceptual sequence from simulated release to pending propulsion measurements and a new fixed-controller recovery evaluation](docs/media/project-overview.svg)
 
-![Simulated recovery envelope: altitude loss and recoverable tumble rate for three component tiers](Figures/release_recovery_envelope.png)
+*Conceptual engineering sequence, not a flight demonstration. Measured propulsion
+authority and physical recovery remain pending.*
 
-*Simulated altitude loss and recoverable tumble rate for three component tiers.
-The [results](Analysis/current-results.md) explain the current gate state; the
-[figure guide](docs/data-and-figures.md) records assumptions and generators.*
+## About
 
-## Overview
+Midair recovery is a coupled engineering problem: release detection, available
+torque, descent, battery state, mass distribution and guard loads must agree.
+A plausible controller alone is not evidence that the vehicle can recover.
 
-Midair recovery requires the release classifier, controller, propulsion system,
-battery, mass properties, guard, and test rig to close as one system. This
-repository expresses those dependencies as executable models, structured data
-tables, test contracts, and staged stop/go gates.
+This repository links those constraints through executable dynamics, structured
+engineering inputs, regression tests and explicit stop/go gates. It includes
+nominal motor-envelope CAD and bench preparation—not a finished recovery vehicle.
 
-```mermaid
-flowchart LR
-    classDef input    fill:#bbdefb,stroke:#1565c0,stroke-width:2px,color:#1f2933,font-weight:bold;
-    classDef process  fill:#b2dfdb,stroke:#00796b,stroke-width:2px,color:#1f2933;
-    classDef core     fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px,color:#1f2933,font-weight:bold;
-    classDef decision fill:#fff9c4,stroke:#f9a825,stroke-width:2px,color:#1f2933,font-weight:bold;
-    classDef endpoint fill:#f8bbd0,stroke:#c2185b,stroke-width:2px,color:#1f2933,font-weight:bold;
+## Evidence snapshot
 
-    I[/Release cues/]:::input --> C[Classifier and state machine]:::process
-    C --> R{{6-DoF recovery simulation}}:::core
-    P[/Propulsion authority/]:::input --> R
-    M[/Mass, inertia, and CG/]:::input --> R
-    R --> G{Recovery and descent gates}:::decision
-    S[Guard and rig checks]:::process --> F([Flight-test readiness]):::endpoint
-    G --> F
-```
+| Work product | What exists | Boundary |
+| --- | --- | --- |
+| Release and recovery models | [Dynamics, uncertainty and gate results](Analysis/current-results.md) | Simulation with estimated or catalog-derived inputs |
+| Negative feasibility finding | Placeholder-torque Monte Carlo recovers 4.0% in the reported as-toleranced case | A failed modeled gate, not a physical failure rate |
+| Revised prediction | Assumed four-motor mixer **and revised controller** recover 300/300 in the reported sweep | Not an isolated torque intervention or hardware validation |
+| Nominal geometry | [Motor-envelope generator](cad/generate.py) and [geometry contract](cad/contract.json) | No guessed mount pattern, shaft or propulsion fixture |
+| Bench preparation | [Input requests](cad/bench/input-requests.csv) and [fixture requirements](cad/bench/fixture-preparation.md) | Vendor proposals are not measurements or purchased parts |
+| Measured-authority gate | [Registered evidence contract](docs/specs/measured-authority-gate/) | Actual thrust, installed geometry and recovery evaluation pending |
 
-*Shapes: parallelogram = input · rectangle = process · hexagon = core method · diamond = gate · pill = endpoint.*
+![Simulated altitude loss and recoverable tumble rate across component tiers](Figures/release_recovery_envelope.png)
 
-The current plots use estimated or catalog-derived parameters. The Monte Carlo
-study compares placeholder torque with an assumed mixer-authority model.
-Hardware has not yet supplied the measured authority, mass properties, guard
-response, or recovery-flight data needed to close the registered gates.
+*Simulation output with estimated/catalog inputs. The [result summary](Analysis/current-results.md)
+and [figure provenance](docs/data-and-figures.md) explain the assumptions.
+No recovery-flight or static-thrust measurements are shown.*
 
-## Results and status
+## Quick start
 
-Every number below is simulation or vendor-spec — **no hardware has been
-measured yet**. Full tables and lineage:
-[`Analysis/current-results.md`](Analysis/current-results.md).
+Use **Python 3.11**, matching CI. This bounded first check needs no hardware,
+CAD installation or regenerated study outputs.
 
-| Finding | Evidence state |
-| --- | --- |
-| The Monte Carlo dispersion gate **fails at the placeholder torque authority**: 4.0% recovery as-toleranced (CG ≤ 5 mm, 2 rad/s release). Root cause: thrust-line-offset torque consumes the placeholder 0.004 N·m budget at 0.95 mm offset under recovery thrust. | Simulation — registered gate result (FAIL) |
-| With the physically derived four-motor mixer **and revised controller behavior**, the as-toleranced sweep recovers **300/300** (exact 95% lower bounds 96.1–98.0%), worst altitude loss 1.01 m of the 3.0 m budget. | Simulation — **prediction, not a validation**; assumed 60 mm arm and datasheet thrust; not an isolated torque intervention |
-| Bench measurement **EST-REC-007** (per-motor thrust + arm length → measured differential-torque authority) supplies inputs for a new fixed-controller recovery evaluation; static authority does not validate recovery. | Pre-registered, **pending** — contract in [`docs/specs/measured-authority-gate/`](docs/specs/measured-authority-gate/) |
-
-Open engineering questions and the milestone schedule: [`OPEN_QUESTIONS.md`](OPEN_QUESTIONS.md).
-
-## Reproduce the analysis
-
-```bash
+```sh
+git clone https://github.com/500ft/multirotor-recovery-dynamics.git
+cd multirotor-recovery-dynamics
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
-python -m unittest discover -s Analysis/tests -v
-python -m Analysis.run_release_recovery
-python -m Analysis.monte_carlo_recovery
+python cad/input_requests.py --check
+python -m unittest Analysis.tests.test_bench_inputs Analysis.tests.test_results_numbers -v
 ```
 
-The first analysis command regenerates the recovery JSON and four plot files.
-The second regenerates the deterministic Monte Carlo JSON. Other calculators
-and their inputs are indexed in [`Analysis/README.md`](Analysis/README.md); the
-complete data path is in [`docs/data-and-figures.md`](docs/data-and-figures.md).
+Expected: the derived input-request sheet is consistent and both test modules
+report `OK`. Pending values remain pending. These checks establish register
+and documented-number consistency, not physical readiness.
+
+The [reading guide](docs/START_HERE.md) separates the complete analysis suite,
+optional study regeneration and pinned CadQuery environment.
 
 ## Documentation
 
-| Document | Purpose |
+| Start with | Use it to |
 | --- | --- |
-| [`Analysis/current-results.md`](Analysis/current-results.md) | Current mass, guard, recovery, Monte Carlo, and gate results |
-| [`docs/data-and-figures.md`](docs/data-and-figures.md) | Data sources, assumptions, plot generators, and reproduction limits |
-| [`docs/figure-manifest.json`](docs/figure-manifest.json) | Machine-readable generator/input/output map |
-| [`Engineering Plan/README.md`](Engineering%20Plan/README.md) | Test sequence, dependencies, and exit gates |
-| [`Design Report/README.md`](Design%20Report/README.md) | Architecture, BOM, and preliminary calculations |
-| [`Controls/README.md`](Controls/README.md) | State machine and control interfaces |
-| [`Instrumentation/README.md`](Instrumentation/README.md) | Bench equipment and measurement procedures |
-| [`Safety/README.md`](Safety/README.md) | Release-rig plan and operating controls |
-| [`docs/specs/measured-authority-gate/`](docs/specs/measured-authority-gate/) | Registered propulsion and recovery acceptance contract |
-
-The authoritative controller state names and guards are stored in
-[`Controls/state_machine.json`](Controls/state_machine.json).
-
-## Repository map
+| [Reading guide](docs/START_HERE.md) | Choose a short review or a technical reproduction |
+| [Current results](Analysis/current-results.md) | Inspect mass, guard, recovery and Monte Carlo conclusions |
+| [Data and figures](docs/data-and-figures.md) | Trace plots to inputs, code and evidence states |
+| [Measured-authority contract](docs/specs/measured-authority-gate/) | Understand what the next measurement must establish |
+| [Fixture preparation](cad/bench/fixture-preparation.md) | Review load-cell proposal, interfaces and metrology |
+| [CAD inventory](docs/CAD_ITEMS.md) | Separate planned assemblies from existing nominal geometry |
+| [State machine](Controls/state_machine.json) | Inspect authoritative controller states and guards |
+| [Bench safety checklist](Instrumentation/propulsion-bench-safety-checklist.md) | Review prerequisites before any powered work |
+| [Review index](docs/REVIEW_READY.md) | Find checks, counterexamples and unresolved gates |
 
 ```text
-Analysis/          executable models, gates, tests, and result summary
-Controls/          recovery state machine and controller interfaces
-Data/              generated JSON plus the structure for future test data
-Design Report/     BOM, architecture, and calculations
-Engineering Data/  requirements, budgets, interfaces, and FMEA tables
-Engineering Plan/  staged execution and procurement plan
-Instrumentation/   bench procedures and measurement requirements
-Safety/            release-rig and operating controls
-Figures/           generated plots and authored engineering diagrams
-Research/          component, propulsion, and architecture studies
-docs/              specifications and figure lineage
+Analysis/          models, acceptance gates, tests and result interpretation
+Controls/          authoritative state machine and interfaces
+Engineering Data/  parameter budgets, requirements and failure analysis
+cad/               nominal geometry, input registers and geometry checks
+Instrumentation/   proposed bench measurements and safety checklist
+Safety/            release-rig planning and operating constraints
+Figures/           existing simulation figures and engineering diagrams
+docs/              contracts, source lineage and reviewer guides
 ```
 
-## Safety boundary
+## Next engineering gate
 
-Do not attempt a recovery flight from the current project state. Propulsion
-measurements, guard testing, release-rig checks, and the registered simulation
-gates must be completed first. See the
-[`propulsion-bench checklist`](Instrumentation/propulsion-bench-safety-checklist.md)
-and [`Safety/README.md`](Safety/README.md).
+Prioritize the **single-motor propulsion bench**, not vehicle packaging.
+Resolve source-backed mounting interfaces, fixture geometry, calibration and
+installed lever-arm measurements before admitting thrust data at the registered
+7.0 V condition. Vendor data at a different voltage/propeller is not that result.
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for analysis checks, generated-artifact
-rules, and safety constraints. The project uses the [MIT License](LICENSE).
+The [fixture preparation](cad/bench/fixture-preparation.md) recommends a candidate
+load cell and a metal load path, with reasons and unresolved inputs. It does
+not authorize purchasing, assembly or operation. Measured static authority
+would then feed a new fixed-controller evaluation; it would not itself validate
+recovery in flight.
+
+## Safety and limits
+
+**Do not attempt recovery flight from the current repository state.** The
+[bench checklist](Instrumentation/propulsion-bench-safety-checklist.md),
+[operating constraints](Safety/README.md) and registered gates come first.
+
+Mass properties, real propulsion authority, guard response and physical
+recovery have not been measured here. A successful nominal STEP export,
+a software test or a favorable simulated sweep cannot close those gaps.
+
+## Contributing and license
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before changing an input, controller or
+generated result. Report commands, source revision, evidence category and
+counterexamples in [issues](https://github.com/500ft/multirotor-recovery-dynamics/issues/new/choose).
+
+Repository code is [MIT licensed](LICENSE); third-party sources retain their
+own terms. Cite the exact repository revision and the specific model or result
+used. [Identity and presentation notes](docs/REPOSITORY_IDENTITY.md) explain the
+rename; no paper title, frozen gate or software API is changed by it.
