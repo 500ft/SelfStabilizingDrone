@@ -1,5 +1,13 @@
 # Partial handoff — software integrity ready for review
 
+## Day-3 preparation — 2026-09-09
+
+Six request-sheet tests cover exact pending-row coverage, a newly added unknown pending row, invalid units, a filled pending value, duplicates and snapshot drift. 29 CAD tests pass. The load-cell choice is sourced and proposed; no fixture geometry, hole pattern or measurement was invented.
+
+Review [DAY3_PLAN.md](DAY3_PLAN.md), [deliverable](../cad/bench/fixture-preparation.md), and [commands/evidence](../evidence/task-day3-2026-09-09/README.md). Base: `3658f038f115f0c2d831333eed935b13caf032c0`; new PR branch: `task/day-three-20260909`. No original Owner/External gate is closed. Final source identity is the PR head, reported in its delivery record rather than embedded circularly here.
+
+No guessed motor-hole layout, caliper readings, calibrated thrust, vehicle radius or fixture approval.
+
 ## Hosted tooling acceptance — 2026-09-09
 
 DR-CAD-10 is now **done**: hosted geometry and existing CI passed for source
