@@ -74,3 +74,7 @@ No instruction here permits powered work. Review [Safety](../Safety/README.md)
 and the [propulsion-bench checklist](../Instrumentation/propulsion-bench-safety-checklist.md)
 with the responsible operator. The [review index](REVIEW_READY.md) and
 [task ledger](SPRINT_TASKS.csv) retain actual completion status.
+
+## September 11 completion correction
+
+Read the [item-by-item correction](COMPLETION_RECONCILIATION.md) before interpreting a prepared protocol, software check, or search export as a completed research gate. It identifies actual deliverables and the remaining measurement, review, or source-reading work separately.
