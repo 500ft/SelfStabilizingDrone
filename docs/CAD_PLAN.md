@@ -154,3 +154,13 @@ IDs retain continuity with the first PR. New IDs represent split inputs, tooling
 Do not equate prepared drawings with fabricated/inspected apparatus. Unknown fit-critical dimensions block manufacture. Owner/facility review, actual metrology and prospective reference freezes remain separate gates. No spending, manufacture, pressurization, rotor operation, flight, publication or new third-party drawing disclosure is authorized here.
 
 If time overruns, cut decorative views and already-parked variants first. Keep reference controls, fit/clearance tests, source provenance, filled measurement budgets and pre-load model freeze. Update estimates explicitly rather than claiming blocked hours as progress. Every future public visual needs a source/version, problem explained and CAD-only label.
+
+
+### DR-CAD-12 — Bench-fixture geometry contract (2026-09-12)
+
+The contract `cad/bench/fixture-preparation.md` requires before any fixture model: twelve clauses
+over interfaces (motor pattern, thread engagement, prop hub, load-cell ends, bench anchors),
+clearances (static prop swept disc, motor envelope, sensor deflection) and load path (force-axis
+datum, capacity margin, calibration lever vs authority arm, thrust uncertainty budget), each bound
+to register rows. `--check` gates staleness in the existing CAD job; `--release` refuses while any
+clause is pending or any vendor-nominal input is unconfirmed. No STEP, no fabrication, no measurement.
