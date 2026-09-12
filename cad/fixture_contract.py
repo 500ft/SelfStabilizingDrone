@@ -32,6 +32,13 @@ UNITS = {
     "total_thrust_model": "N", "thrust_expanded_uncertainty": "N",
 }
 STATE_RANK = ["pending", "model_assumption", "vendor_nominal", "reported_vendor_nominal", "design_choice", "inspection", "protocol"]
+# The ONLY evidence states a register row may carry. Anything else is refused, not ranked.
+ALLOWED_STATES = {"pending", "model_assumption", "vendor_nominal", "reported_vendor_nominal", "design_choice",
+                  "inspection", "drawing", "calibration_record", "owner_decision", "protocol"}
+# States that make an input RELEASE-GRADE for a fixture model. Vendor nominal and model
+# assumptions are planning inputs and never satisfy release; protocol values are frozen by decision.
+RELEASE_GRADE = {"inspection", "drawing", "calibration_record", "owner_decision", "protocol"}
+PLACEHOLDERS = {"", "tbd", "todo", "x", "?", "n/a", "na", "none", "null", "placeholder", "pending", "unknown", "-"}
 
 
 class ContractInputError(ValueError):
@@ -53,6 +60,10 @@ def load_register(path: Path = REGISTER) -> dict:
         if r["unit"].strip() != unit:
             raise ContractInputError(f"unit mismatch for {name}: register {r['unit']!r}, contract expects {unit!r}")
         state = r["evidence_state"].strip(); raw = r["value"].strip()
+        if state not in ALLOWED_STATES:
+            raise ContractInputError(f"unsupported evidence_state {state!r} for {name}; allowed: {sorted(ALLOWED_STATES)}")
+        if state != "pending" and r["source"].strip().lower() in PLACEHOLDERS:
+            raise ContractInputError(f"{name} carries evidence_state {state!r} with no source; a value without provenance is not evidence")
         if state == "pending":
             if raw:
                 raise ContractInputError("pending parameter carries a value; refuse to treat it as measured: " + name)
@@ -137,7 +148,8 @@ def build(reg: dict) -> dict:
         "source_parameters": "cad/bench/parameters.csv",
         "governing_documents": ["cad/bench/fixture-preparation.md", "cad/bench/design-inputs.md",
                                  "docs/specs/measured-authority-gate/evidence-contract.md", "Instrumentation/propulsion-bench-safety-checklist.md"],
-        "release_gate": "Every clause evaluable AND its inputs at inspection/drawing evidence state; vendor_nominal rows satisfy geometry planning only. A CAD collision check does not prove structural stability or prop containment.",
+        "release_gate": "Verdicts, in order and never conflated: INPUTS_INCOMPLETE -> INPUTS_COMPLETE_NOT_RELEASE_GRADE (vendor_nominal/model_assumption rows remain) -> REQUIREMENTS_FAILED -> REQUIREMENTS_EVALUATED. Geometry match and physical validation are separate gates. A CAD collision check does not prove structural stability or prop containment.",
+        "allowed_evidence_states": sorted(ALLOWED_STATES), "release_grade_states": sorted(RELEASE_GRADE),
         "clauses": clauses,
         "evaluable_clauses": [c["id"] for c in clauses if c["status"] == "evaluable"],
         "pending_clauses": [c["id"] for c in clauses if c["status"] == "pending"],
@@ -145,6 +157,71 @@ def build(reg: dict) -> dict:
         "vendor_nominal_inputs_awaiting_confirmation": sorted(n for n, v in reg.items() if v["state"] in ("vendor_nominal", "reported_vendor_nominal")),
         "evidence_note": "Derived from the register on the stated version; no fixture STEP exists; nothing here authorises fabrication, spending, pressurisation or rotor operation.",
     }
+
+
+def evaluate_requirements(reg: dict, contract: dict) -> list[dict]:
+    """Numerically evaluate the requirements the register can support. Each result is pass /
+    fail / unresolved with the arithmetic shown. 'unresolved' means an input is pending or the
+    requirement needs a quantity not in the register (never guessed here)."""
+    R = []
+    def val(n): return reg[n]["value"]
+    def add(cid, status, detail, **kw): R.append(dict(clause=cid, status=status, detail=detail, **kw))
+    Tm = val("total_thrust_model")
+    cap = val("load_cell_capacity")
+    if cap is None:
+        add("load_cell_capacity_margin", "unresolved", "load_cell_capacity pending")
+    else:
+        # Hard floor, no margin chosen for the owner: capacity must at least exceed the model peak thrust.
+        ratio = cap / Tm
+        add("load_cell_capacity_margin", "pass" if ratio >= 1.0 else "fail",
+            f"capacity {cap} N / model peak thrust {Tm} N = {ratio:.3g}; floor is >= 1 (owner margin still to be chosen; dead load not yet recorded)",
+            capacity_n=cap, model_peak_thrust_n=Tm, ratio=ratio)
+    lever, arm = val("stand_calibration_lever"), val("authority_arm_measured")
+    if lever is None or arm is None:
+        add("stand_calibration_lever", "unresolved", "stand_calibration_lever and/or authority_arm_measured pending")
+    else:
+        add("stand_calibration_lever", "pass" if abs(lever - arm) > 1e-9 else "fail",
+            f"lever {lever} m vs authority arm {arm} m; the evidence contract requires them to be measured separately, identical values indicate one measurement reused", lever_m=lever, arm_m=arm)
+    D, Dp = val("motor_body_diameter"), val("prop_diameter")
+    add("prop_static_swept_envelope", "pass" if Dp > D else "fail", f"prop {Dp} mm clears motor body {D} mm (static only)")
+    bore, shaft = val("prop_hub_bore"), val("motor_shaft_diameter")
+    add("prop_hub_interface", "pass" if abs(bore - shaft) <= 0.05 else "fail",
+        f"hub bore {bore} mm vs shaft {shaft} mm (nominal fit check only; delivered parts unmeasured)" if val("prop_mount_screw_spacing") is not None else
+        f"bore/shaft nominal {bore}/{shaft} mm consistent; prop_mount_screw_spacing pending", partial=val("prop_mount_screw_spacing") is None)
+    if val("prop_mount_screw_spacing") is None: R[-1]["status"] = "unresolved"
+    eng = val("motor_mount_thread_engagement")
+    if eng is None: add("motor_mount_thread_engagement", "unresolved", "motor_mount_thread_engagement pending")
+    else:
+        add("motor_mount_thread_engagement", "pass" if 0 < eng < val("motor_body_length") else "fail", f"engagement {eng} mm must be positive and less than the motor body length {val('motor_body_length')} mm (safe depth still an owner confirmation)")
+    for cid in ("motor_mount_pattern", "load_cell_end_interfaces", "stand_anchor_pattern", "force_axis_datum", "sensor_deflection_clearance", "thrust_uncertainty_budget"):
+        inputs = next(c["inputs"] for c in contract["clauses"] if c["id"] == cid)
+        pend = [n for n in inputs if reg[n]["state"] == "pending"]
+        add(cid, "unresolved", ("pending: " + ", ".join(pend)) if pend else "requires a drawing / cell datasheet quantity not in the register; not evaluated here")
+    add("motor_envelope_volume", "pass", "envelope only; derived value present")
+    return R
+
+
+VERDICTS = {
+    "INPUTS_UNSUPPORTED": 2, "INPUTS_INCOMPLETE": 2, "INPUTS_COMPLETE_NOT_RELEASE_GRADE": 2,
+    "REQUIREMENTS_FAILED": 3, "REQUIREMENTS_EVALUATED": 0,
+}
+
+
+def verdict(reg: dict, contract: dict) -> tuple[str, list[str]]:
+    """Four separable conclusions, never conflated:
+         inputs complete  ->  requirements evaluated  ->  (separately) geometry matches  ->  (separately) physical validation.
+    This function reaches at most the second."""
+    if contract["pending_clauses"]:
+        return "INPUTS_INCOMPLETE", [f"pending clause: {c}" for c in contract["pending_clauses"]] + ["pending rows: " + ", ".join(contract["not_generated_pending_owner_inputs"])]
+    weak = sorted(n for n, v in reg.items() if v["state"] not in RELEASE_GRADE and v["state"] != "pending")
+    if weak:
+        return "INPUTS_COMPLETE_NOT_RELEASE_GRADE", [f"{n}: {reg[n]['state']}" for n in weak]
+    req = evaluate_requirements(reg, contract)
+    failed = [r for r in req if r["status"] == "fail"]
+    if failed:
+        return "REQUIREMENTS_FAILED", [f"{r['clause']}: {r['detail']}" for r in failed]
+    unresolved = [r for r in req if r["status"] == "unresolved"]
+    return "REQUIREMENTS_EVALUATED", [f"{r['clause']}: {r['detail']}" for r in unresolved]
 
 
 def render(contract: dict) -> str:
@@ -161,20 +238,24 @@ def main(argv=None) -> int:
     parser.add_argument("--output", type=Path, default=OUTPUT)
     a = parser.parse_args(argv)
     try:
-        contract = build(load_register(a.parameters))
+        reg = load_register(a.parameters)
+        contract = build(reg)
     except ContractInputError as e:
-        print("REFUSED:", e, file=sys.stderr); return 2
+        print("REFUSED INPUTS_UNSUPPORTED:", e, file=sys.stderr); return 2
     if a.check:
         if not a.output.exists() or a.output.read_text() != render(contract):
             print("STALE: committed fixture contract does not match the register; run --refresh", file=sys.stderr); return 1
         print(f"fixture contract current: {len(contract['evaluable_clauses'])} evaluable, {len(contract['pending_clauses'])} pending"); return 0
     if a.release:
-        if contract["pending_clauses"]:
-            print("REFUSED: fixture contract cannot release; pending clauses:\n  - " + "\n  - ".join(contract["pending_clauses"]), file=sys.stderr)
-            print("  pending register rows: " + ", ".join(contract["not_generated_pending_owner_inputs"]), file=sys.stderr); return 2
-        if contract["vendor_nominal_inputs_awaiting_confirmation"]:
-            print("REFUSED: all clauses evaluable but vendor-nominal inputs are unconfirmed: " + ", ".join(contract["vendor_nominal_inputs_awaiting_confirmation"]), file=sys.stderr); return 2
-        print("RELEASABLE: every clause evaluable on inspected inputs (geometry comparison still required)"); return 0
+        v, notes = verdict(reg, contract)
+        code = VERDICTS[v]
+        stream = sys.stdout if code == 0 else sys.stderr
+        head = {"INPUTS_INCOMPLETE": "REFUSED", "INPUTS_COMPLETE_NOT_RELEASE_GRADE": "REFUSED", "REQUIREMENTS_FAILED": "FAILED", "REQUIREMENTS_EVALUATED": "OK"}[v]
+        print(f"{head} {v}" + ("\n  - " + "\n  - ".join(notes) if notes else ""), file=stream)
+        if code == 0:
+            print("  This is an INPUT-REVIEW verdict only. Geometry comparison against a fixture model and physical\n"
+                  "  validation are separate gates and are not claimed. Unresolved items above still need owner input.")
+        return code
     a.output.write_text(render(contract))
     print(f"wrote {a.output.relative_to(ROOT) if a.output.is_relative_to(ROOT) else a.output}: {len(contract['evaluable_clauses'])} evaluable, {len(contract['pending_clauses'])} pending")
     return 0

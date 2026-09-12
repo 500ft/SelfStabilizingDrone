@@ -41,7 +41,7 @@ def test_derived_values_match_register_arithmetic():
 
 def test_release_refuses_while_pending():
     p = subprocess.run([sys.executable, str(ROOT / "cad/fixture_contract.py"), "--release"], capture_output=True, text=True)
-    assert p.returncode == 2 and "REFUSED" in p.stderr and "motor_mount_pattern" in p.stderr and "load_cell_mount_spacing" in p.stderr
+    assert p.returncode == 2 and "INPUTS_INCOMPLETE" in p.stderr and "motor_mount_pattern" in p.stderr and "load_cell_mount_spacing" in p.stderr
 
 
 def test_filling_a_pending_row_makes_its_clause_evaluable_positive_control(tmp_path):
@@ -53,18 +53,70 @@ def test_filling_a_pending_row_makes_its_clause_evaluable_positive_control(tmp_p
     assert "stand_anchor_pattern" in c["evaluable_clauses"] and len(c["pending_clauses"]) == 9
 
 
-def test_filling_every_pending_row_still_refuses_release_on_unconfirmed_vendor_nominals(tmp_path):
-    # Positive control for the second gate: geometry can be complete while the delivered
-    # parts are still unconfirmed. Vendor nominal is not inspection.
-    def fill_all(rows):
-        for r in rows:
-            if r["evidence_state"] == "pending":
-                r["value"], r["evidence_state"], r["source"] = "1", "inspection", "synthetic"
-    reg_path = _write_register(tmp_path, fill_all)
-    c = FC.build(FC.load_register(reg_path))
-    assert not c["pending_clauses"]
+def _fill_all(rows, cap="60", state="inspection", src="synthetic inspection record", promote=False):
+    for r in rows:
+        if r["evidence_state"] == "pending":
+            r["value"] = cap if r["parameter"] == "load_cell_capacity" else "1"
+            r["evidence_state"], r["source"] = state, src
+        if r["parameter"] == "authority_arm_measured": r["value"] = "0.061"
+        if r["parameter"] == "stand_calibration_lever": r["value"] = "0.150"
+        if promote and r["evidence_state"] in ("vendor_nominal", "model_assumption"):
+            r["evidence_state"], r["source"] = "inspection", src
+
+
+def _release(reg_path):
     p = subprocess.run([sys.executable, str(ROOT / "cad/fixture_contract.py"), "--release", "--parameters", str(reg_path)], capture_output=True, text=True)
-    assert p.returncode == 2 and "vendor-nominal" in p.stderr
+    return p.returncode, p.stdout + p.stderr
+
+
+def test_filling_every_pending_row_still_refuses_release_on_unconfirmed_vendor_nominals(tmp_path):
+    # Geometry can be complete while the delivered parts are still catalogue values.
+    reg_path = _write_register(tmp_path, _fill_all)
+    assert not FC.build(FC.load_register(reg_path))["pending_clauses"]
+    rc, out = _release(reg_path)
+    assert rc == 2 and "INPUTS_COMPLETE_NOT_RELEASE_GRADE" in out and "vendor_nominal" in out
+
+
+# ── review 2026-09-12: unsupported evidence and numerically wrong inputs were RELEASABLE ──
+def test_unsupported_evidence_state_is_refused_not_ranked(tmp_path):
+    reg_path = _write_register(tmp_path, lambda rows: _fill_all(rows, cap="0.001", state="not_evidence", src=""))
+    with pytest.raises(FC.ContractInputError, match="unsupported evidence_state"):
+        FC.load_register(reg_path)
+    rc, out = _release(reg_path)
+    assert rc == 2 and "INPUTS_UNSUPPORTED" in out
+
+
+def test_evidence_without_a_source_is_refused(tmp_path):
+    reg_path = _write_register(tmp_path, lambda rows: _fill_all(rows, src=""))
+    with pytest.raises(FC.ContractInputError, match="no source"):
+        FC.load_register(reg_path)
+
+
+def test_absurd_load_cell_capacity_fails_requirements(tmp_path):
+    reg_path = _write_register(tmp_path, lambda rows: _fill_all(rows, cap="0.001", promote=True))
+    rc, out = _release(reg_path)
+    assert rc == 3 and "REQUIREMENTS_FAILED" in out and "load_cell_capacity_margin" in out
+
+
+def test_lever_equal_to_authority_arm_fails_requirements(tmp_path):
+    def same(rows):
+        _fill_all(rows, promote=True)
+        for r in rows:
+            if r["parameter"] in ("authority_arm_measured", "stand_calibration_lever"): r["value"] = "0.060"
+    rc, out = _release(_write_register(tmp_path, same))
+    assert rc == 3 and "stand_calibration_lever" in out
+
+
+def test_release_grade_inputs_with_consistent_numbers_reach_requirements_evaluated_only(tmp_path):
+    rc, out = _release(_write_register(tmp_path, lambda rows: _fill_all(rows, promote=True)))
+    assert rc == 0 and "REQUIREMENTS_EVALUATED" in out
+    assert "INPUT-REVIEW verdict only" in out and "not claimed" in out
+    reg = FC.load_register(_write_register(tmp_path, lambda rows: _fill_all(rows, promote=True)))
+    req = FC.evaluate_requirements(reg, FC.build(reg))
+    assert {r["status"] for r in req} <= {"pass", "unresolved"}
+    assert any(r["clause"] == "load_cell_capacity_margin" and r["status"] == "pass" and r["ratio"] > 10 for r in req)
+    # requirements needing quantities the register does not hold stay UNRESOLVED, never passed silently
+    assert any(r["clause"] == "sensor_deflection_clearance" and r["status"] == "unresolved" for r in req)
 
 
 def test_pending_row_carrying_a_value_is_refused(tmp_path):
